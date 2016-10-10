@@ -15,6 +15,7 @@ var http_1 = require('@angular/http');
 var app_component_1 = require('./app.component');
 var home_component_1 = require('./home/home.component');
 var about_component_1 = require('./about/about.component');
+var login_component_1 = require('./auth/login.component');
 var app_routing_1 = require('./app.routing');
 var character_service_1 = require('./shared/character.service');
 var AppModule = (function () {
@@ -35,7 +36,8 @@ var AppModule = (function () {
             declarations: [
                 app_component_1.AppComponent,
                 home_component_1.HomeComponent,
-                about_component_1.AboutComponent
+                about_component_1.AboutComponent,
+                login_component_1.LoginComponent
             ],
             bootstrap: [app_component_1.AppComponent]
         }), 

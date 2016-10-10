@@ -8,5 +8,4 @@ import 'rxjs/Rx';
 
 //enableProdMode();
 
-
 platformBrowserDynamic().bootstrapModule(AppModule);
