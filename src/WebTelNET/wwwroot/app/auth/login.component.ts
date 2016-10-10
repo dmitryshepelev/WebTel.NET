@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, OnInit } from "@angular/core";
+import { LoginModel } from "./login-model";
 
 @Component({
     moduleId: module.id,
@@ -6,11 +7,15 @@ import { Component, OnInit } from "@angular/core"
 })
 export class LoginComponent implements OnInit {
 
-    loginVm: any = {};
+    loginVm: LoginModel = new LoginModel();
 
     constructor() {}
 
     ngOnInit () {
-        console.log(this)
+        console.log(this);
+    }
+
+    onSubmit () {
+        console.log(this);
     }
 }

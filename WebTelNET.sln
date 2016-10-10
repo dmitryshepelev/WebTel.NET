@@ -7,6 +7,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7361E831-AC07-4A8B-B70B-944F98050F50}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		WebEssentials2015-Settings.json = WebEssentials2015-Settings.json
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebTelNET", "src\WebTelNET\WebTelNET.xproj", "{B1D72989-8F5E-4F16-8D1D-B5D6DA215627}"

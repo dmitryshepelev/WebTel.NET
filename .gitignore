@@ -238,4 +238,4 @@ _Pvt_Extensions
 .fake/
 
 
-**/wwwroot/app/*.js
+src/WebTelNet/wwwroot/app/*.js

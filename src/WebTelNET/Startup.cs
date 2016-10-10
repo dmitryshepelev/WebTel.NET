@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
+using WebTelNET.Models;
+using WebTelNET.Models.Models;
 
 namespace WebTelNET
 {
@@ -26,6 +29,11 @@ namespace WebTelNET
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddDbContext<WTIdentityDbContext>(
+                options => options.UseNpgsql(Configuration.GetConnectionString("PostgresConnectionString")));
+            services.AddIdentity<WTUser, WTRole>()
+                .AddEntityFrameworkStores<WTIdentityDbContext>()
+                .AddDefaultTokenProviders();
             services.AddMvc();
         }
 
@@ -36,7 +44,7 @@ namespace WebTelNET
             loggerFactory.AddDebug();
 
             app.UseStaticFiles();
-
+            app.UseIdentity();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules")),
