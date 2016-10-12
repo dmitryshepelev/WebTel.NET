@@ -3,12 +3,9 @@ import { LoginModel } from "./login-model";
 
 @Component({
     moduleId: module.id,
-    templateUrl: 'login.component.html'
+    templateUrl: "login-page.html"
 })
-export class LoginComponent implements OnInit {
-
-    loginVm: LoginModel = new LoginModel();
-
+export class LoginPageComponent implements OnInit {
     constructor() {}
 
     ngOnInit () {

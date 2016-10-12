@@ -238,4 +238,7 @@ _Pvt_Extensions
 .fake/
 
 
-src/WebTelNet/wwwroot/app/*.js
+src/WebTelNet/wwwroot/app/**/*.js
+src/WebTelNet/wwwroot/app/**/*.map
+
+src/WebTelNet.Models/Migrations/
