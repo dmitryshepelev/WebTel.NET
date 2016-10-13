@@ -22,13 +22,12 @@ export class LoginForm implements OnInit {
     submit() {
         var model = new LoginModel(this.form.controls["login"].value, this.form.controls["password"].value);
         this.accountService.login(model)
-//            .subscribe(response => {
-//                console.log(response);
-//            });
+            .then(response => { console.log(response); })
+            .catch(error => { console.log(error);});
     }
 
 
     ngOnInit(): void {
-        console.log("LoginForm Component: ", this.form);
+        
     }
 }

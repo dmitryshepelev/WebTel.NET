@@ -10,7 +10,9 @@ import { LoginPageComponent } from './auth/login-page.component';
 import { LoginForm } from './auth/login-form.component';
 import { routing, appRoutingProviders } from './app.routing';
 import { CharacterService } from './shared/character.service';
-import { AccountService } from './shared/account.service'
+import { AccountService } from './shared/account.service';
+import { Alert } from "./shared/controls/alert.component";
+
 
 @NgModule({
     imports: [
@@ -30,7 +32,8 @@ import { AccountService } from './shared/account.service'
         HomeComponent,
         AboutComponent,
         LoginPageComponent,
-        LoginForm
+        LoginForm,
+        Alert
     ],
     bootstrap: [AppComponent]
 })

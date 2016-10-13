@@ -1,25 +1,16 @@
 ﻿import { Injectable } from "@angular/core";
-import { Http, Headers } from "@angular/http";
-import { LoginModel } from "../auth/login-model.ts";
+import { Http } from "@angular/http";
+import { ServiceBase } from "./service";
+import { LoginModel } from "../auth/login-model";
 
-import "rxjs/add/operator/toPromise";
 
 @Injectable()
-export class AccountService {
-    constructor(private http: Http) { }
+export class AccountService extends  ServiceBase {
+    constructor(http: Http) { super(http); }
 
-    login(model: LoginModel): Promise<ResponseModel> {
-        return this.http.post("api/account/", model)
-            .toPromise()
-            .then(response => response.json() as ResponseModel)
-            .catch(response => console.log(response.json() as ResponseModel));
+    login(model: LoginModel): Promise<any> {
+        return this.post("api/account/", model);
     }
 }
 
 
-export class ResponseModel {
-    constructor() { }
-
-    message: string;
-    data: any;
-}

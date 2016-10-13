@@ -9,10 +9,8 @@ export class LoginPageComponent implements OnInit {
     constructor() {}
 
     ngOnInit () {
-        console.log(this);
+
     }
 
-    onSubmit () {
-        console.log(this);
-    }
+
 }
