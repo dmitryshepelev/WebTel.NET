@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebTelNET.Auth.Models;
 using WebTelNET.Models.Models;
+using WebTelNET.CommonNET.Models;
 
 namespace WebTelNET.Auth.Api
 {
