@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebTelNET.Models;
+using WebTelNET.Auth.Models;
 using WebTelNET.Models.Models;
 
-namespace WebTelNET.Api
+namespace WebTelNET.Auth.Api
 {
     [Route("api/[controller]")]
     [Produces("application/json")]
     public class AccountController : Controller
     {
-        public const string _invalidLoginOrPassword = "Invalid login or password";
-        private readonly SignInManager<WTUser> signInManager;
+        private const string InvalidLoginOrPassword = "Invalid login or password";
+        private readonly SignInManager<WTUser> _signInManager;
         
         public AccountController(SignInManager<WTUser> signInManager)
         {
-            this.signInManager = signInManager;
+            this._signInManager = signInManager;
         }
 
         [HttpPost]
@@ -23,7 +23,7 @@ namespace WebTelNET.Api
         {
             if (ModelState.IsValid)
             {
-                var result = signInManager.PasswordSignInAsync(model.Login, model.Password, true, false).Result;
+                var result = _signInManager.PasswordSignInAsync(model.Login, model.Password, true, false).Result;
                 if (result.Succeeded)
                 {
                     return Ok();
@@ -31,7 +31,7 @@ namespace WebTelNET.Api
             }
             var response = new ApiResponseModel
             {
-                Message = _invalidLoginOrPassword
+                Message = InvalidLoginOrPassword
             };
             return BadRequest(response);
         }

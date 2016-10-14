@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebTelNET.Controllers
+namespace WebTelNET.Auth.Controllers
 {
     public class HomeController : Controller
     {

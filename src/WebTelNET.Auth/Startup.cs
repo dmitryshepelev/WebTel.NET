@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using WebTelNET.Models;
 using WebTelNET.Models.Models;
 
-namespace WebTelNET
+namespace WebTelNET.Auth
 {
     public class Startup
     {

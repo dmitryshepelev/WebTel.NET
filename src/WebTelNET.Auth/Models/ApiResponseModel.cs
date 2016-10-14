@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebTelNET.Models
+namespace WebTelNET.Auth.Models
 {
     public class ApiResponseModel
     {

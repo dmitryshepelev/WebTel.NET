@@ -1,14 +1,11 @@
 <!doctype html>
 <html>
 <head>
-    <title>WebTel.NET</title>
+    <title>WebTel.NET.Auth</title>
     <base href="~/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--TODO: to depricate material design-->
-    <link rel="stylesheet" href="node_modules/material-design-lite/dist/material.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,100" />
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="styles/styles.css" />
@@ -21,14 +18,14 @@
     <script src="node_modules/systemjs/dist/system.src.js"></script>
     <script src="systemjs.config.js"></script>
     <script>
-      System.import('app').catch(console.error.bind(console));
+        System.import('app').catch(console.error.bind(console));
     </script>
 </head>
 <body>
-    <app-root>
-        <div class="container-fluid m-y-3">
-            <h4 class="text-xs-center"><i class="fa fa-cog fa-spin fa-fw"></i> Loading...</h4>
-        </div>
-    </app-root>
+<app-root>
+    <div class="container-fluid m-y-3">
+        <h4 class="text-xs-center"><i class="fa fa-cog fa-spin fa-fw"></i> Loading...</h4>
+    </div>
+</app-root>
 </body>
 </html>
