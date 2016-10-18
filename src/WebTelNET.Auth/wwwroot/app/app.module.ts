@@ -4,14 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent }  from './app.component';
-import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
-import { LoginPageComponent } from './auth/login-page.component';
-import { LoginForm } from './auth/login-form.component';
+import { LoginPageComponent } from './login/login-page.component';
+import { LoginFormComponent } from './login/login-form.component';
+import { SignupPageComponent } from "./signup/signup-page.component";
+import { SignupFormComponent } from "./signup/signup-form-component";
 import { routing, appRoutingProviders } from './app.routing';
-import { CharacterService } from './shared/character.service';
 import { AccountService } from './shared/account.service';
-import { Alert } from "./shared/controls/alert.component";
+import { AlertComponent } from "./shared/controls/alert.component";
 
 
 @NgModule({
@@ -24,16 +23,15 @@ import { Alert } from "./shared/controls/alert.component";
     ],
     providers: [
         appRoutingProviders,
-        CharacterService,
         AccountService
     ],
     declarations: [
         AppComponent,
-        HomeComponent,
-        AboutComponent,
         LoginPageComponent,
-        LoginForm,
-        Alert
+        LoginFormComponent,
+        SignupPageComponent,
+        SignupFormComponent,
+        AlertComponent
     ],
     bootstrap: [AppComponent]
 })

@@ -1,13 +1,12 @@
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
-import { LoginPageComponent } from './auth/login-page.component';
+import { LoginPageComponent } from './login/login-page.component';
+import { SignupPageComponent } from "./signup/signup-page.component";
+
 
 const appRoutes: Routes = [
     { path: '', component: LoginPageComponent },
-    { path: 'home', component: HomeComponent },
-    { path: 'about', component: AboutComponent }
+    { path: 'signup', component: SignupPageComponent }
 ];
 
 export const appRoutingProviders: any[] = [

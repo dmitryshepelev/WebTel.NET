@@ -10,14 +10,17 @@ namespace WebTelNET.Auth.Api
     [Produces("application/json")]
     public class AccountController : Controller
     {
-        private const string InvalidLoginOrPassword = "Invalid login or password";
+        private const string InvalidLoginOrPassword = "Неправильный логин или пароль.";
+        private const string SignupProceedSuccessful =
+            "Запрос отправлен. На Вашу почту выслано письмо с дальнейшими инструкциями.";
         private readonly SignInManager<WTUser> _signInManager;
-        
+
         public AccountController(SignInManager<WTUser> signInManager)
         {
             this._signInManager = signInManager;
         }
 
+        [Route("login")]
         [HttpPost]
         [Produces(typeof(string[]))]
         public IActionResult Login([FromBody] LoginViewModel model)
@@ -34,6 +37,21 @@ namespace WebTelNET.Auth.Api
             {
                 Message = InvalidLoginOrPassword
             };
+            return BadRequest(response);
+        }
+
+        [Route("signup")]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public IActionResult Signup([FromBody] SignupViewModel model)
+        {
+            var response = new ApiResponseModel();
+            if (ModelState.IsValid)
+            {
+                response.Data.Add("model", model);
+                response.Message = SignupProceedSuccessful;
+                return Ok(response);
+            }
             return BadRequest(response);
         }
     }

@@ -17,6 +17,7 @@ export class ResponseModel {
 }
 
 export abstract class ServiceBase {
+
     constructor(protected http: Http) { }
 
     private handleError(error: any): Promise<any> {
@@ -24,7 +25,7 @@ export abstract class ServiceBase {
 
         var responseModel = new ResponseModel();
         if (errorObj instanceof ProgressEvent) {
-            const serverUnavailableError: string = "Server is temporary unavailable";
+            const serverUnavailableError: string = "Сервер временно недоступен. Повторите попытку позже.";
             responseModel.message = serverUnavailableError;
             responseModel.data = errorObj;
             responseModel.type = ResponseType.Unavailable;

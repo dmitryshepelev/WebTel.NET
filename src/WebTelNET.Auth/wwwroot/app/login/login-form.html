@@ -1,0 +1,19 @@
+﻿<form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-group row">
+        <label for="login-input" class="col-md-3 col-form-label">Логин</label>
+        <div class="col-md-9">
+            <input type="text" class="form-control" id="login-input" placeholder="Введите свой логин" formControlName="login" name="login" autocomplete="off" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="password-input" class="col-md-3 col-form-label">Пароль</label>
+        <div class="col-md-9">
+            <input type="password" class="form-control" id="password-input" placeholder="Введите свой пароль" formControlName="password" name="password" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary pull-xs-right" [disabled]="form.invalid">Войти</button>
+        </div>
+    </div>
+</form>
