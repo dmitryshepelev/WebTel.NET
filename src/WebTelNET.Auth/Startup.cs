@@ -8,6 +8,7 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using WebTelNET.Models;
 using WebTelNET.Models.Models;
+using WebTelNET.Models.Repository;
 
 namespace WebTelNET.Auth
 {
@@ -35,6 +36,8 @@ namespace WebTelNET.Auth
                 .AddEntityFrameworkStores<WTIdentityDbContext>()
                 .AddDefaultTokenProviders();
             services.AddMvc();
+
+            services.AddScoped<IAccountRequestRepository, AccountRequestRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebTelNET.Auth.Models;
 using WebTelNET.Models.Models;
 using WebTelNET.CommonNET.Models;
+using WebTelNET.Models.Repository;
 
 namespace WebTelNET.Auth.Api
 {
@@ -14,10 +15,12 @@ namespace WebTelNET.Auth.Api
         private const string SignupProceedSuccessful =
             "Запрос отправлен. На Вашу почту выслано письмо с дальнейшими инструкциями.";
         private readonly SignInManager<WTUser> _signInManager;
+        private readonly IAccountRequestRepository _accountRequestRepository;
 
-        public AccountController(SignInManager<WTUser> signInManager)
+        public AccountController(SignInManager<WTUser> signInManager, IAccountRequestRepository accountRequestRepository)
         {
-            this._signInManager = signInManager;
+            _signInManager = signInManager;
+            _accountRequestRepository = accountRequestRepository;
         }
 
         [Route("login")]
