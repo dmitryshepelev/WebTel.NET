@@ -1,21 +1,21 @@
 import { Component, ViewChild } from "@angular/core";
 import { ResponseModel } from "../shared/service";
 import { AlertComponent, AlertType } from "../shared/controls/alert.component";
-import { SignupFormComponent } from "./signup-form-component";
+import { RequestFormComponent } from "./request-form.component";
 
 
 @Component({
     moduleId: module.id,
-    templateUrl: "signup-page.html"
+    templateUrl: "request-page.html"
 })
-export class SignupPageComponent {
+export class RequestPageComponent {
 
     @ViewChild(AlertComponent)
     alertComponent: AlertComponent;
 
     onSignupRequestSuccess(response: ResponseModel): void {
         this.alertComponent.message = response.message;
-        this.alertComponent.type = response.type === 0 ? AlertType.Success : AlertType.Error;
+        this.alertComponent.type = AlertType.Success;
         this.alertComponent.show();
     }
 

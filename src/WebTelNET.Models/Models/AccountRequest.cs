@@ -7,7 +7,7 @@ namespace WebTelNET.Models.Models
     public class AccountRequest
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(24)]
@@ -23,7 +23,6 @@ namespace WebTelNET.Models.Models
         [DataType(DataType.DateTime)]
         public DateTime DateTime { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
         [MaxLength(40)]
         public string RequestCode { get; set; }

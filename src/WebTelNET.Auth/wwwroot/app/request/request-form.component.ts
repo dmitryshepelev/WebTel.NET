@@ -1,16 +1,16 @@
 import { Component, Inject, EventEmitter, Output } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AccountService } from "../shared/account.service";
-import { SignupModel } from "./signup-model";
+import { RequestModel } from "./request-model";
 import { ResponseModel } from "../shared/service";
 
 
 @Component({
     moduleId: module.id,
-    selector: "signup-form",
-    templateUrl: "signup-form.html"
+    selector: "request-form",
+    templateUrl: "request-form.html"
 })
-export class SignupFormComponent {
+export class RequestFormComponent {
     form: FormGroup;
     submittedSucceed = false;
 
@@ -28,9 +28,9 @@ export class SignupFormComponent {
     }
 
     submit() {
-        const model = new SignupModel(this.form.controls["login"].value, this.form.controls["email"].value);
+        const model = new RequestModel(this.form.controls["login"].value, this.form.controls["email"].value);
         console.log(this.form);
-        this.accountService.signup(model)
+        this.accountService.request(model)
             .then(response => this.onSignupRequestSuccess.emit(response))
             .catch(error => this.onSignupRequestError.emit(error));
     }

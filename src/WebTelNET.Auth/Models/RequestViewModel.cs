@@ -2,7 +2,7 @@
 
 namespace WebTelNET.Auth.Models
 {
-    public class SignupViewModel
+    public class RequestViewModel
     {
         [Required]
         public string Login { get; set; }

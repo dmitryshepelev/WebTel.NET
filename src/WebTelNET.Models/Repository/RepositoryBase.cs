@@ -14,31 +14,33 @@ namespace WebTelNET.Models.Repository
             Context = context;
         }
 
-        public void Create(T entity)
+        public virtual T Create(T entity)
         {
             Context.Entry(entity).State = EntityState.Added;
             Context.SaveChanges();
+            return entity;
         }
 
-        public T GetSingle(Expression<Func<T, bool>> predicate)
+        public virtual T GetSingle(Expression<Func<T, bool>> predicate)
         {
             return Context.Set<T>().FirstOrDefault(predicate);
         }
 
-        public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null)
+        public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null)
         {
             IQueryable<T> query = Context.Set<T>();
             return predicate != null ? Context.Set<T>().Where(predicate) : query;
         }
 
-        public void Update(T entity)
+        public virtual T Update(T entity)
         {
             Context.Set<T>().Attach(entity);
             Context.Entry(entity).State = EntityState.Modified;
             Context.SaveChanges();
+            return entity;
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             if (Context.Entry(entity).State == EntityState.Detached)
             {
@@ -49,7 +51,7 @@ namespace WebTelNET.Models.Repository
 
         }
 
-        public bool Any(Expression<Func<T, bool>> condition)
+        public virtual bool Any(Expression<Func<T, bool>> condition)
         {
             return Context.Set<T>().Any(condition);
         }

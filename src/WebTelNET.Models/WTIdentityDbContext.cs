@@ -17,7 +17,13 @@ namespace WebTelNET.Models
                 .Property(x => x.IsComfirmed)
                 .HasDefaultValue(false);
             builder.Entity<AccountRequest>()
-                .HasIndex(x => new { x.RequestCode, x.Email, x.Login })
+                .HasIndex(x => x.RequestCode)
+                .IsUnique();
+            builder.Entity<AccountRequest>()
+                .HasIndex(x => x.Login)
+                .IsUnique();
+            builder.Entity<AccountRequest>()
+                .HasIndex(x => x.Email)
                 .IsUnique();
         }
 

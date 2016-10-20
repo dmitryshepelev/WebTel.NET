@@ -37,7 +37,7 @@ export abstract class ServiceBase {
         responseModel.data = errorObj.data;
         responseModel.type = ResponseType.Error;
 
-        return Promise.resolve(responseModel);
+        return Promise.reject(responseModel);
     }
 
     private handleSuccess(response: any): Promise<ResponseModel> {

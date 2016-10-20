@@ -6,6 +6,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using WebTelNET.Auth.Resources;
+using WebTelNET.CommonNET.Resources;
 using WebTelNET.Models;
 using WebTelNET.Models.Models;
 using WebTelNET.Models.Repository;
@@ -38,6 +40,7 @@ namespace WebTelNET.Auth
             services.AddMvc();
 
             services.AddScoped<IAccountRequestRepository, AccountRequestRepository>();
+            services.AddScoped<IResourceManager, AccountResourceManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

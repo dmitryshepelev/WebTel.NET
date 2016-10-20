@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebTelNET.Auth.Models;
+using WebTelNET.Auth.Resources;
 using WebTelNET.Models.Models;
 using WebTelNET.CommonNET.Models;
+using WebTelNET.CommonNET.Resources;
 using WebTelNET.Models.Repository;
 
 namespace WebTelNET.Auth.Api
@@ -11,16 +15,18 @@ namespace WebTelNET.Auth.Api
     [Produces("application/json")]
     public class AccountController : Controller
     {
-        private const string InvalidLoginOrPassword = "Неправильный логин или пароль.";
-        private const string SignupProceedSuccessful =
-            "Запрос отправлен. На Вашу почту выслано письмо с дальнейшими инструкциями.";
         private readonly SignInManager<WTUser> _signInManager;
         private readonly IAccountRequestRepository _accountRequestRepository;
+        private readonly IResourceManager _resourceManager;
 
-        public AccountController(SignInManager<WTUser> signInManager, IAccountRequestRepository accountRequestRepository)
+        public AccountController(
+            SignInManager<WTUser> signInManager,
+            IAccountRequestRepository accountRequestRepository,
+            IResourceManager resourceManager)
         {
             _signInManager = signInManager;
             _accountRequestRepository = accountRequestRepository;
+            _resourceManager = resourceManager;
         }
 
         [Route("login")]
@@ -38,22 +44,37 @@ namespace WebTelNET.Auth.Api
             }
             var response = new ApiResponseModel
             {
-                Message = InvalidLoginOrPassword
+                Message = ApiStatusResource.InvalidLoginOrPassword
             };
             return BadRequest(response);
         }
 
-        [Route("signup")]
+        [Route("request")]
         [HttpPost]
         [Produces(typeof(string[]))]
-        public IActionResult Signup([FromBody] SignupViewModel model)
+        public IActionResult AccountRequest([FromBody] RequestViewModel model)
         {
             var response = new ApiResponseModel();
             if (ModelState.IsValid)
             {
-                response.Data.Add("model", model);
-                response.Message = SignupProceedSuccessful;
-                return Ok(response);
+                var accountRequestModel = new AccountRequest()
+                {
+                    Login = model.Login,
+                    Email = model.Email,
+                    DateTime = DateTime.UtcNow
+                };
+                try
+                {
+                    var accountRequest = _accountRequestRepository.Create(accountRequestModel);
+                    response.Message = ApiStatusResource.SignupProceedSuccessful;
+                    response.Data.Add(nameof(accountRequest.RequestCode), accountRequest.RequestCode);
+                    return Ok(response);
+                }
+                catch (Exception e)
+                {
+                    response.Message = _resourceManager.ResolveExeption(e).First().Value;
+                    return BadRequest(response);
+                }
             }
             return BadRequest(response);
         }
