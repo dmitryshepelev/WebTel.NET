@@ -4,30 +4,39 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebTelNET.CommonNET.Resources;
 using Npgsql;
+using System.Data.Common;
 
 namespace WebTelNET.CommonNET.Resources
 {
-    public class ResourceManager : IResourceManager
+    public class WTResourceManager : IResourceManager
     {
-        public virtual IDictionary<string, string> ResolveExeption(Exception e)
+        protected IResourceResolver GetResolver(ref Exception e)
         {
-            var key = "";
-            var value = "";
+            Exception exceptionTyped = null;
+            IResourceResolver resolver = null;
 
             while (e != null)
             {
-                var exTyped = e as PostgresException;
-                if (exTyped != null)
+                exceptionTyped = e as DbException;
+                if (exceptionTyped != null)
                 {
-                    key = exTyped.SqlState;
+                    resolver = new DbResourceResolver();
                 }
-                value = e.Message;
                 e = e.InnerException;
             }
+            e = exceptionTyped;
 
-            var dict = new Dictionary<string, string>();
-            dict.Add(key, value);
-            return dict;
+            if (resolver == null)
+            {
+                return new CommonResourceResolver();
+            }
+            return resolver;
+        }
+
+        public virtual string ResolveException(Exception e)
+        {
+            var resolver = GetResolver(ref e);
+            return resolver.ResolveException(e);
         }
     }
 }

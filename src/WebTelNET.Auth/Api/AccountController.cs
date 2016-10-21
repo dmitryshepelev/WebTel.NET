@@ -44,7 +44,7 @@ namespace WebTelNET.Auth.Api
             }
             var response = new ApiResponseModel
             {
-                Message = ApiStatusResource.InvalidLoginOrPassword
+                Message = AccountResource.InvalidLoginOrPassword
             };
             return BadRequest(response);
         }
@@ -57,7 +57,7 @@ namespace WebTelNET.Auth.Api
             var response = new ApiResponseModel();
             if (ModelState.IsValid)
             {
-                var accountRequestModel = new AccountRequest()
+                var accountRequestModel = new AccountRequest
                 {
                     Login = model.Login,
                     Email = model.Email,
@@ -66,13 +66,13 @@ namespace WebTelNET.Auth.Api
                 try
                 {
                     var accountRequest = _accountRequestRepository.Create(accountRequestModel);
-                    response.Message = ApiStatusResource.SignupProceedSuccessful;
+                    response.Message = AccountResource.SignupProceedSuccessful;
                     response.Data.Add(nameof(accountRequest.RequestCode), accountRequest.RequestCode);
                     return Ok(response);
                 }
                 catch (Exception e)
                 {
-                    response.Message = _resourceManager.ResolveExeption(e).First().Value;
+                    response.Message = _resourceManager.ResolveException(e);
                     return BadRequest(response);
                 }
             }

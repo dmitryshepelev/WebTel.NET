@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebTelNET.Auth.Resources {
+namespace WebTelNET.CommonNET.Resources {
     using System;
     using System.Reflection;
     
@@ -22,13 +22,13 @@ namespace WebTelNET.Auth.Resources {
     // with the /str option, or rebuild your VS project.
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ApiStatusResource {
+    public class DbResource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
-        internal ApiStatusResource() {
+        internal DbResource() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace WebTelNET.Auth.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WebTelNET.Auth.Resources.ApiStatusResource", typeof(ApiStatusResource).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WebTelNET.CommonNET.Resources.DbResource", typeof(DbResource).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,20 +60,11 @@ namespace WebTelNET.Auth.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Неправильный логин или пароль..
+        ///    Looks up a localized string similar to Данный логин ули адрес электронной почты уже используется..
         /// </summary>
-        public static string InvalidLoginOrPassword {
+        public static string _23505 {
             get {
-                return ResourceManager.GetString("InvalidLoginOrPassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///    Looks up a localized string similar to Запрос отправлен. На Вашу почту выслано письмо с дальнейшими инструкциями..
-        /// </summary>
-        public static string SignupProceedSuccessful {
-            get {
-                return ResourceManager.GetString("SignupProceedSuccessful", resourceCulture);
+                return ResourceManager.GetString("23505", resourceCulture);
             }
         }
     }
