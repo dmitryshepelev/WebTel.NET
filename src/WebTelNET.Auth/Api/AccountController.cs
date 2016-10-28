@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebTelNET.Auth.Models;
 using WebTelNET.Auth.Resources;
 using WebTelNET.Models.Models;
 using WebTelNET.CommonNET.Models;
-using WebTelNET.CommonNET.Resources;
 using WebTelNET.Models.Repository;
 
 namespace WebTelNET.Auth.Api
@@ -17,12 +15,12 @@ namespace WebTelNET.Auth.Api
     {
         private readonly SignInManager<WTUser> _signInManager;
         private readonly IAccountRequestRepository _accountRequestRepository;
-        private readonly IResourceManager _resourceManager;
+        private readonly IAccountResourceManager _resourceManager;
 
         public AccountController(
             SignInManager<WTUser> signInManager,
             IAccountRequestRepository accountRequestRepository,
-            IResourceManager resourceManager)
+            IAccountResourceManager resourceManager)
         {
             _signInManager = signInManager;
             _accountRequestRepository = accountRequestRepository;

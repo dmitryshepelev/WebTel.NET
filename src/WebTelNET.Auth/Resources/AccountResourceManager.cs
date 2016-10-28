@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebTelNET.CommonNET.Resources;
 
 namespace WebTelNET.Auth.Resources
 {
-    public class AccountResourceManager : WTResourceManager
+    public class AccountResourceManager : WTResourceManager, IAccountResourceManager
     {
         public override string ResolveException(Exception e)
         {

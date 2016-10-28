@@ -1,9 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Data.Common;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using Npgsql;
 using WebTelNET.Auth.Api;
 using WebTelNET.Auth.Models;
+using WebTelNET.Auth.Resources;
+using WebTelNET.CommonNET.Models;
 using WebTelNET.Models.Models;
+using WebTelNET.Models.Repository;
 using Xunit;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -24,13 +31,15 @@ namespace WebTelNET.Tests.Auth
             var mockSignInManager = Mocks.MockSignInManager<WTUser>();
             mockSignInManager
                 .Setup(mockManager => mockManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .Returns(new Task<SignInResult>(() => SignInResult.Success));
+                .Returns(Task.FromResult(SignInResult.Success));
+            var mockAccountRequest = new Mock<IAccountRequestRepository>();
+            var mockAccountResourceManager = new Mock<IAccountResourceManager>();
 
             var model = new LoginViewModel { Login = "test_login", Password = "test_password" };
-            var controller = new AccountController(mockSignInManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
             var result = controller.Login(model);
 
-            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<OkResult>(result);
         }
 
         [Fact]
@@ -39,10 +48,12 @@ namespace WebTelNET.Tests.Auth
             var mockSignInManager = Mocks.MockSignInManager<WTUser>();
             mockSignInManager
                 .Setup(mockManager => mockManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .Returns(new Task<SignInResult>(() => SignInResult.Failed));
+                .Returns(Task.FromResult(SignInResult.Failed));
+            var mockAccountRequest = new Mock<IAccountRequestRepository>();
+            var mockAccountResourceManager = new Mock<IAccountResourceManager>();
 
             var model = new LoginViewModel { Password = "test_password" };
-            var controller = new AccountController(mockSignInManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
             var result = controller.Login(model);
 
             Assert.IsType<BadRequestObjectResult>(result);
@@ -54,13 +65,80 @@ namespace WebTelNET.Tests.Auth
             var mockSignInManager = Mocks.MockSignInManager<WTUser>();
             mockSignInManager
                 .Setup(mockManager => mockManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .Returns(new Task<SignInResult>(() => SignInResult.Failed));
+                .Returns(Task.FromResult(SignInResult.Failed));
+            var mockAccountRequest = new Mock<IAccountRequestRepository>();
+            var mockAccountResourceManager = new Mock<IAccountResourceManager>();
 
             var model = new LoginViewModel { Login = "test_login" };
-            var controller = new AccountController(mockSignInManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
             var result = controller.Login(model);
 
             Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void AccountRequestFailed_InvalidModel_LoginRequired()
+        {
+            var mockSignInManager = Mocks.MockSignInManager<WTUser>();
+            var mockAccountRequest = new Mock<IAccountRequestRepository>();
+            var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+
+            var model = new RequestViewModel {Email = "test@test.test"};
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var result = controller.AccountRequest(model);
+
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void AccountRequestFailed_InvalidModel_EmailRequired()
+        {
+            var mockSignInManager = Mocks.MockSignInManager<WTUser>();
+            var mockAccountRequest = new Mock<IAccountRequestRepository>();
+            var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+
+            var model = new RequestViewModel { Login = "test" };
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var result = controller.AccountRequest(model);
+
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void AccountRequestFailed_InvalidModel_InvalidEmail()
+        {
+            var mockSignInManager = Mocks.MockSignInManager<WTUser>();
+            var mockAccountRequest = new Mock<IAccountRequestRepository>();
+            var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+
+            var model = new RequestViewModel { Login = "test", Email = "test" };
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var result = controller.AccountRequest(model);
+
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void AccountRequestFailed_CreationError_DublicateLogin()
+        {
+            var mockSignInManager = Mocks.MockSignInManager<WTUser>();
+            var mockAccountRequest = new Mock<IAccountRequestRepository>();
+            mockAccountRequest
+                .Setup(mockManager => mockManager.Create(It.IsAny<AccountRequest>()))
+                .Throws(new DbUpdateException(string.Empty, new Exception()));
+            var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+            var message = "test message text";;
+            mockAccountResourceManager
+                .Setup(mockManager => mockManager.ResolveException(It.IsAny<DbUpdateException>()))
+                .Returns(message);
+
+            var model = new RequestViewModel { Login = "test", Email = "test" };
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var result = controller.AccountRequest(model);
+
+            Assert.IsType<BadRequestObjectResult>(result);
+            var apiResponseModel = (ApiResponseModel)((BadRequestObjectResult)result).Value;
+            Assert.Equal(message, apiResponseModel.Message);
         }
     }
 }

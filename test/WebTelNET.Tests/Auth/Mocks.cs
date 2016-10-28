@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Resources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Moq;
+using WebTelNET.Models.Repository;
+using WebTelNET.Models;
+using WebTelNET.Auth.Resources;
 
 namespace WebTelNET.Tests.Auth
 {

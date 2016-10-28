@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebTelNET.CommonNET.Resources;
-using Npgsql;
 using System.Data.Common;
 
 namespace WebTelNET.CommonNET.Resources

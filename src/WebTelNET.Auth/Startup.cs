@@ -41,7 +41,7 @@ namespace WebTelNET.Auth
             services.AddMvc();
 
             services.AddScoped<IAccountRequestRepository, AccountRequestRepository>();
-            services.AddScoped<IResourceManager, AccountResourceManager>();
+            services.AddScoped<IAccountResourceManager, AccountResourceManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
