@@ -242,6 +242,6 @@ src/**/wwwroot/app/**/*.js
 src/**/wwwroot/app/**/*.map
 src/**/.vscode/
 
-src/WebTelNet.Models/Migrations/
+src/WebTelNET.Models/Migrations/
 
 .idea/
