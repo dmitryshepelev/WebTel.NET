@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using WebTelNET.Auth.Libs;
 using WebTelNET.Auth.Models;
 using WebTelNET.Auth.Resources;
+using WebTelNET.Auth.Services;
 using WebTelNET.Models.Models;
 using WebTelNET.CommonNET.Models;
+using WebTelNET.CommonNET.Services;
 using WebTelNET.Models.Repository;
 
 namespace WebTelNET.Auth.Api
@@ -16,15 +21,25 @@ namespace WebTelNET.Auth.Api
         private readonly SignInManager<WTUser> _signInManager;
         private readonly IAccountRequestRepository _accountRequestRepository;
         private readonly IAccountResourceManager _resourceManager;
+        private readonly IMailManager _mailManager;
+        private readonly IOptions<AppSettings> _appSettings;
+        private readonly IAuthMailCreator _authMailCreator;
 
         public AccountController(
             SignInManager<WTUser> signInManager,
             IAccountRequestRepository accountRequestRepository,
-            IAccountResourceManager resourceManager)
+            IAccountResourceManager resourceManager,
+            IMailManager mailManager,
+            IOptions<AppSettings> appSettings,
+            IAuthMailCreator authMailCreator
+        )
         {
             _signInManager = signInManager;
             _accountRequestRepository = accountRequestRepository;
             _resourceManager = resourceManager;
+            _mailManager = mailManager;
+            _appSettings = appSettings;
+            _authMailCreator = authMailCreator;
         }
 
         [Route("login")]
@@ -64,7 +79,15 @@ namespace WebTelNET.Auth.Api
                 try
                 {
                     var accountRequest = _accountRequestRepository.Create(accountRequestModel);
-                    response.Message = AccountResource.SignupProceedSuccessful;
+
+                    var message = _authMailCreator.CreateAccountRequestConfirmationMail(
+                        new AccountRequestConfirmationMailContext {RequestCode = accountRequest.RequestCode, Login = accountRequest.Login, DateTime = accountRequest.DateTime},
+                        new List<string> {_appSettings.Value.MailSettings.Login},
+                        new List<string> {accountRequest.Email}
+                    );
+                    _mailManager.Send(message, _appSettings.Value.MailSettings);
+
+                    response.Message = AccountResource.AccountRequestProceedSuccessful;
                     response.Data.Add(nameof(accountRequest.RequestCode), accountRequest.RequestCode);
                     return Ok(response);
                 }

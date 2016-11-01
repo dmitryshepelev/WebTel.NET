@@ -8,7 +8,9 @@ using Microsoft.Extensions.Logging;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using WebTelNET.Auth.Resources;
-using WebTelNET.CommonNET.Resources;
+using WebTelNET.Auth.Services;
+using WebTelNET.CommonNET.Libs;
+using WebTelNET.CommonNET.Services;
 using WebTelNET.Models;
 using WebTelNET.Models.Models;
 using WebTelNET.Models.Repository;
@@ -40,8 +42,24 @@ namespace WebTelNET.Auth
                 .AddDefaultTokenProviders();
             services.AddMvc();
 
+            services.Configure<AppSettings>(settings =>
+            {
+                var appSettings = nameof(AppSettings);
+                var mailSettings = nameof(MailSettings);
+                settings.MailSettings = new MailSettings
+                {
+                    LocalDomain = Configuration[$"{appSettings}:{mailSettings}:LocalDomain"],
+                    SMTPServer = Configuration[$"{appSettings}:{mailSettings}:SMTPServer"],
+                    Port = int.Parse(Configuration[$"{appSettings}:{mailSettings}:Port"]),
+                    Login = Configuration[$"{appSettings}:{mailSettings}:Login"],
+                    Password = Configuration[$"{appSettings}:{mailSettings}:Password"]
+                };
+            });
+
             services.AddScoped<IAccountRequestRepository, AccountRequestRepository>();
             services.AddScoped<IAccountResourceManager, AccountResourceManager>();
+            services.AddScoped<IMailManager, MailManager>();
+            services.AddScoped<IAuthMailCreator, AuthMailCreator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

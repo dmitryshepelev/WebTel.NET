@@ -9,6 +9,7 @@ using WebTelNET.Auth.Api;
 using WebTelNET.Auth.Models;
 using WebTelNET.Auth.Resources;
 using WebTelNET.CommonNET.Models;
+using WebTelNET.CommonNET.Services;
 using WebTelNET.Models.Models;
 using WebTelNET.Models.Repository;
 using Xunit;
@@ -34,9 +35,10 @@ namespace WebTelNET.Tests.Auth
                 .Returns(Task.FromResult(SignInResult.Success));
             var mockAccountRequest = new Mock<IAccountRequestRepository>();
             var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+            var mockMailManager = new Mock<IMailManager>();
 
             var model = new LoginViewModel { Login = "test_login", Password = "test_password" };
-            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
             var result = controller.Login(model);
 
             Assert.IsType<OkResult>(result);
@@ -51,9 +53,10 @@ namespace WebTelNET.Tests.Auth
                 .Returns(Task.FromResult(SignInResult.Failed));
             var mockAccountRequest = new Mock<IAccountRequestRepository>();
             var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+            var mockMailManager = new Mock<IMailManager>();
 
             var model = new LoginViewModel { Password = "test_password" };
-            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
             var result = controller.Login(model);
 
             Assert.IsType<BadRequestObjectResult>(result);
@@ -68,9 +71,10 @@ namespace WebTelNET.Tests.Auth
                 .Returns(Task.FromResult(SignInResult.Failed));
             var mockAccountRequest = new Mock<IAccountRequestRepository>();
             var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+            var mockMailManager = new Mock<IMailManager>();
 
             var model = new LoginViewModel { Login = "test_login" };
-            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
             var result = controller.Login(model);
 
             Assert.IsType<BadRequestObjectResult>(result);
@@ -82,9 +86,10 @@ namespace WebTelNET.Tests.Auth
             var mockSignInManager = Mocks.MockSignInManager<WTUser>();
             var mockAccountRequest = new Mock<IAccountRequestRepository>();
             var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+            var mockMailManager = new Mock<IMailManager>();
 
             var model = new RequestViewModel {Email = "test@test.test"};
-            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
             var result = controller.AccountRequest(model);
 
             Assert.IsType<BadRequestObjectResult>(result);
@@ -96,9 +101,10 @@ namespace WebTelNET.Tests.Auth
             var mockSignInManager = Mocks.MockSignInManager<WTUser>();
             var mockAccountRequest = new Mock<IAccountRequestRepository>();
             var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+            var mockMailManager = new Mock<IMailManager>();
 
             var model = new RequestViewModel { Login = "test" };
-            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
             var result = controller.AccountRequest(model);
 
             Assert.IsType<BadRequestObjectResult>(result);
@@ -110,9 +116,10 @@ namespace WebTelNET.Tests.Auth
             var mockSignInManager = Mocks.MockSignInManager<WTUser>();
             var mockAccountRequest = new Mock<IAccountRequestRepository>();
             var mockAccountResourceManager = new Mock<IAccountResourceManager>();
+            var mockMailManager = new Mock<IMailManager>();
 
             var model = new RequestViewModel { Login = "test", Email = "test" };
-            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
             var result = controller.AccountRequest(model);
 
             Assert.IsType<BadRequestObjectResult>(result);
@@ -131,9 +138,10 @@ namespace WebTelNET.Tests.Auth
             mockAccountResourceManager
                 .Setup(mockManager => mockManager.ResolveException(It.IsAny<DbUpdateException>()))
                 .Returns(message);
+            var mockMailManager = new Mock<IMailManager>();
 
             var model = new RequestViewModel { Login = "test", Email = "test" };
-            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object);
+            var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
             var result = controller.AccountRequest(model);
 
             Assert.IsType<BadRequestObjectResult>(result);

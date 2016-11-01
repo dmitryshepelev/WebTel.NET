@@ -60,20 +60,20 @@ namespace WebTelNET.Auth.Resources {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Запрос отправлен. На Вашу почту выслано письмо с дальнейшими инструкциями..
+        /// </summary>
+        public static string AccountRequestProceedSuccessful {
+            get {
+                return ResourceManager.GetString("AccountRequestProceedSuccessful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Неправильный логин или пароль..
         /// </summary>
         public static string InvalidLoginOrPassword {
             get {
                 return ResourceManager.GetString("InvalidLoginOrPassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///    Looks up a localized string similar to Запрос отправлен. На Вашу почту выслано письмо с дальнейшими инструкциями..
-        /// </summary>
-        public static string SignupProceedSuccessful {
-            get {
-                return ResourceManager.GetString("SignupProceedSuccessful", resourceCulture);
             }
         }
     }
