@@ -5,8 +5,9 @@ import { RequestPageComponent } from "./request/request-page.component";
 
 
 const appRoutes: Routes = [
-    { path: '', component: LoginPageComponent },
-    { path: 'request', component: RequestPageComponent }
+    { path: "", component: LoginPageComponent },
+    { path: "request", component: RequestPageComponent },
+    { path: "**", redirectTo: "" }
 ];
 
 export const appRoutingProviders: any[] = [
