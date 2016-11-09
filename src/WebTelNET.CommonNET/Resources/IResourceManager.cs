@@ -5,6 +5,8 @@ namespace WebTelNET.CommonNET.Resources
 {
     public interface IResourceManager
     {
-        string ResolveException(Exception e);
+        string GetByException(Exception e);
+
+        string GetByString(string str);
     }
 }

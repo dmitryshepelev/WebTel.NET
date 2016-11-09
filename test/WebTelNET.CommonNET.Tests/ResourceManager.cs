@@ -1,8 +1,9 @@
 using System;
 using System.Data.Common;
-using Npgsql;
 using WebTelNET.CommonNET.Resources;
 using Xunit;
+using Moq;
+using WebTelNET.CommonNET.Libs.ExceptionResolvers;
 
 namespace WebTelNET.CommonNET.Tests
 {
@@ -10,36 +11,61 @@ namespace WebTelNET.CommonNET.Tests
 
     public class ResourceManager
     {
-
         [Fact]
         public void ResolveException_AnyException()
         {
-            IResourceManager manager = new WTResourceManager();
-            Assert.Throws<NotImplementedException>(() => manager.ResolveException(new Exception()));
+            var mockExceptionResolverFactory = new Mock<IExceptionManager>();
+            mockExceptionResolverFactory
+                .Setup(mockManager => mockManager.GetLastException(It.IsAny<Exception>()))
+                .Returns(new Exception());
+            mockExceptionResolverFactory
+                .Setup(mockManager => mockManager.CreateResolver(It.IsAny<Exception>()))
+                .Returns(new DefaultExceptionResolver());
+            IResourceManager manager = new WTResourceManager(mockExceptionResolverFactory.Object);
+            Assert.Equal(DefaultResource.DefaultError, manager.GetByException(new Exception()));
         }
 
         [Fact]
         public void ResolveException_DbException()
         {
-            IResourceManager manager = new WTResourceManager();
+            var mockExceptionResolverFactory = new Mock<IExceptionManager>();
+            mockExceptionResolverFactory
+                .Setup(mockManager => mockManager.GetLastException(It.IsAny<Exception>()))
+                .Returns(new TestDbException());
+            mockExceptionResolverFactory
+                .Setup(mockManager => mockManager.CreateResolver(It.IsAny<Exception>()))
+                .Returns(new DbExceptionResolver());
+            IResourceManager manager = new WTResourceManager(mockExceptionResolverFactory.Object);
             var exception = new TestDbException();
-            Assert.Equal(string.Empty, manager.ResolveException(exception));
-        }
-
-        [Fact]
-        public void ResolveException_InnerException_DbException()
-        {
-            IResourceManager manager = new WTResourceManager();
-            var exception = new Exception("test message", new TestDbException());
-            Assert.Equal(string.Empty, manager.ResolveException(exception));
+            Assert.Equal(string.Empty, manager.GetByException(exception));
         }
 
         [Fact]
         public void ResolveException_InnerException_AnyException()
         {
-            IResourceManager manager = new WTResourceManager();
-            var exception = new Exception("test message", new Exception());
-            Assert.Throws<NotImplementedException>(() => manager.ResolveException(exception));
+            var mockExceptionResolverFactory = new Mock<IExceptionManager>();
+            mockExceptionResolverFactory
+                .Setup(mockManager => mockManager.GetLastException(It.IsAny<Exception>()))
+                .Returns(new Exception());
+            mockExceptionResolverFactory
+                .Setup(mockManager => mockManager.CreateResolver(It.IsAny<Exception>()))
+                .Returns(new DefaultExceptionResolver());
+            IResourceManager manager = new WTResourceManager(mockExceptionResolverFactory.Object);
+            Assert.Equal(DefaultResource.DefaultError, manager.GetByException(new Exception("test message", new TestDbException())));
+        }
+
+        [Fact]
+        public void ResolveException_InnerException_DbException()
+        {
+            var mockExceptionResolverFactory = new Mock<IExceptionManager>();
+            mockExceptionResolverFactory
+                .Setup(mockManager => mockManager.GetLastException(It.IsAny<Exception>()))
+                .Returns(new TestDbException());
+            mockExceptionResolverFactory
+                .Setup(mockManager => mockManager.CreateResolver(It.IsAny<Exception>()))
+                .Returns(new DbExceptionResolver());
+            IResourceManager manager = new WTResourceManager(mockExceptionResolverFactory.Object);
+            Assert.Equal(string.Empty, manager.GetByException(new Exception("test message", new TestDbException())));
         }
     }
 }

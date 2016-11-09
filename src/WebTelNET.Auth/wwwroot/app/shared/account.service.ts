@@ -2,7 +2,7 @@
 import { Http } from "@angular/http";
 import { ServiceBase } from "./service";
 import { LoginModel } from "../login/login-model";
-import { RequestModel } from "../request/request-model";
+import { SignUpModel } from "../signup/signup-model";
 
 
 @Injectable()
@@ -15,8 +15,8 @@ export class AccountService extends  ServiceBase {
         return this.post(this.baseUrl + "/login/", model);
     };
 
-    request(model: RequestModel): Promise<any> {
-        return this.post(this.baseUrl + "/request/", model);
+    signup(model: SignUpModel): Promise<any> {
+        return this.post(this.baseUrl + "/signup/", model);
     }
 
 

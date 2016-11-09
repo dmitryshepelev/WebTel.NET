@@ -1,12 +1,12 @@
 ﻿using System;
+using WebTelNET.Auth.Models;
 using WebTelNET.CommonNET.Libs;
 
 namespace WebTelNET.Auth.Libs
 {
-    public class AccountRequestConfirmationMailContext : MailContext
+    public class AccountConfirmationMailContext : MailContext
     {
-        public string Login { get; set; }
-        public string RequestCode { get; set; }
+        public SignUpViewModel SignUpViewModel { get; set; }
         public DateTime DateTime { get; set; }
     }
 }

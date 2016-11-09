@@ -1,37 +1,33 @@
 ﻿using System;
 using System.Data.Common;
+using System.Resources;
+using Npgsql;
+using WebTelNET.CommonNET.Libs.ExceptionResolvers;
 
 namespace WebTelNET.CommonNET.Resources
 {
     public class WTResourceManager : IResourceManager
     {
-        protected IResourceResolver GetResolver(ref Exception e)
+        private readonly IExceptionManager _exceptionManager;
+        private readonly ResourceManager _resourceManager;
+
+        public WTResourceManager(IExceptionManager exceptionManager)
         {
-            Exception exceptionTyped = null;
-            IResourceResolver resolver = null;
-
-            while (e != null)
-            {
-                exceptionTyped = e as DbException;
-                if (exceptionTyped != null)
-                {
-                    resolver = new DbResourceResolver();
-                }
-                e = e.InnerException;
-            }
-            e = exceptionTyped;
-
-            if (resolver == null)
-            {
-                return new CommonResourceResolver();
-            }
-            return resolver;
+            _exceptionManager = exceptionManager;
+            _resourceManager = new ResourceManager(typeof(DefaultResource));
         }
 
-        public virtual string ResolveException(Exception e)
+        public virtual string GetByException(Exception e)
         {
-            var resolver = GetResolver(ref e);
-            return resolver.ResolveException(e);
+            var lastExcpetion = _exceptionManager.GetLastException(e);
+            var resolver = _exceptionManager.CreateResolver(lastExcpetion);
+            var identifier = resolver.GetIdentifier(lastExcpetion);
+            return GetByString(identifier);
+        }
+
+        public virtual string GetByString(string str)
+        {
+            return _resourceManager.GetString(str);
         }
     }
 }

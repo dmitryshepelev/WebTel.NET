@@ -88,9 +88,9 @@ namespace WebTelNET.Tests.Auth
         //    var mockAccountResourceManager = new Mock<IAccountResourceManager>();
         //    var mockMailManager = new Mock<IMailManager>();
 
-        //    var model = new RequestViewModel {Email = "test@test.test"};
+        //    var model = new SignUpViewModel {Email = "test@test.test"};
         //    var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
-        //    var result = controller.AccountRequest(model);
+        //    var result = controller.SignUp(model);
 
         //    Assert.IsType<BadRequestObjectResult>(result);
         //}
@@ -103,9 +103,9 @@ namespace WebTelNET.Tests.Auth
         //    var mockAccountResourceManager = new Mock<IAccountResourceManager>();
         //    var mockMailManager = new Mock<IMailManager>();
 
-        //    var model = new RequestViewModel { Login = "test" };
+        //    var model = new SignUpViewModel { Login = "test" };
         //    var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
-        //    var result = controller.AccountRequest(model);
+        //    var result = controller.SignUp(model);
 
         //    Assert.IsType<BadRequestObjectResult>(result);
         //}
@@ -118,9 +118,9 @@ namespace WebTelNET.Tests.Auth
         //    var mockAccountResourceManager = new Mock<IAccountResourceManager>();
         //    var mockMailManager = new Mock<IMailManager>();
 
-        //    var model = new RequestViewModel { Login = "test", Email = "test" };
+        //    var model = new SignUpViewModel { Login = "test", Email = "test" };
         //    var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
-        //    var result = controller.AccountRequest(model);
+        //    var result = controller.SignUp(model);
 
         //    Assert.IsType<BadRequestObjectResult>(result);
         //}
@@ -131,18 +131,18 @@ namespace WebTelNET.Tests.Auth
         //    var mockSignInManager = Mocks.MockSignInManager<WTUser>();
         //    var mockAccountRequest = new Mock<IAccountRequestRepository>();
         //    mockAccountRequest
-        //        .Setup(mockManager => mockManager.Create(It.IsAny<AccountRequest>()))
+        //        .Setup(mockManager => mockManager.Create(It.IsAny<SignUp>()))
         //        .Throws(new DbUpdateException(string.Empty, new Exception()));
         //    var mockAccountResourceManager = new Mock<IAccountResourceManager>();
         //    var message = "test message text";;
         //    mockAccountResourceManager
-        //        .Setup(mockManager => mockManager.ResolveException(It.IsAny<DbUpdateException>()))
+        //        .Setup(mockManager => mockManager.GetByException(It.IsAny<DbUpdateException>()))
         //        .Returns(message);
         //    var mockMailManager = new Mock<IMailManager>();
 
-        //    var model = new RequestViewModel { Login = "test", Email = "test" };
+        //    var model = new SignUpViewModel { Login = "test", Email = "test" };
         //    var controller = new AccountController(mockSignInManager.Object, mockAccountRequest.Object, mockAccountResourceManager.Object, mockMailManager.Object);
-        //    var result = controller.AccountRequest(model);
+        //    var result = controller.SignUp(model);
 
         //    Assert.IsType<BadRequestObjectResult>(result);
         //    var apiResponseModel = (ApiResponseModel)((BadRequestObjectResult)result).Value;

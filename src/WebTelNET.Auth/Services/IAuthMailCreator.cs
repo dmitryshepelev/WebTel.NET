@@ -7,6 +7,6 @@ namespace WebTelNET.Auth.Services
 {
     public interface IAuthMailCreator : IMailCreator
     {
-        MimeMessage CreateAccountRequestConfirmationMail(AccountRequestConfirmationMailContext context, IList<string> senders, IList<string> recievers, string subject = null);
+        MimeMessage CreateAccountConfirmationMail(AccountConfirmationMailContext context, string sender, string reciever, string subject = null);
     }
 }

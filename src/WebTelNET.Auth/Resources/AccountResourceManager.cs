@@ -1,19 +1,27 @@
 ﻿using System;
+using System.Resources;
+using WebTelNET.CommonNET.Libs.ExceptionResolvers;
 using WebTelNET.CommonNET.Resources;
 
 namespace WebTelNET.Auth.Resources
 {
     public class AccountResourceManager : WTResourceManager, IAccountResourceManager
     {
-        public override string ResolveException(Exception e)
+        private readonly ResourceManager _resourceManager;
+
+        public AccountResourceManager(IExceptionManager exceptionManager) : base(exceptionManager)
         {
-            var message = base.ResolveException(e);
-            if (string.IsNullOrEmpty(message))
+            _resourceManager = new ResourceManager(typeof(AccountResource));
+        }
+
+        public override string GetByString(string str)
+        {
+            var text = _resourceManager.GetString(str);
+            if (string.IsNullOrEmpty(text))
             {
-                var resolver = new AccountResourceResolver();
-                return resolver.ResolveException(e);
+                text = base.GetByString(str);
             }
-            return message;
+            return text;
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,10 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using WebTelNET.Auth.Resources;
 using WebTelNET.Auth.Services;
 using WebTelNET.CommonNET.Libs;
+using WebTelNET.CommonNET.Libs.ExceptionResolvers;
+using WebTelNET.CommonNET.Resources;
 using WebTelNET.CommonNET.Services;
 using WebTelNET.Models;
 using WebTelNET.Models.Models;
-using WebTelNET.Models.Repository;
 
 namespace WebTelNET.Auth
 {
@@ -56,10 +56,10 @@ namespace WebTelNET.Auth
                 };
             });
 
-            services.AddScoped<IAccountRequestRepository, AccountRequestRepository>();
             services.AddScoped<IAccountResourceManager, AccountResourceManager>();
             services.AddScoped<IMailManager, MailManager>();
             services.AddScoped<IAuthMailCreator, AuthMailCreator>();
+            services.AddScoped<IExceptionManager, ExceptionManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

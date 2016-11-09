@@ -1,14 +1,14 @@
 import { Component, ViewChild } from "@angular/core";
 import { ResponseModel } from "../shared/service";
 import { AlertComponent, AlertType } from "../shared/controls/alert.component";
-import { RequestFormComponent } from "./request-form.component";
+import { SignUpFormComponent } from "./signup-form.component";
 
 
 @Component({
     moduleId: module.id,
-    templateUrl: "request-page.html"
+    templateUrl: "signup-page.html"
 })
-export class RequestPageComponent {
+export class SignUpPageComponent {
 
     @ViewChild(AlertComponent)
     alertComponent: AlertComponent;

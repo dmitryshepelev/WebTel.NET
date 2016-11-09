@@ -15,19 +15,19 @@ namespace WebTelNET.Auth.Services
         {
         }
 
-        public MimeMessage CreateAccountRequestConfirmationMail(
-            AccountRequestConfirmationMailContext context,
-            IList<string> senders,
-            IList<string> recievers,
+        public MimeMessage CreateAccountConfirmationMail(
+            AccountConfirmationMailContext context,
+            string sender,
+            string reciever,
             string subject = null
         )
         {
-            TemplateName = "AccountRequestConfirmationTemplate.cshtml";
+            TemplateName = "AccountConfirmationTemplate.cshtml";
             if (string.IsNullOrEmpty(subject))
             {
-                subject = "Подтверждение запроса на создание аккаунта";
+                subject = "Подтверждение cоздания аккаунта";
             }
-            var message = Create(context, subject, senders, recievers);
+            var message = Create(context, subject, new List<string> { sender }, new List<string> { reciever });
             return message;
         }
     }

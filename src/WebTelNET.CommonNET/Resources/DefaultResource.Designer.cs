@@ -22,13 +22,13 @@ namespace WebTelNET.CommonNET.Resources {
     // with the /str option, or rebuild your VS project.
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class DbResource {
+    public class DefaultResource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
-        internal DbResource() {
+        internal DefaultResource() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace WebTelNET.CommonNET.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WebTelNET.CommonNET.Resources.DbResource", typeof(DbResource).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WebTelNET.CommonNET.Resources.DefaultResource", typeof(DefaultResource).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,11 +60,20 @@ namespace WebTelNET.CommonNET.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Данный логин ули адрес электронной почты уже используется..
+        ///    Looks up a localized string similar to Данный логин или адрес электронной почты уже используется..
         /// </summary>
         public static string _23505 {
             get {
                 return ResourceManager.GetString("23505", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Произошла ошибка. Повторите операцию снова..
+        /// </summary>
+        public static string DefaultError {
+            get {
+                return ResourceManager.GetString("DefaultError", resourceCulture);
             }
         }
     }

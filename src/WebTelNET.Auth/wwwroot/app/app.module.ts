@@ -3,11 +3,11 @@ import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 
-import { AppComponent }  from "./app.component";
+import { AuthAppComponent }  from "./auth-app.component";
 import { LoginPageComponent } from "./login/login-page.component";
 import { LoginFormComponent } from "./login/login-form.component";
-import { RequestPageComponent } from "./request/request-page.component";
-import { RequestFormComponent } from "./request/request-form.component";
+import { SignUpPageComponent } from "./signup/signup-page.component";
+import { SignUpFormComponent } from "./signup/signup-form.component";
 import { routing, appRoutingProviders } from "./app.routing";
 import { AccountService } from "./shared/account.service";
 import { AlertComponent } from "./shared/controls/alert.component";
@@ -26,13 +26,13 @@ import { AlertComponent } from "./shared/controls/alert.component";
         AccountService
     ],
     declarations: [
-        AppComponent,
+        AuthAppComponent,
         LoginPageComponent,
         LoginFormComponent,
-        RequestPageComponent,
-        RequestFormComponent,
+        SignUpPageComponent,
+        SignUpFormComponent,
         AlertComponent
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AuthAppComponent]
 })
-export class AppModule { }
+export class AuthAppModule { }
