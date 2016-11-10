@@ -45,35 +45,37 @@ namespace WebTelNET.Auth.Api
         [Route("login")]
         [HttpPost]
         [Produces(typeof(string[]))]
-        public IActionResult Login([FromBody] LoginViewModel model)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
+            var response = new ApiResponseModel();
             if (ModelState.IsValid)
             {
-                var result = _signInManager.PasswordSignInAsync(model.Login, model.Password, true, false).Result;
+                var result = await _signInManager.PasswordSignInAsync(model.Login, model.Password, true, false);
                 if (result.Succeeded)
                 {
-                    return Ok();
+                    return Ok(response);
                 }
+                response.Data = new Dictionary<string, object> { { "errors", result.ToString() } };
             }
-            var response = new ApiResponseModel
+            else
             {
-                Message = AccountResource.InvalidLoginOrPassword
-            };
+                response.Message = AccountResource.IncorrectDataIsInputed;
+            }
             return BadRequest(response);
         }
 
         [Route("signup")]
         [HttpPost]
         [Produces(typeof(string[]))]
-        public IActionResult SignUp([FromBody] SignUpViewModel model)
+        public async Task<IActionResult> SignUp([FromBody] SignUpViewModel model)
         {
             var response = new ApiResponseModel();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var result = _userManager.CreateAsync(new WTUser { Email = model.Email, UserName = model.Login }, model.Password);
-                    if (result.Result.Succeeded)
+                    var result = await _userManager.CreateAsync(new WTUser { Email = model.Email, UserName = model.Login }, model.Password);
+                    if (result.Succeeded)
                     {
                         var message = _authMailCreator.CreateAccountConfirmationMail(
                             new AccountConfirmationMailContext { SignUpViewModel = model, DateTime = DateTime.Now },
@@ -82,15 +84,19 @@ namespace WebTelNET.Auth.Api
                         );
                         _mailManager.Send(message, _appSettings.Value.MailSettings);
 
-                        return Ok();
+                        return Ok(response);
                     }
-                    response.Message = _resourceManager.GetByString(result.Result.Errors.First().Code);
-                    response.Data = new Dictionary<string, object> { { "errors", result.Result.Errors } };
+                    response.Message = _resourceManager.GetByString(result.Errors.First()?.Code);
+                    response.Data = new Dictionary<string, object> { { "errors", result.Errors } };
                 }
                 catch (Exception e)
                 {
                     response.Message = _resourceManager.GetByException(e);
                 }
+            }
+            else
+            {
+                response.Message = AccountResource.IncorrectDataIsInputed;
             }
             return BadRequest(response);
         }

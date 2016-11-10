@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7200B5EC-BD7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7361E831-AC07-4A8B-B70B-944F98050F50}"
 	ProjectSection(SolutionItems) = preProject
+		ef_commands.txt = ef_commands.txt
 		global.json = global.json
 	EndProjectSection
 EndProject

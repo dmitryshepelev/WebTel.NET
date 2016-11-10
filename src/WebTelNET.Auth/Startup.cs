@@ -5,15 +5,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebTelNET.Auth.Resources;
 using WebTelNET.Auth.Services;
 using WebTelNET.CommonNET.Libs;
 using WebTelNET.CommonNET.Libs.ExceptionResolvers;
-using WebTelNET.CommonNET.Resources;
 using WebTelNET.CommonNET.Services;
 using WebTelNET.Models;
 using WebTelNET.Models.Models;
+using WebTelNET.Models.Repository;
 
 namespace WebTelNET.Auth
 {
@@ -42,6 +43,16 @@ namespace WebTelNET.Auth
                 .AddDefaultTokenProviders();
             services.AddMvc();
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+
+                options.SignIn.RequireConfirmedEmail = true;
+
+                options.User.RequireUniqueEmail = true;
+            });
+
             services.Configure<AppSettings>(settings =>
             {
                 var appSettings = nameof(AppSettings);
@@ -56,6 +67,8 @@ namespace WebTelNET.Auth
                 };
             });
 
+            services.AddScoped<SignInManager<WTUser>, WTSignInManager<WTUser>>();
+            services.AddScoped<UserManager<WTUser>, WTUserManager<WTUser>>();
             services.AddScoped<IAccountResourceManager, AccountResourceManager>();
             services.AddScoped<IMailManager, MailManager>();
             services.AddScoped<IAuthMailCreator, AuthMailCreator>();

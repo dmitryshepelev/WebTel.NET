@@ -60,6 +60,33 @@ namespace WebTelNET.Auth.Resources {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Этот e-mail уже используется..
+        /// </summary>
+        public static string DuplicateEmail {
+            get {
+                return ResourceManager.GetString("DuplicateEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Это имя пользователя уже используется..
+        /// </summary>
+        public static string DuplicateUserName {
+            get {
+                return ResourceManager.GetString("DuplicateUserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Вы ввели некорректные данные..
+        /// </summary>
+        public static string IncorrectDataIsInputed {
+            get {
+                return ResourceManager.GetString("IncorrectDataIsInputed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Неправильный логин или пароль..
         /// </summary>
         public static string InvalidLoginOrPassword {

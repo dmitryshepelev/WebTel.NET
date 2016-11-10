@@ -8,10 +8,12 @@ namespace WebTelNET.Models
     {
         public WTIdentityDbContext(DbContextOptions<WTIdentityDbContext> options) : base(options)
         {
+            
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
         }
     }
 }

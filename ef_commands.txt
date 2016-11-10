@@ -1,0 +1,1 @@
+D:\dev\WebTelNET\src\WebTelNET.Auth>dotnet ef --startup-project . --project ../WebTelNET.Models migrations add initial
