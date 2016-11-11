@@ -48,8 +48,6 @@ namespace WebTelNET.Auth
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
 
-                options.SignIn.RequireConfirmedEmail = true;
-
                 options.User.RequireUniqueEmail = true;
             });
 
@@ -65,6 +63,7 @@ namespace WebTelNET.Auth
                     Login = Configuration[$"{appSettings}:{mailSettings}:Login"],
                     Password = Configuration[$"{appSettings}:{mailSettings}:Password"]
                 };
+                settings.LoginRedirect = Configuration[$"{appSettings}:LoginRedirect"];
             });
 
             services.AddScoped<SignInManager<WTUser>, WTSignInManager<WTUser>>();

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild, OnInit } from "@angular/core";
 import { ResponseModel } from "../shared/service";
 import { AlertComponent, AlertType } from "../shared/controls/alert.component";
 import { SignUpFormComponent } from "./signup-form.component";

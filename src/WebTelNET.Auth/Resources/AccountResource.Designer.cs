@@ -103,5 +103,14 @@ namespace WebTelNET.Auth.Resources {
                 return ResourceManager.GetString("PasswordRequiresUpper", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Спасибо за регистрацию. Теперь вы можете &lt;b&gt;войти&lt;/b&gt; в свой профиль..
+        /// </summary>
+        public static string SignUpSuccess {
+            get {
+                return ResourceManager.GetString("SignUpSuccess", resourceCulture);
+            }
+        }
     }
 }

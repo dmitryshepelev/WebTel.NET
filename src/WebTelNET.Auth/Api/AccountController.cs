@@ -53,9 +53,11 @@ namespace WebTelNET.Auth.Api
                 var result = await _signInManager.PasswordSignInAsync(model.Login, model.Password, true, false);
                 if (result.Succeeded)
                 {
+                    response.Data.Add("redirectUrl", _appSettings.Value.LoginRedirect);
                     return Ok(response);
                 }
-                response.Data = new Dictionary<string, object> { { "errors", result.ToString() } };
+                response.Message = AccountResource.InvalidLoginOrPassword;
+                response.Data.Add("errors", result.ToString());
             }
             else
             {
@@ -84,6 +86,7 @@ namespace WebTelNET.Auth.Api
                         );
                         _mailManager.Send(message, _appSettings.Value.MailSettings);
 
+                        response.Message = AccountResource.SignUpSuccess;
                         return Ok(response);
                     }
                     response.Message = _resourceManager.GetByString(result.Errors.First()?.Code);

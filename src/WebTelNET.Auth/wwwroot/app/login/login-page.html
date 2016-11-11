@@ -1,7 +1,7 @@
-<div class="container-fluid">
+﻿<div class="container-fluid">
     <div class="col-sm-10 col-md-8 col-lg-5 m-x-auto pull-xs-none">
         <alert></alert>
-        <login-form (onLoginRequestCompleted)="onLoginRequestCompleted($event)"></login-form>
+        <login-form (onLoginRequestSuccess)="onLoginRequestSuccess($event)" (onLoginRequestError)="onLoginRequestError($event)" (onLoginFormSubmitingStart)="onLoginFormSubmitingStart($event)"></login-form>
         <span>
             Нужен аккаунт? <a [routerLink]="['/signup']" class="">Создать</a>
         </span>
