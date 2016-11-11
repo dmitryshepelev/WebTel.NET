@@ -96,6 +96,15 @@ namespace WebTelNET.Auth.Resources {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Пароль должен иметь хотя бы одну строчкую букву (a-z).
+        /// </summary>
+        public static string PasswordRequiresLower {
+            get {
+                return ResourceManager.GetString("PasswordRequiresLower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Пароль должени иметь хотя бы одну заглавную букву (A - Z).
         /// </summary>
         public static string PasswordRequiresUpper {
@@ -105,7 +114,16 @@ namespace WebTelNET.Auth.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Спасибо за регистрацию. Теперь вы можете &lt;b&gt;войти&lt;/b&gt; в свой профиль..
+        ///    Looks up a localized string similar to Пароль сличком короткий..
+        /// </summary>
+        public static string PasswordTooShort {
+            get {
+                return ResourceManager.GetString("PasswordTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Спасибо за регистрацию. Теперь вы можете войти в свой профиль..
         /// </summary>
         public static string SignUpSuccess {
             get {

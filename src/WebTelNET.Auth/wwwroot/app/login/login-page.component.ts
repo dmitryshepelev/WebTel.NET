@@ -4,7 +4,6 @@ import { LoginFormComponent } from "./login-form.component";
 import { AlertComponent, AlertType } from "../shared/controls/alert.component";
 import { ResponseModel } from "../shared/service";
 import { Router, ActivatedRoute, Params } from "@angular/router";
-import { Location } from "@angular/common";
 
 
 @Component({
@@ -14,7 +13,7 @@ import { Location } from "@angular/common";
 export class LoginPageComponent implements OnInit {
     private redirectTo: string;
 
-    constructor(private route: ActivatedRoute, private router: Router, private location: Location) { }
+    constructor(private route: ActivatedRoute, private router: Router) { }
 
     @ViewChild(AlertComponent)
     alertComponent: AlertComponent;
@@ -29,8 +28,8 @@ export class LoginPageComponent implements OnInit {
         this.alertComponent.show();
     }
 
-    onLoginFormSubmitingStart(event: any) {
-        console.log("SUBMITING StArT!!!");
+    onSubmitingStart(event: any) {
+
     }
 
     ngOnInit(): void {

@@ -4,23 +4,24 @@ import { AccountService } from "../shared/account.service";
 import { LoginModel } from "./login-model";
 import { ResponseModel } from "../shared/service";
 
-import { SubmitingComponent } from "../shared/interfaces/isubmitable";
+import { ISubmitable, SubmitingComponent } from "../shared/libs/submiting.component";
 
 @Component({
     moduleId: module.id,
     selector: "login-form",
     templateUrl: "login-form.html"
 })
-export class LoginFormComponent extends SubmitingComponent {
+export class LoginFormComponent extends SubmitingComponent implements ISubmitable {
     form: FormGroup;
 
     @Output()
     onLoginRequestSuccess = new EventEmitter<ResponseModel>();
     @Output()
     onLoginRequestError = new EventEmitter<ResponseModel>();
-
     @Output()
-    onLoginFormSubmitingStart = new EventEmitter<any>();
+    onSubmitingStart = new EventEmitter<any>();
+    @Output()
+    onSubmitingEnd = new EventEmitter<any>();
 
     constructor(private accountService: AccountService, @Inject(FormBuilder) builder: FormBuilder) {
         super();
@@ -29,14 +30,18 @@ export class LoginFormComponent extends SubmitingComponent {
             password: ["", Validators.required]
         });
     }
-
+    
     submit() {
         const model = new LoginModel(this.form.controls["login"].value, this.form.controls["password"].value);
-        this.submiting = true;
-        this.onLoginFormSubmitingStart.emit();
+        this.startSubmiting();
         this.accountService.login(model)
             .then(response => this.onLoginRequestSuccess.emit(response))
             .catch(error => this.onLoginRequestError.emit(error))
-            .then(() => this.submiting = false);
+            .then(() => this.endSubmiting());
+    }
+
+    startSubmiting(): void {
+        super.startSubmiting();
+        this.onSubmitingStart.emit();
     }
 }

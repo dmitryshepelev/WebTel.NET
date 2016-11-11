@@ -129,10 +129,16 @@
   <data name="InvalidLoginOrPassword" xml:space="preserve">
     <value>Неправильный логин или пароль.</value>
   </data>
+  <data name="PasswordRequiresLower" xml:space="preserve">
+    <value>Пароль должен иметь хотя бы одну строчкую букву (a-z)</value>
+  </data>
   <data name="PasswordRequiresUpper" xml:space="preserve">
     <value>Пароль должени иметь хотя бы одну заглавную букву (A - Z)</value>
   </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>Пароль сличком короткий.</value>
+  </data>
   <data name="SignUpSuccess" xml:space="preserve">
-    <value>Спасибо за регистрацию. Теперь вы можете &lt;b&gt;войти&lt;/b&gt; в свой профиль.</value>
+    <value>Спасибо за регистрацию. Теперь вы можете войти в свой профиль.</value>
   </data>
 </root>
