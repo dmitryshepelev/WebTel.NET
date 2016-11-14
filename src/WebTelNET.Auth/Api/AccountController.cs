@@ -76,9 +76,12 @@ namespace WebTelNET.Auth.Api
             {
                 try
                 {
-                    var result = await _userManager.CreateAsync(new WTUser { Email = model.Email, UserName = model.Login }, model.Password);
+                    var user = new WTUser {Email = model.Email, UserName = model.Login};
+                    var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
+                        await _userManager.AddToRoleAsync(user, _appSettings.Value.Roles.UserRole);
+
                         var message = _authMailCreator.CreateAccountConfirmationMail(
                             new AccountConfirmationMailContext { SignUpViewModel = model, DateTime = DateTime.Now },
                             _appSettings.Value.MailSettings.Login,

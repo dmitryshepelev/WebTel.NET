@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,12 +8,14 @@ using Microsoft.Extensions.Logging;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using WebTelNET.Auth.Resources;
 using WebTelNET.Auth.Services;
 using WebTelNET.CommonNET.Libs;
 using WebTelNET.CommonNET.Libs.ExceptionResolvers;
 using WebTelNET.CommonNET.Services;
 using WebTelNET.Models;
+using WebTelNET.Models.Libs;
 using WebTelNET.Models.Models;
 using WebTelNET.Models.Repository;
 
@@ -64,6 +67,14 @@ namespace WebTelNET.Auth
                     Password = Configuration[$"{appSettings}:{mailSettings}:Password"]
                 };
                 settings.LoginRedirect = Configuration[$"{appSettings}:LoginRedirect"];
+
+                var databaseSettings = nameof(DatabaseSettings);
+                var roleSettings = nameof(RoleSettings);
+                settings.Roles = new RoleSettings
+                {
+                    AdminRole = Configuration[$"{appSettings}:{databaseSettings}:{roleSettings}:AdminRole"],
+                    UserRole = Configuration[$"{appSettings}:{databaseSettings}:{roleSettings}:UserRole"]
+                };
             });
 
             services.AddScoped<SignInManager<WTUser>, WTSignInManager<WTUser>>();
@@ -90,8 +101,25 @@ namespace WebTelNET.Auth
 
             app.UseMvc(routes =>
             {
-                routes.MapSpaFallbackRoute("spa-fallback", new { controller = "home", action = "index" });
+                routes.MapSpaFallbackRoute("spa-fallback", new {controller = "home", action = "index"});
             });
+
+            try
+            {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    serviceScope.ServiceProvider.GetService<WTIdentityDbContext>().Database.Migrate();
+
+                    var userManager = app.ApplicationServices.GetService<UserManager<WTUser>>();
+                    var roleManager = app.ApplicationServices.GetService<RoleManager<WTRole>>();
+                    var appSettings = app.ApplicationServices.GetService<IOptions<AppSettings>>();
+
+                    serviceScope.ServiceProvider.GetService<WTIdentityDbContext>().EnsureSeedData(userManager, roleManager, appSettings.Value);
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

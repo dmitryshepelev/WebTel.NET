@@ -18,6 +18,4 @@ export class AccountService extends  ServiceBase {
     signup(model: SignUpModel): Promise<any> {
         return this.post(this.baseUrl + "/signup/", model);
     }
-
-
 }

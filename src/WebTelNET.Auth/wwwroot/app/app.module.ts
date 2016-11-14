@@ -10,6 +10,7 @@ import { SignUpPageComponent } from "./signup/signup-page.component";
 import { SignUpFormComponent } from "./signup/signup-form.component";
 import { routing, appRoutingProviders } from "./app.routing";
 import { AccountService } from "./shared/account.service";
+import { StorageService } from "./shared/storage.service";
 import { AlertComponent } from "./shared/controls/alert.component";
 
 
@@ -23,7 +24,8 @@ import { AlertComponent } from "./shared/controls/alert.component";
     ],
     providers: [
         appRoutingProviders,
-        AccountService
+        AccountService,
+        StorageService
     ],
     declarations: [
         AuthAppComponent,
