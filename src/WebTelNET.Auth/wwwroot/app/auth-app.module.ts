@@ -8,7 +8,7 @@ import { LoginPageComponent } from "./login/login-page.component";
 import { LoginFormComponent } from "./login/login-form.component";
 import { SignUpPageComponent } from "./signup/signup-page.component";
 import { SignUpFormComponent } from "./signup/signup-form.component";
-import { routing, appRoutingProviders } from "./app.routing";
+import { routing, appRoutingProviders } from "./auth-app.routing";
 import { AccountService } from "./shared/account.service";
 import { StorageService } from "./shared/storage.service";
 import { AlertComponent } from "./shared/controls/alert.component";

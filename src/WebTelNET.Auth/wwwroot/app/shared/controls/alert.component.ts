@@ -1,4 +1,5 @@
-﻿import { Component } from "@angular/core";
+﻿import { Component, OnInit } from "@angular/core";
+import { StorageService } from "../storage.service";
 
 export enum AlertType {
     Success,
@@ -18,14 +19,14 @@ export class AlertModel {
     selector: "alert",
     templateUrl: "alert.html"
 })
-export class AlertComponent {
+export class AlertComponent implements OnInit {
     private classes: string[] = ["success", "danger", "warning", "info"];
     private model: AlertModel;
 
     protected alertClass: string;
     protected isShown = false;
 
-    constructor() {
+    constructor(private storageService: StorageService) {
         this.model = new AlertModel();
     }
 
@@ -47,5 +48,16 @@ export class AlertComponent {
 
     hide(): void {
         this.isShown = false;
+    }
+
+    ngOnInit(): void {
+        var alert = this.storageService.getItem("alert") as AlertModel;
+        if (alert != null) {
+            this.message = alert.message;
+            this.title = alert.title;
+            this.type = alert.type;
+
+            this.show();
+        }
     }
 }

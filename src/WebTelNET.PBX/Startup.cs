@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace WebTelNET.PBX
 {
@@ -27,6 +29,12 @@ namespace WebTelNET.PBX
         {
             // Add framework services.
             services.AddMvc();
+
+            services.Configure<AppSettings>(settings =>
+            {
+                var appSettings = nameof(AppSettings);
+                settings.LoginUrl = Configuration[$"{appSettings}:LoginUrl"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +42,14 @@ namespace WebTelNET.PBX
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            var appSettings = app.ApplicationServices.GetService<IOptions<AppSettings>>();
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                
+                LoginPath = new PathString(appSettings.Value.LoginUrl),
+                ReturnUrlParameter = appSettings.Value.RedirectUrlParameter
+            });
 
             app.UseStaticFiles();
 

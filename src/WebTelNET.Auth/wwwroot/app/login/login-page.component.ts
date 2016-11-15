@@ -4,7 +4,6 @@ import { LoginFormComponent } from "./login-form.component";
 import { AlertComponent, AlertType, AlertModel } from "../shared/controls/alert.component";
 import { ResponseModel } from "../shared/service";
 import { Router, ActivatedRoute, Params } from "@angular/router";
-import { StorageService } from "../shared/storage.service";
 
 
 @Component({
@@ -14,7 +13,7 @@ import { StorageService } from "../shared/storage.service";
 export class LoginPageComponent implements OnInit {
     private redirectTo: string;
 
-    constructor(private route: ActivatedRoute, private router: Router, private storageService: StorageService) { }
+    constructor(private route: ActivatedRoute, private router: Router) { }
 
     @ViewChild(AlertComponent)
     alertComponent: AlertComponent;
@@ -44,10 +43,5 @@ export class LoginPageComponent implements OnInit {
         this.route.queryParams.forEach((params: Params) => {
             this.redirectTo = params["then"];
         });
-
-        var alert = this.storageService.getItem("alert") as AlertModel;
-        if (alert != null) {
-            this.showAlert(alert);
-        }
     }
 }

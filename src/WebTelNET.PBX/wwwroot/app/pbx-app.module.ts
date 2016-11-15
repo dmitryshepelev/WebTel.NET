@@ -3,10 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { AppComponent }  from './app.component';
+import { PBXAppComponent }  from './pbx-app.component';
 import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
-import { routing, appRoutingProviders } from './app.routing';
+import { routing, appRoutingProviders } from './pbx-app.routing';
 import { CharacterService } from './shared/character.service';
 
 @NgModule({
@@ -21,10 +20,9 @@ import { CharacterService } from './shared/character.service';
         CharacterService
     ],
     declarations: [
-        AppComponent,
-        HomeComponent,
-        AboutComponent
+        PBXAppComponent,
+        HomeComponent
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [PBXAppComponent]
 })
 export class AppModule { }
