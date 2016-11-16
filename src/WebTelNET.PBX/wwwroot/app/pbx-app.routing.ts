@@ -1,9 +1,13 @@
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent } from './home/home.component';
+import { StatisticPageComponent } from './statistic/statistic-page.component';
+import { CallCostPageComponent } from "./call-cost/call-cost-page.component";
+
 
 const appRoutes: Routes = [
-    { path: '', component: HomeComponent },
+    { path: '', redirectTo: "statistic", pathMatch: "full" },
+    { path: 'statistic', component: StatisticPageComponent },
+    { path: 'cost', component: CallCostPageComponent }
 ];
 
 export const appRoutingProviders: any[] = [

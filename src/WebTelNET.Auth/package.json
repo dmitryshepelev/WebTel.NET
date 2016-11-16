@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "typescript": "^2.0.2",
-    "typings": "^1.0.4"
+    "typings": "^1.0.4",
+    "oidc-client": "1.2.1-beta.4"
   }
 }

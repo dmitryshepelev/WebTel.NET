@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebTelNET.PBX.Api
@@ -8,6 +9,7 @@ namespace WebTelNET.PBX.Api
     {
         [HttpGet]
         [Produces(typeof(string[]))]
+        [Authorize]
         public IActionResult Get()
         {
             return Ok(new[] {

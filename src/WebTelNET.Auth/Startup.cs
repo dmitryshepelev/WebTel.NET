@@ -18,6 +18,7 @@ using WebTelNET.Models;
 using WebTelNET.Models.Libs;
 using WebTelNET.Models.Models;
 using WebTelNET.Models.Repository;
+using WebTelNET.Auth;
 
 namespace WebTelNET.Auth
 {
@@ -45,6 +46,12 @@ namespace WebTelNET.Auth
                 .AddEntityFrameworkStores<WTIdentityDbContext>()
                 .AddDefaultTokenProviders();
             services.AddMvc();
+
+            services.AddIdentityServer()
+                .AddTemporarySigningCredential()
+                .AddInMemoryScopes(IdentityServerConfig.GetScopes())
+                .AddInMemoryClients(IdentityServerConfig.GetClients())
+                .AddAspNetIdentity<WTUser>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -93,6 +100,8 @@ namespace WebTelNET.Auth
 
             app.UseStaticFiles();
             app.UseIdentity();
+            app.UseIdentityServer();
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules")),

@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { PBXAppComponent }  from './pbx-app.component';
-import { HomeComponent } from './home/home.component';
+import { StatisticPageComponent } from './statistic/statistic-page.component';
+import { CallCostPageComponent } from './call-cost/call-cost-page.component';
 import { routing, appRoutingProviders } from './pbx-app.routing';
 import { CharacterService } from './shared/character.service';
 
@@ -21,7 +22,8 @@ import { CharacterService } from './shared/character.service';
     ],
     declarations: [
         PBXAppComponent,
-        HomeComponent
+        StatisticPageComponent,
+        CallCostPageComponent
     ],
     bootstrap: [PBXAppComponent]
 })

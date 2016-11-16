@@ -4,9 +4,9 @@ import { CharacterService } from '../shared/character.service';
 
 @Component({
     moduleId: module.id,
-    templateUrl: 'home.component.html'
+    templateUrl: 'statistic-page.html'
 })
-export class HomeComponent implements OnInit {
+export class StatisticPageComponent implements OnInit {
     characters: string[];
 
     constructor(private characterService: CharacterService) { }

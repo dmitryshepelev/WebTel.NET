@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,8 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using WebTelNET.CommonNET.Libs;
+using WebTelNET.CommonNET.Libs.ExceptionResolvers;
+using WebTelNET.CommonNET.Services;
+using WebTelNET.Models;
+using WebTelNET.Models.Libs;
+using WebTelNET.Models.Models;
+using WebTelNET.Models.Repository;
 
 namespace WebTelNET.PBX
 {
@@ -28,13 +37,13 @@ namespace WebTelNET.PBX
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddDbContext<WTIdentityDbContext>(
+                options => options.UseNpgsql(Configuration.GetConnectionString("PostgresConnectionString")));
+            services.AddIdentity<WTUser, WTRole>()
+                .AddEntityFrameworkStores<WTIdentityDbContext>()
+                .AddDefaultTokenProviders();
 
-            services.Configure<AppSettings>(settings =>
-            {
-                var appSettings = nameof(AppSettings);
-                settings.LoginUrl = Configuration[$"{appSettings}:LoginUrl"];
-            });
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,16 +52,31 @@ namespace WebTelNET.PBX
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            var appSettings = app.ApplicationServices.GetService<IOptions<AppSettings>>();
+            app.UseIdentity();
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                
-                LoginPath = new PathString(appSettings.Value.LoginUrl),
-                ReturnUrlParameter = appSettings.Value.RedirectUrlParameter
+                AuthenticationScheme = "Cookies"
+            });
+            app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
+            {
+                AuthenticationScheme = "oidc",
+                SignInScheme = "Cookies",
+
+                Authority = "http://localhost:5000",
+                RequireHttpsMetadata = false,
+
+                ClientId = "pbx",
+                ClientSecret = "secret",
+
+                ResponseType = "code id_token",
+                Scope = {"api", "offline_access"},
+
+                GetClaimsFromUserInfoEndpoint = true,
+                SaveTokens = true
             });
 
             app.UseStaticFiles();
-
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules")),
