@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Newtonsoft.Json;
 
 namespace WebTelNET.PBX.Services
@@ -33,6 +32,12 @@ namespace WebTelNET.PBX.Services
         {
             StatusCode = statusCode;
         }
+    }
+
+    public struct ZadarmaResponseStatus
+    {
+        public static string Success => "success";
+        public static string Error => "error";
     }
 
     /// <summary>
@@ -126,28 +131,41 @@ namespace WebTelNET.PBX.Services
             return string.Join("$", sorted.Select(x => $"{x.Key}={x.Value}"));
         }
 
-        private async Task<ZadarmaResponseModel> ResolveRequestContentAsync<T>(HttpContent content) where T : ZadarmaResponseModel
+        /// <summary>
+        /// Creates a ZadarmaResponseModel of type T
+        /// </summary>
+        /// <param name="content">Response content</param>
+        /// <typeparam name="T">Type of the model to fill the successfully completed request</typeparam>
+        /// <returns>Instance of T</returns>
+        private async Task<ZadarmaResponseModel> ResolveRequestContentAsync<T>(HttpContent content)
+            where T : ZadarmaResponseModel
         {
             var data = await content.ReadAsStringAsync();
-            using (StringReader sr = new StringReader(data))
+            using (var sr = new StringReader(data))
             {
-                JsonTextReader jtr = new JsonTextReader(sr);
-                JsonSerializer serializer = new JsonSerializer();
-                ZadarmaResponseModel model;
-                try
-                {
-                    model = serializer.Deserialize<T>(jtr);
-                }
-                catch (Exception)
-                {
-                    model = serializer.Deserialize<ErrorResponseModel>(jtr);
-                }
-                finally
-                {
-                    jtr.Close();
-                }
+                var jtr = new JsonTextReader(sr);
+                var serializer = new JsonSerializer();
+                ZadarmaResponseModel model = serializer.Deserialize<T>(jtr);
+                jtr.Close();
                 return model;
             }
+        }
+
+        /// <summary>
+        /// Creates a ZadarmaResponseModel of type T
+        /// </summary>
+        /// <param name="content">Response content</param>
+        /// <param name="isSuccessStatusCode">The flag to define if the request has completed succesfully</param>
+        /// <typeparam name="T">Type of the model to fill the successfully completed request</typeparam>
+        /// <returns>Instance of T</returns>
+        private async Task<ZadarmaResponseModel> ResolveRequestContentAsync<T>(HttpContent content,
+            bool isSuccessStatusCode) where T : ZadarmaResponseModel
+        {
+            if (isSuccessStatusCode)
+            {
+                return await ResolveRequestContentAsync<T>(content);
+            }
+            return await ResolveRequestContentAsync<ErrorResponseModel>(content);
         }
 
         private async Task<HttpResponseMessage> ExecuteRequestAsync(HttpMethod method, string apiMethod, IDictionary<string, string> parameters = null)
@@ -164,8 +182,7 @@ namespace WebTelNET.PBX.Services
                 var queryString = GetQueryString(parameters);
                 var str = $"{requestUri}{queryString}{GetMD5(queryString)}";
                 var sign = Convert.ToBase64String(Encoding.UTF8.GetBytes(GetSHA1(str, SecretKey)));
-                Console.WriteLine(requestUri);
-                Console.WriteLine(sign);
+
                 if (!string.IsNullOrEmpty(queryString))
                 {
                     requestUri = $"{requestUri}?{queryString}";
@@ -184,11 +201,7 @@ namespace WebTelNET.PBX.Services
         public async Task<ZadarmaResponseModel> GetBalanceAsync()
         {
             var response = await ExecuteRequestAsync(HttpMethod.Get, "info/balance");
-            if (response.IsSuccessStatusCode)
-            {
-                return await ResolveRequestContentAsync<BalanceResponseModel>(response.Content);
-            }
-            throw new ZadarmaServiceRequestException(response.StatusCode);
+            return await ResolveRequestContentAsync<BalanceResponseModel>(response.Content, response.IsSuccessStatusCode);
         }
         
         /// <summary>
@@ -199,11 +212,7 @@ namespace WebTelNET.PBX.Services
         public async Task<ZadarmaResponseModel> GetPriceInfoAsync(string number)
         {
             var response = await ExecuteRequestAsync(HttpMethod.Get, "info/price", new Dictionary<string, string> { { nameof(number), number } });
-            if (response.IsSuccessStatusCode)
-            {
-                return await ResolveRequestContentAsync<PriceInfoResponseModel>(response.Content);
-            }
-            throw new ZadarmaServiceRequestException(response.StatusCode);
+            return await ResolveRequestContentAsync<PriceInfoResponseModel>(response.Content, response.IsSuccessStatusCode);
         }
 
         /// <summary>

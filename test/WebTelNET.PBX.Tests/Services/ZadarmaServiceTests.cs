@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using WebTelNET.PBX.Services;
+﻿using WebTelNET.PBX.Services;
 using Xunit;
 
 namespace WebTelNET.PBX.Tests.Services
@@ -53,17 +47,14 @@ namespace WebTelNET.PBX.Tests.Services
         }
 
         [Fact]
-        public void GetBalanceAsync_Error_Unauthorized()
+        public void GetBalanceAsync_Failure_Unauthorized()
         {
             var service = new ZadarmaService(_userKey, _userKey);
-            var e = Assert.Throws<AggregateException>(() => service.GetBalanceAsync().Result);
+            var result = service.GetBalanceAsync().Result;
 
-            Assert.Equal(1, e.InnerExceptions.Count);
-            var exception = e.InnerExceptions.First();
-            Assert.IsType<ZadarmaServiceRequestException>(exception);
-
-            var zadarmaException = (ZadarmaServiceRequestException) exception;
-            Assert.Equal(HttpStatusCode.Unauthorized, zadarmaException.StatusCode);
+            Assert.Equal(ZadarmaResponseStatus.Error, result.Status);
+            var model = (ErrorResponseModel) result;
+            Assert.Equal("Not authorized", model.Message);
         }
 
         [Fact]
@@ -87,10 +78,20 @@ namespace WebTelNET.PBX.Tests.Services
         }
 
         [Fact]
-        public void GetPriceInfoAsync_Error_ErrorResponseModelIsGot()
+        public void GetPriceInfoAsync_Failure_ErrorResponseModelIsGot_InvalidNumber()
         {
             var service = new ZadarmaService(_userKey, _secretKey);
             const string testNumber = "InvalidNumber";
+            var result = service.GetPriceInfoAsync(testNumber).Result;
+
+            Assert.IsType<ErrorResponseModel>(result);
+        }
+
+        [Fact]
+        public void GetPriceInfoAsync_Failure_ErrorResponseModelIsGot_EmptyNumber()
+        {
+            var service = new ZadarmaService(_userKey, _secretKey);
+            const string testNumber = "";
             var result = service.GetPriceInfoAsync(testNumber).Result;
 
             Assert.IsType<ErrorResponseModel>(result);
