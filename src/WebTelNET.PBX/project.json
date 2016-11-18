@@ -24,7 +24,8 @@
     "Microsoft.AspNetCore.Mvc.Abstractions": "1.0.1",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.1",
     "IdentityModel": "2.0.1",
-    "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.0.*"
+    "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.0.*",
+    "Microsoft.AspNetCore.WebUtilities": "1.1.0"
   },
 
   "tools": {

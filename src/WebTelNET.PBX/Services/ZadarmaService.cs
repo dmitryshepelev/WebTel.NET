@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 
 namespace WebTelNET.PBX.Services
@@ -40,6 +42,8 @@ namespace WebTelNET.PBX.Services
         public static string Error => "error";
     }
 
+    #region Abstractions
+
     /// <summary>
     /// Represents Zadarma base response model
     /// </summary>
@@ -51,6 +55,40 @@ namespace WebTelNET.PBX.Services
         public string Status { get; set; }
     }
 
+    /// <summary>
+    /// Statistics info base model
+    /// </summary>
+    public abstract class StatisticsInfo
+    {
+        public string Sip { get; set; }
+        public DateTime CallStart { get; set; }
+        public string Disposition { get; set; }
+    }
+
+    /// <summary>
+    /// Statistics response base model
+    /// </summary>
+    public abstract class StatisticsResponseModel : ZadarmaResponseModel
+    {
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+    }
+
+    /// <summary>
+    /// Provide to class working with Currency property
+    /// </summary>
+    public interface ICurrency
+    {
+        string Currency { get; set; }
+    }
+
+    #endregion
+
+    #region Response Models
+
+    /// <summary>
+    /// Response model for failure api responses
+    /// </summary>
     public class ErrorResponseModel : ZadarmaResponseModel
     {
         /// <summary>
@@ -59,13 +97,36 @@ namespace WebTelNET.PBX.Services
         public string Message { get; set; }
     }
 
-    public class BalanceResponseModel : ZadarmaResponseModel
+    /// <summary>
+    /// Response model for /info/balance/ api method
+    /// </summary>
+    public class BalanceResponseModel : ZadarmaResponseModel, ICurrency
     {
         public float Balance { get; set; }
         public string Currency { get; set; }
     }
 
-    public class PriceInfo
+    /// <summary>
+    /// Response model for /info/price/ api method
+    /// </summary>
+    public class PriceInfoResponseModel : ZadarmaResponseModel
+    {
+        public PriceInfo Info { get; set; }
+    }
+
+    /// <summary>
+    /// Response model for /statistics/ api method
+    /// </summary>
+    public class OverallStatisticsResponseModel : StatisticsResponseModel
+    {
+        public IList<OverallStatisticsInfo> Stats { get; set; }
+    }
+
+    #endregion
+
+    #region Response items
+
+    public class PriceInfo : ICurrency
     {
         public string Prefix { get; set; }
         public string Description { get; set; }
@@ -73,14 +134,38 @@ namespace WebTelNET.PBX.Services
         public string Currency { get; set; }
     }
 
-    public class PriceInfoResponseModel : ZadarmaResponseModel
+    public class OverallStatisticsInfo : StatisticsInfo, ICurrency
     {
-        public PriceInfo Info { get; set; }
+        public string Id { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+        public string Description { get; set; }
+        public int BillSeconds { get; set; }
+        public float Cost { get; set; }
+        public float BillCost { get; set; }
+        public string Currency { get; set; }
     }
 
+    public class PBXStatisticsInfo : StatisticsInfo
+    {
+        public string Call_Id { get; set; }
+        public string Clid { get; set; }
+        public string Destination { get; set; }
+        public int Seconds { get; set; }
+        public bool Is_Recorded { get; set; }
+        public string PBX_Call_Id { get; set; }
+    }
+
+    #endregion
+
+
+    /// <summary>
+    /// Service to provide access to Zadarma API
+    /// </summary>
     public class ZadarmaService
     {
         private const string BaseAddress = "https://api.zadarma.com";
+        private const string DateTimeTemplate = "yyyy-MM-dd HH:mm:ss";
 
         public string UserKey { get; }
         public string SecretKey { get; }
@@ -122,14 +207,24 @@ namespace WebTelNET.PBX.Services
 
         private string GetRequestUri(string apiMethod)
         {
-            return $"/{ApiVersion}/{apiMethod}/";
+            return $"/{ApiVersion}/{apiMethod}";
         }
 
         private string GetQueryString(IDictionary<string, string> parameters)
         {
             IOrderedEnumerable<KeyValuePair<string, string>> sorted = parameters.OrderBy(x => x.Key);
-            return string.Join("$", sorted.Select(x => $"{x.Key}={x.Value}"));
+            return string.Join("&", sorted.Select(x => $"{x.Key}={x.Value}"));
         }
+
+        //private string EncodeQueryString(string str)
+        //{
+        //    var map = new Dictionary<char, string>()
+        //    {
+        //        {' ', "+"},
+        //        {':', "%3A"}
+        //    };
+        //    str.Select(x => map.Select(y => y.Key == x) ? )
+        //}
 
         /// <summary>
         /// Creates a ZadarmaResponseModel of type T
@@ -186,7 +281,12 @@ namespace WebTelNET.PBX.Services
                 if (!string.IsNullOrEmpty(queryString))
                 {
                     requestUri = $"{requestUri}?{queryString}";
+//                    requestUri = QueryHelpers.AddQueryString(requestUri, parameters);
                 }
+                Console.WriteLine(queryString);
+                Console.WriteLine(requestUri);
+                Console.WriteLine(str);
+                Console.WriteLine(sign);
                 var request = new HttpRequestMessage(method, requestUri);
                 request.Headers.TryAddWithoutValidation("Authorization", UserKey + ":" + sign);
 
@@ -213,6 +313,29 @@ namespace WebTelNET.PBX.Services
         {
             var response = await ExecuteRequestAsync(HttpMethod.Get, "info/price", new Dictionary<string, string> { { nameof(number), number } });
             return await ResolveRequestContentAsync<PriceInfoResponseModel>(response.Content, response.IsSuccessStatusCode);
+        }
+
+        /// <summary>
+        /// Get overall statistics
+        /// </summary>
+        /// <param name="start">Start date of the statistics</param>
+        /// <param name="end">End date of the statistics</param>
+        /// <returns></returns>
+        public async Task<ZadarmaResponseModel> GetOverallStatisticsAsync(DateTime? start = null, DateTime? end = null)
+        {
+            var parameters = new Dictionary<string, string>();
+            if (start != null)
+            {
+                parameters.Add(nameof(start), start.Value.ToString(DateTimeTemplate));
+                //parameters.Add(nameof(start), "2016-11-17+00%3A00%3A00");
+            }
+            if (end != null)
+            {
+                parameters.Add(nameof(end), end.Value.ToString(DateTimeTemplate));
+            }
+            //Console.WriteLine(start.Value.ToString(DateTimeTemplate));
+            var response = await ExecuteRequestAsync(HttpMethod.Get, "statistics", parameters);
+            return await ResolveRequestContentAsync<OverallStatisticsResponseModel>(response.Content, response.IsSuccessStatusCode);
         }
 
         /// <summary>

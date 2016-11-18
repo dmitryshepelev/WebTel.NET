@@ -1,4 +1,5 @@
-﻿using WebTelNET.PBX.Services;
+﻿using System;
+using WebTelNET.PBX.Services;
 using Xunit;
 
 namespace WebTelNET.PBX.Tests.Services
@@ -14,7 +15,7 @@ namespace WebTelNET.PBX.Tests.Services
             var service = new ZadarmaService(_userKey, _secretKey);
             var result = service.GetBalanceAsync().Result;
 
-            Assert.Equal("success", result.Status);
+            Assert.Equal(ZadarmaResponseStatus.Success, result.Status);
         }
 
         [Fact]
@@ -64,7 +65,7 @@ namespace WebTelNET.PBX.Tests.Services
             const string testNumber = "375259189613";
             var result = service.GetPriceInfoAsync(testNumber).Result;
 
-            Assert.Equal("success", result.Status);
+            Assert.Equal(ZadarmaResponseStatus.Success, result.Status);
         }
 
         [Fact]
@@ -95,6 +96,54 @@ namespace WebTelNET.PBX.Tests.Services
             var result = service.GetPriceInfoAsync(testNumber).Result;
 
             Assert.IsType<ErrorResponseModel>(result);
+        }
+
+        [Fact]
+        public void GetOverallStatisticsAsync_Success()
+        {
+            var service = new ZadarmaService(_userKey, _secretKey);
+            var result = service.GetOverallStatisticsAsync().Result;
+
+            Assert.Equal(ZadarmaResponseStatus.Success, result.Status);
+        }
+
+        [Fact]
+        public void GetOverallStatisticsAsync_Success_OverallStatisticsResponseModelIsGot()
+        {
+            var service = new ZadarmaService(_userKey, _secretKey);
+            var result = service.GetOverallStatisticsAsync().Result;
+
+            Assert.IsType<OverallStatisticsResponseModel>(result);
+        }
+
+        [Fact]
+        public void GetOverallStatisticsAsync_Success_StartPropertyIsValid()
+        {
+            var service = new ZadarmaService(_userKey, _secretKey);
+            var result = service.GetOverallStatisticsAsync().Result;
+            var model = (OverallStatisticsResponseModel) result;
+
+            Assert.Equal(1, model.Start.Day);
+        }
+
+        [Fact]
+        public void GetOverallStatisticsAsync_Success_EndPropertyIsValid()
+        {
+            var service = new ZadarmaService(_userKey, _secretKey);
+            var result = service.GetOverallStatisticsAsync().Result;
+            var model = (OverallStatisticsResponseModel)result;
+
+            Assert.Equal(DateTime.Today.Day, model.End.Day);
+        }
+
+        [Fact]
+        public void GetOverallStatisticsAsync_Success_DayQuery_StartPropertyIsValid()
+        {
+            var service = new ZadarmaService(_userKey, _secretKey);
+            var result = service.GetOverallStatisticsAsync(DateTime.Now.AddDays(+1)).Result;
+            var model = (OverallStatisticsResponseModel)result;
+
+            Assert.Equal(DateTime.Now.AddDays(-1).Day, model.Start.Day);
         }
     }
 }
