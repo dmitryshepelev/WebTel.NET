@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 
 namespace WebTelNET.PBX.Services
@@ -40,6 +38,12 @@ namespace WebTelNET.PBX.Services
     {
         public static string Success => "success";
         public static string Error => "error";
+    }
+
+    public enum ResponseVersion
+    {
+        Old = 1,
+        New = 2
     }
 
     #region Abstractions
@@ -122,6 +126,15 @@ namespace WebTelNET.PBX.Services
         public IList<OverallStatisticsInfo> Stats { get; set; }
     }
 
+    /// <summary>
+    /// Response model for /statistics/pbx/ api method
+    /// </summary>
+    public class PBXStatisticsResponseModel : StatisticsResponseModel
+    {
+        public ResponseVersion Version { get; set; }
+        public IList<PBXStatisticsInfo> Stats { get; set; }
+    }
+
     #endregion
 
     #region Response items
@@ -157,7 +170,6 @@ namespace WebTelNET.PBX.Services
     }
 
     #endregion
-
 
     /// <summary>
     /// Service to provide access to Zadarma API
@@ -213,18 +225,8 @@ namespace WebTelNET.PBX.Services
         private string GetQueryString(IDictionary<string, string> parameters)
         {
             IOrderedEnumerable<KeyValuePair<string, string>> sorted = parameters.OrderBy(x => x.Key);
-            return string.Join("&", sorted.Select(x => $"{x.Key}={x.Value}"));
+            return string.Join("&", sorted.Select(x => $"{x.Key}={WebUtility.UrlEncode(x.Value)}"));
         }
-
-        //private string EncodeQueryString(string str)
-        //{
-        //    var map = new Dictionary<char, string>()
-        //    {
-        //        {' ', "+"},
-        //        {':', "%3A"}
-        //    };
-        //    str.Select(x => map.Select(y => y.Key == x) ? )
-        //}
 
         /// <summary>
         /// Creates a ZadarmaResponseModel of type T
@@ -281,12 +283,7 @@ namespace WebTelNET.PBX.Services
                 if (!string.IsNullOrEmpty(queryString))
                 {
                     requestUri = $"{requestUri}?{queryString}";
-//                    requestUri = QueryHelpers.AddQueryString(requestUri, parameters);
                 }
-                Console.WriteLine(queryString);
-                Console.WriteLine(requestUri);
-                Console.WriteLine(str);
-                Console.WriteLine(sign);
                 var request = new HttpRequestMessage(method, requestUri);
                 request.Headers.TryAddWithoutValidation("Authorization", UserKey + ":" + sign);
 
@@ -327,15 +324,34 @@ namespace WebTelNET.PBX.Services
             if (start != null)
             {
                 parameters.Add(nameof(start), start.Value.ToString(DateTimeTemplate));
-                //parameters.Add(nameof(start), "2016-11-17+00%3A00%3A00");
             }
             if (end != null)
             {
                 parameters.Add(nameof(end), end.Value.ToString(DateTimeTemplate));
             }
-            //Console.WriteLine(start.Value.ToString(DateTimeTemplate));
             var response = await ExecuteRequestAsync(HttpMethod.Get, "statistics", parameters);
             return await ResolveRequestContentAsync<OverallStatisticsResponseModel>(response.Content, response.IsSuccessStatusCode);
+        }
+
+        /// <summary>
+        /// Get PBX statitics
+        /// </summary>
+        /// <param name="start">Start date of the statistics</param>
+        /// <param name="end">End date of the statistics</param>
+        /// <returns></returns>
+        public async Task<ZadarmaResponseModel> GetPBXStatisticsAsync(DateTime? start = null, DateTime? end = null)
+        {
+            var parameters = new Dictionary<string, string>();
+            if (start != null)
+            {
+                parameters.Add(nameof(start), start.Value.ToString(DateTimeTemplate));
+            }
+            if (end != null)
+            {
+                parameters.Add(nameof(end), end.Value.ToString(DateTimeTemplate));
+            }
+            var response = await ExecuteRequestAsync(HttpMethod.Get, "statistics/pbx", parameters);
+            return await ResolveRequestContentAsync<PBXStatisticsResponseModel>(response.Content, response.IsSuccessStatusCode);
         }
 
         /// <summary>
