@@ -1,0 +1,26 @@
+﻿<form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-group row">
+        <label for="from" class="col-md-3 col-form-label">Откуда</label>
+        <div class="col-md-9">
+            <input type="text" class="form-control" id="from" placeholder="Откуда звоним" formControlName="from" name="from" autocomplete="off" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="to" class="col-md-3 col-form-label"></label>
+        <div class="col-md-9">
+            <span class="fa fa-exchange text-muted" style="transform: rotate(90deg)"></span>
+        </div>
+        
+    </div>
+    <div class="form-group row">
+        <label for="to" class="col-md-3 col-form-label">Куда</label>
+        <div class="col-md-9">
+            <input type="text" class="form-control" id="to" placeholder="Куда звоним" formControlName="to" name="to" autocomplete="off" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary pull-xs-right" [disabled]="form.invalid || submiting">Позвонить</button>
+        </div>
+    </div>
+</form>

@@ -135,6 +135,16 @@ namespace WebTelNET.PBX.Services
         public IList<PBXStatisticsInfo> Stats { get; set; }
     }
 
+    /// <summary>
+    /// Response model from /reqeust/callback/ api method
+    /// </summary>
+    public class RequestCallbackResponseModel : ZadarmaResponseModel
+    {
+        public string From { get; set; }
+        public string To { get; set; }
+        public DateTime Time { get; set; }
+    }
+
     #endregion
 
     #region Response items
@@ -352,6 +362,20 @@ namespace WebTelNET.PBX.Services
             }
             var response = await ExecuteRequestAsync(HttpMethod.Get, "statistics/pbx", parameters);
             return await ResolveRequestContentAsync<PBXStatisticsResponseModel>(response.Content, response.IsSuccessStatusCode);
+        }
+
+        /// <summary>
+        /// Send a request to callback
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="isPredicted">if the param is true, system will call "to" number first and then connect "from" on success</param>
+        /// <returns></returns>
+        public async Task<ZadarmaResponseModel> RequestCallbackAsync(string from, string to, bool isPredicted = true)
+        {
+            var parameters = new Dictionary<string, string> { {nameof(from), from}, {nameof(to), to} };
+            var response = await ExecuteRequestAsync(HttpMethod.Get, "request/callback", parameters);
+            return await ResolveRequestContentAsync<RequestCallbackResponseModel>(response.Content, response.IsSuccessStatusCode);
         }
 
         /// <summary>
