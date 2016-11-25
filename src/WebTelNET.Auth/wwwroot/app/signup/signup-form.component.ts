@@ -2,9 +2,9 @@ import { Component, Inject, EventEmitter, Output } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AccountService } from "../shared/account.service";
 import { SignUpModel } from "./signup-model";
-import { ResponseModel } from "../shared/service";
+import { ResponseModel } from "@commonclient/services";
 
-import { ISubmitable, SubmitingComponent } from "../shared/libs/submiting.component";
+import { ISubmitable, SubmitingComponent } from "@commonclient/components";
 
 @Component({
     moduleId: module.id,

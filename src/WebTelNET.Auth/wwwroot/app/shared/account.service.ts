@@ -1,6 +1,6 @@
 ﻿import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
-import { ServiceBase } from "./service";
+import { ServiceBase } from "@commonclient/services";
 import { LoginModel } from "../login/login-model";
 import { SignUpModel } from "../signup/signup-model";
 

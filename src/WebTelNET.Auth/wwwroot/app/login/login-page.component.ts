@@ -1,8 +1,8 @@
 import { Component, ViewChild } from "@angular/core";
 import { LoginModel } from "./login-model";
 import { LoginFormComponent } from "./login-form.component";
-import { AlertComponent, AlertType } from "../shared/controls/alert.component";
-import { ResponseModel } from "../shared/service";
+import { AlertComponent, AlertType } from "@commonclient/controls";
+import { ResponseModel } from "@commonclient/services";
 import { Router, ActivatedRoute, Params } from "@angular/router";
 
 @Component({

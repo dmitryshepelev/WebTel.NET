@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
-import { ResponseModel } from "../shared/service";
-import { AlertComponent, AlertType, AlertModel } from "../shared/controls/alert.component";
-import { StorageService } from "../shared/storage.service";
+import { ResponseModel } from "@commonclient/services";
+import { AlertComponent, AlertType, AlertModel } from "@commonclient/controls";
+import { StorageService } from "@commonclient/services";
 import { SignUpFormComponent } from "./signup-form.component";
 import { Router, ActivatedRoute, Params } from "@angular/router";
 

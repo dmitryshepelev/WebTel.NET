@@ -21,7 +21,10 @@
     "reflect-metadata": "^0.1.3",
     "rxjs": "5.0.0-beta.12",
     "zone.js": "^0.6.23",
-    "bootstrap": "4.0.0-alpha.4"
+    "bootstrap": "4.0.0-alpha.4",
+    "@commonclient/services": "file:../WebTelNET.CommonClient/services/",
+    "@commonclient/components": "file:../WebTelNET.CommonClient/components/",
+    "@commonclient/controls": "file:../WebTelNET.CommonClient/controls/" 
   },
   "devDependencies": {
     "typescript": "^2.0.2",

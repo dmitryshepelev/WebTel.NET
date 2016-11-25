@@ -10,8 +10,8 @@ import { SignUpPageComponent } from "./signup/signup-page.component";
 import { SignUpFormComponent } from "./signup/signup-form.component";
 import { routing, appRoutingProviders } from "./auth-app.routing";
 import { AccountService } from "./shared/account.service";
-import { StorageService } from "./shared/storage.service";
-import { AlertComponent } from "./shared/controls/alert.component";
+import { StorageService } from "@commonclient/services";
+import { AlertComponent } from "@commonclient/controls";
 
 
 @NgModule({

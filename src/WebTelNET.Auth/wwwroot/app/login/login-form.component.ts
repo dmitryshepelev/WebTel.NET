@@ -2,9 +2,9 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AccountService } from "../shared/account.service";
 import { LoginModel } from "./login-model";
-import { ResponseModel } from "../shared/service";
+import { ResponseModel } from "@commonclient/services";
 
-import { ISubmitable, SubmitingComponent } from "../shared/libs/submiting.component";
+import { ISubmitable, SubmitingComponent } from "@commonclient/components";
 
 @Component({
     moduleId: module.id,

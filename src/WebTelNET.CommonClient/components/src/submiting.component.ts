@@ -10,12 +10,11 @@ export abstract class SubmitingComponent {
 
     startSubmiting() {
         this._submiting = true;
-    };
+    }
     endSubmiting() {
         this._submiting = false;
     }
 
-    get submiting(): boolean {
-        return this._submiting;
-    }
+    get submiting(): boolean { return this._submiting; }
+    set submiting(value: boolean) {throw new Error("Setting isn't allowed") }
 }

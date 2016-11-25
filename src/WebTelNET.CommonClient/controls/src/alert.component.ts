@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { StorageService } from "../storage.service";
+import { StorageService } from "@commonclient/services";
 
 export enum AlertType {
     Success,
@@ -15,9 +15,17 @@ export class AlertModel {
 }
 
 @Component({
-    moduleId: module.id,
     selector: "alert",
-    templateUrl: "alert.html"
+    template: 
+    `
+        <div *ngIf="isShown" class="row alert alert-{{ alertClass }}" role="alert">
+            <button type="button" class="close" aria-label="Close" about=""(click)="hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 *ngIf="title" class="alert-heading">{{ title }}</h4>
+            <span>{{ message }}</span>
+        </div>
+    `
 })
 export class AlertComponent implements OnInit {
     private classes: string[] = ["success", "danger", "warning", "info"];
