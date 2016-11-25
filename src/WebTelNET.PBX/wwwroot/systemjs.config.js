@@ -25,7 +25,9 @@
             '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
             // other libraries
             'rxjs': 'npm:rxjs',
-            '@commonclient/services': 'npm:@commonclient/services/dist/index.js'
+            '@commonclient/services': 'npm:@commonclient/services/dist/index.js',
+            '@commonclient/components': 'npm:@commonclient/components/dist/index.js',
+            '@commonclient/controls': 'npm:@commonclient/controls/dist/index.js'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {

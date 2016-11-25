@@ -1,5 +1,6 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Component, OnInit, ViewChild } from "@angular/core";
 import { StorageService } from "@commonclient/services";
+import { AlertComponent, AlertModel, AlertType } from "@commonclient/controls";
 
 
 @Component({
@@ -7,10 +8,13 @@ import { StorageService } from "@commonclient/services";
     templateUrl: "callback-page.html"
 })
 export class CallbackPageComponent implements OnInit {
-    constructor(private storageService: StorageService) { }
+    constructor(private storageService: StorageService) {
+    }
+
+    @ViewChild(AlertComponent)
+    alertComponent: AlertComponent;
 
     ngOnInit(): void {
-        this.storageService.setItem("aaaa", true);
-        console.log(this.storageService.getItem("aaaa"));
+
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { CharacterService } from '../shared/character.service';
+//import { CharacterService } from '../shared/character.service';
 
 @Component({
     moduleId: module.id,
@@ -9,10 +9,10 @@ import { CharacterService } from '../shared/character.service';
 export class StatisticPageComponent implements OnInit {
     characters: string[];
 
-    constructor(private characterService: CharacterService) { }
+    //constructor(private characterService: CharacterService) { }
 
     ngOnInit() {
-        this.characterService.getCharacters()
-            .subscribe(characters => this.characters = characters);
+        //this.characterService.getCharacters()
+            //.subscribe(characters => this.characters = characters);
     }
 }

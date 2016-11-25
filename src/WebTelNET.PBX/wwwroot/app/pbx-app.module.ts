@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { ServicesModule, StorageService } from "@commonclient/services";
+import { AlertComponent } from "@commonclient/controls";
 
 import { PBXAppComponent }  from './pbx-app.component';
 import { StatisticPageComponent } from './statistic/statistic-page.component';
@@ -11,7 +12,7 @@ import { CallCostPageComponent } from './call-cost/call-cost-page.component';
 import { CallbackPageComponent } from "./callback/callback-page.component";
 import { CallbackFormComponent } from "./callback/callback-form.component";
 import { routing, appRoutingProviders } from './pbx-app.routing';
-import { CharacterService } from './shared/character.service';
+import { PBXService } from './shared/pbx.service';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { CharacterService } from './shared/character.service';
     ],
     providers: [
         appRoutingProviders,
-        CharacterService,
+        PBXService,
         StorageService
     ],
     declarations: [
@@ -34,6 +35,7 @@ import { CharacterService } from './shared/character.service';
         CallCostPageComponent,
         CallbackFormComponent,
         CallbackPageComponent,
+        AlertComponent
     ],
     bootstrap: [PBXAppComponent]
 })

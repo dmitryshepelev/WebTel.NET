@@ -32,6 +32,48 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{E0068C3E-2E8
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebTelNET.PBX.Tests", "test\WebTelNET.PBX.Tests\WebTelNET.PBX.Tests.xproj", "{264EF074-C460-4B75-BA47-6D44729B4D03}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebTelNET.CommonClient", "WebTelNET.CommonClient", "{2246309F-FCFD-470B-A3CB-5E1454211868}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{D37C3D20-E2C4-470F-BD45-E1D30A164EE2}"
+	ProjectSection(SolutionItems) = preProject
+		src\WebTelNET.CommonClient\services\index.ts = src\WebTelNET.CommonClient\services\index.ts
+		src\WebTelNET.CommonClient\services\package.json = src\WebTelNET.CommonClient\services\package.json
+		src\WebTelNET.CommonClient\services\tsconfig.json = src\WebTelNET.CommonClient\services\tsconfig.json
+		src\WebTelNET.CommonClient\services\typings.json = src\WebTelNET.CommonClient\services\typings.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6E852752-2588-4DB0-8557-F9614E2DDF23}"
+	ProjectSection(SolutionItems) = preProject
+		src\WebTelNET.CommonClient\services\src\service.ts = src\WebTelNET.CommonClient\services\src\service.ts
+		src\WebTelNET.CommonClient\services\src\storage.service.ts = src\WebTelNET.CommonClient\services\src\storage.service.ts
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{D6477D29-0737-4021-A569-617CFD6DEE9D}"
+	ProjectSection(SolutionItems) = preProject
+		src\WebTelNET.CommonClient\components\index.ts = src\WebTelNET.CommonClient\components\index.ts
+		src\WebTelNET.CommonClient\components\package.json = src\WebTelNET.CommonClient\components\package.json
+		src\WebTelNET.CommonClient\components\tsconfig.json = src\WebTelNET.CommonClient\components\tsconfig.json
+		src\WebTelNET.CommonClient\components\typings.json = src\WebTelNET.CommonClient\components\typings.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{40805CD2-73F2-4C17-B4A5-4D160B579400}"
+	ProjectSection(SolutionItems) = preProject
+		src\WebTelNET.CommonClient\components\src\submiting.component.ts = src\WebTelNET.CommonClient\components\src\submiting.component.ts
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "controls", "controls", "{C2ED9B51-CA2C-41A9-9690-83564C7CDCDA}"
+	ProjectSection(SolutionItems) = preProject
+		src\WebTelNET.CommonClient\controls\index.ts = src\WebTelNET.CommonClient\controls\index.ts
+		src\WebTelNET.CommonClient\controls\package.json = src\WebTelNET.CommonClient\controls\package.json
+		src\WebTelNET.CommonClient\controls\tsconfig.json = src\WebTelNET.CommonClient\controls\tsconfig.json
+		src\WebTelNET.CommonClient\controls\typings.json = src\WebTelNET.CommonClient\controls\typings.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EC0FAA84-9D2A-4995-B82C-09D9AE6CE2CF}"
+	ProjectSection(SolutionItems) = preProject
+		src\WebTelNET.CommonClient\controls\src\alert.component.ts = src\WebTelNET.CommonClient\controls\src\alert.component.ts
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,5 +121,12 @@ Global
 		{B1D72989-8F5E-4F16-8D1D-B5D6DA215627} = {7200B5EC-BD79-4C0F-BA39-F2A45B36AC17}
 		{E0068C3E-2E8D-45B7-BE52-BBBFCD786F8F} = {7361E831-AC07-4A8B-B70B-944F98050F50}
 		{264EF074-C460-4B75-BA47-6D44729B4D03} = {6F1D8ABE-2447-4139-BD9B-2BB7509700F3}
+		{2246309F-FCFD-470B-A3CB-5E1454211868} = {7200B5EC-BD79-4C0F-BA39-F2A45B36AC17}
+		{D37C3D20-E2C4-470F-BD45-E1D30A164EE2} = {2246309F-FCFD-470B-A3CB-5E1454211868}
+		{6E852752-2588-4DB0-8557-F9614E2DDF23} = {D37C3D20-E2C4-470F-BD45-E1D30A164EE2}
+		{D6477D29-0737-4021-A569-617CFD6DEE9D} = {2246309F-FCFD-470B-A3CB-5E1454211868}
+		{40805CD2-73F2-4C17-B4A5-4D160B579400} = {D6477D29-0737-4021-A569-617CFD6DEE9D}
+		{C2ED9B51-CA2C-41A9-9690-83564C7CDCDA} = {2246309F-FCFD-470B-A3CB-5E1454211868}
+		{EC0FAA84-9D2A-4995-B82C-09D9AE6CE2CF} = {C2ED9B51-CA2C-41A9-9690-83564C7CDCDA}
 	EndGlobalSection
 EndGlobal
