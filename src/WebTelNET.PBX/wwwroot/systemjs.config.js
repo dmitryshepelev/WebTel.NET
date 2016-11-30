@@ -27,7 +27,11 @@
             'rxjs': 'npm:rxjs',
             '@commonclient/services': 'npm:@commonclient/services/dist/index.js',
             '@commonclient/components': 'npm:@commonclient/components/dist/index.js',
-            '@commonclient/controls': 'npm:@commonclient/controls/dist/index.js'
+            '@commonclient/controls': 'npm:@commonclient/controls/dist/index.js',
+
+            'angular2-text-mask': 'npm:angular2-text-mask/dist/angular2TextMask.js',
+            'text-mask-core': 'npm:text-mask-core',
+            "ng2-tooltip": "node_modules/ng2-tooltip"
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {
@@ -37,6 +41,10 @@
             },
             rxjs: {
                 defaultExtension: 'js'
+            },
+            "ng2-tooltip": {
+                main: "index.js",
+                defaultExtension: "js"
             }
         }
     });

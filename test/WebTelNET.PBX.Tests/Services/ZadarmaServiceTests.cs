@@ -85,6 +85,36 @@ namespace WebTelNET.PBX.Tests.Services
         }
 
         [Fact]
+        public void GetPriceInfoAsync_Success_NumberWithPlus()
+        {
+            var service = new ZadarmaService(_userKey, _secretKey);
+            const string testNumber = "+375259189613";
+            var result = service.GetPriceInfoAsync(testNumber).Result;
+
+            Assert.IsType<PriceInfoResponseModel>(result);
+        }
+
+        [Fact]
+        public void GetPriceInfoAsync_Error_InvalidNumber()
+        {
+            var service = new ZadarmaService(_userKey, _secretKey);
+            const string testNumber = "123456789";
+            var result = service.GetPriceInfoAsync(testNumber).Result;
+
+            Assert.IsType<ErrorResponseModel>(result);
+        }
+
+        [Fact]
+        public void GetPriceInfoAsync_Error_InvalidNumber_2()
+        {
+            var service = new ZadarmaService(_userKey, _secretKey);
+            const string testNumber = "555555555555555";
+            var result = service.GetPriceInfoAsync(testNumber).Result;
+            Console.WriteLine(result.Status);
+            Assert.IsType<ErrorResponseModel>(result);
+        }
+
+        [Fact]
         public void GetPriceInfoAsync_Failure_ErrorResponseModelIsGot_InvalidNumber()
         {
             var service = new ZadarmaService(_userKey, _secretKey);

@@ -1,25 +1,61 @@
 ﻿<form [formGroup]="form" (ngSubmit)="submit()">
-    <div class="form-group row">
-        <label for="from" class="col-md-3 col-form-label">Откуда</label>
-        <div class="col-md-9">
-            <input type="text" class="form-control" id="from" placeholder="Откуда звоним" formControlName="from" name="from" autocomplete="off" />
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group row">
+                <!--                <label for="from" class="col-md-3 col-form-label">Откуда</label>-->
+                <div class="col-md-12">
+                    <input type="text" class="form-control" tabindex="1" inputLoader
+                           [textMask]="{mask: mask, placeholderChar: placeholderChar}" (change)="onFromChanged()"
+                           id="from" placeholder="Откуда звоним" formControlName="from" name="from" autocomplete="off" />
+                    <i *ngIf="fromLoading" [@InOut]="fromLoading" class="fa fa-circle-o-notch fa-spin fa-fw input-loader"></i>
+                </div>
+            </div>
+            <price-info class="row" *ngIf="fromPriceInfo" [@InOut]="fromPriceInfo">
+                <!--<div class="col-md-12">
+                    <div class="card card-block">
+                        <h4 class="card-title">{{ fromPriceInfo.price }} {{ fromPriceInfo.currency }}</h4>
+                        <p class="card-text">{{ fromPriceInfo.description }} (+{{ fromPriceInfo.prefix }})</p>
+                    </div>
+                </div>-->
+            </price-info>
+        </div>
+        <div class="col-md-2 text-xs-center">
+            <div class="form-group row">
+                <!--<label for="to" class="col-md-3 col-form-label"></label>-->
+                <div class="col-md-12">
+                    <button class="btn btn-link" tooltip="here is the tooltip" type="button" (click)="replaceNumbers()"><i class="fa fa-exchange text-muted"></i></button>
+                    <!--<span class="fa fa-exchange text-muted" (click)="replaceNumbers()"></span>-->
+                </div>
+            </div>
+            <div class="form-group row hidden-sm-down">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary rounded-circle" [disabled]="form.invalid || submiting"><i class="fa fa-phone"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group row">
+                <!--<label for="to" class="col-md-3 col-form-label">Куда</label>-->
+                <div class="col-md-12">
+                    <input type="text" class="form-control" tabindex="2"
+                           [textMask]="{mask: mask, placeholderChar: placeholderChar}" (change)="onToChanged()"
+                           id="to" placeholder="Куда звоним" formControlName="to" name="to" autocomplete="off" />
+                    <i *ngIf="toLoading" [@InOut]="toLoading" class="fa fa-circle-o-notch fa-spin fa-fw input-loader"></i>
+                </div>
+            </div>
+            <div class="row" *ngIf="toPriceInfo" [@InOut]="toPriceInfo">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <h4 class="card-title">{{ toPriceInfo.price }} {{ toPriceInfo.currency }}</h4>
+                        <p class="card-text">{{ toPriceInfo.description }} (+{{ toPriceInfo.prefix }})</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="form-group row">
-        <label for="to" class="col-md-3 col-form-label"></label>
-        <div class="col-md-9">
-            <span class="fa fa-exchange text-muted" style="transform: rotate(90deg)"></span>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="to" class="col-md-3 col-form-label">Куда</label>
-        <div class="col-md-9">
-            <input type="text" class="form-control" id="to" placeholder="Куда звоним" formControlName="to" name="to" autocomplete="off" />
-        </div>
-    </div>
-    <div class="form-group row">
+    <div class="form-group row hidden-md-up">
         <div class="col-md-12">
-            <button type="submit" class="btn btn-primary pull-xs-right" [disabled]="form.invalid || submiting">Позвонить</button>
+            <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid || submiting"><i class="fa fa-phone"></i> Позвонить</button>
         </div>
     </div>
 </form>

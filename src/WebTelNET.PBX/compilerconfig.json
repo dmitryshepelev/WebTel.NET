@@ -2,5 +2,9 @@
   {
     "outputFile": "wwwroot/styles/sidepanel.css",
     "inputFile": "wwwroot/styles/sidepanel.scss"
+  },
+  {
+    "outputFile": "wwwroot/styles/styles.css",
+    "inputFile": "wwwroot/styles/styles.scss"
   }
 ]

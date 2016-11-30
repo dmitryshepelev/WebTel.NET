@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { TextMaskModule } from "angular2-text-mask";
+import { TooltipModule } from "ng2-tooltip";
 
 import { ServicesModule, StorageService } from "@commonclient/services";
 import { AlertComponent } from "@commonclient/controls";
@@ -13,6 +15,8 @@ import { CallbackPageComponent } from "./callback/callback-page.component";
 import { CallbackFormComponent } from "./callback/callback-form.component";
 import { routing, appRoutingProviders } from './pbx-app.routing';
 import { PBXService } from './shared/pbx.service';
+import { InputLoaderDirective } from "./shared/directives/input-loader.directive";
+import { PriceInfoComponent } from "./shared/components/price-info/price-info.component";
 
 
 @NgModule({
@@ -22,7 +26,9 @@ import { PBXService } from './shared/pbx.service';
         ReactiveFormsModule,
         HttpModule,
         routing,
-        ServicesModule
+        ServicesModule,
+        TextMaskModule,
+        TooltipModule
     ],
     providers: [
         appRoutingProviders,
@@ -35,7 +41,10 @@ import { PBXService } from './shared/pbx.service';
         CallCostPageComponent,
         CallbackFormComponent,
         CallbackPageComponent,
-        AlertComponent
+        AlertComponent,
+        PriceInfoComponent,
+
+        InputLoaderDirective
     ],
     bootstrap: [PBXAppComponent]
 })
