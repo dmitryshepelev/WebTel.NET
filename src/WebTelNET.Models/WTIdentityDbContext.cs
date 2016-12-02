@@ -17,6 +17,11 @@ namespace WebTelNET.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<WTUser>()
+                .HasOne(q => q.ZadarmaAccount)
+                .WithOne(v => v.User)
+                .HasForeignKey<WTUser>(q => q.ZadarmaAccountId);
         }
 
         public async void EnsureSeedData(UserManager<WTUser> userManager, RoleManager<WTRole> roleManager, DatabaseSettings databaseSettings)

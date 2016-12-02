@@ -2,24 +2,17 @@
 import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from "@angular/forms";
 import { SubmitingComponent, ISubmitable } from "@commonclient/components";
 
-import { CallbackModel } from "./callback-model";
-import { PBXService } from "../shared/pbx.service";
-import { PriceInfoModel } from "../shared/components/price-info/price-info.model";
+import { CallbackModel } from "../shared/models";
+import { PBXService } from "../shared/services/pbx.service";
+import { PriceInfoModel } from "../shared/components/price-info.component";
+
+import { inOut } from "../shared/animations";
 
 
 @Component({
     moduleId: module.id,
     animations: [
-        trigger("InOut", [
-            transition("void => *", [
-                style({ opacity: 0 }),
-                animate("300ms", style({ opacity: 1 }))
-            ]),
-            transition("* => void", [
-                style({ opacity: 1 }),
-                animate("300ms", style({ opacity: 0 }))
-            ])
-        ])
+        inOut
     ],
     selector: "callback-form",
     templateUrl: "callback-form.html"

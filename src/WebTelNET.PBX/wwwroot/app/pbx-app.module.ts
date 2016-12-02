@@ -14,9 +14,8 @@ import { CallCostPageComponent } from './call-cost/call-cost-page.component';
 import { CallbackPageComponent } from "./callback/callback-page.component";
 import { CallbackFormComponent } from "./callback/callback-form.component";
 import { routing, appRoutingProviders } from './pbx-app.routing';
-import { PBXService } from './shared/pbx.service';
-import { InputLoaderDirective } from "./shared/directives/input-loader.directive";
-import { PriceInfoComponent } from "./shared/components/price-info/price-info.component";
+import { PBXService } from './shared/services/pbx.service';
+import { PriceInfoComponent } from "./shared/components/price-info.component";
 
 
 @NgModule({
@@ -42,9 +41,7 @@ import { PriceInfoComponent } from "./shared/components/price-info/price-info.co
         CallbackFormComponent,
         CallbackPageComponent,
         AlertComponent,
-        PriceInfoComponent,
-
-        InputLoaderDirective
+        PriceInfoComponent
     ],
     bootstrap: [PBXAppComponent]
 })

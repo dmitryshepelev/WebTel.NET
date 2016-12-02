@@ -8,5 +8,7 @@ namespace WebTelNET.Models.Models
 {
     public class WTUser : IdentityUser
     {
+        public string ZadarmaAccountId { get; set; }
+        public ZadarmaAccount ZadarmaAccount { get; set; }
     }
 }

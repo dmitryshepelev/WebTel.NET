@@ -12,4 +12,12 @@ namespace WebTelNET.CommonNET.Models
             this.Data = new Dictionary<string, object>();
         }
     }
+
+    public class ApiNotAuthorizedResponseModel : ApiResponseModel
+    {
+        public ApiNotAuthorizedResponseModel() : base()
+        {
+            this.Message = "The request isn't authorized to use the api.";
+        }
+    }
 }

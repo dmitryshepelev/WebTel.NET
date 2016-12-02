@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -16,6 +17,7 @@ using WebTelNET.Models;
 using WebTelNET.Models.Libs;
 using WebTelNET.Models.Models;
 using WebTelNET.Models.Repository;
+using WebTelNET.PBX.Libs;
 
 namespace WebTelNET.PBX
 {
@@ -43,7 +45,14 @@ namespace WebTelNET.PBX
                 .AddEntityFrameworkStores<WTIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IZadarmaAccountRepository, ZadarmaAccountRepository>();
+            services.AddScoped<UserManager<WTUser>, WTUserManager<WTUser>>();
+
             services.AddMvc();
+
+            //services.AddScoped<ConsoleLogActionOneFilter>();
+            services.AddScoped<ClassConsoleLogActionOneFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

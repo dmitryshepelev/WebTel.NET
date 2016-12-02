@@ -290,12 +290,10 @@ namespace WebTelNET.PBX.Services
                 var str = $"{requestUri}{queryString}{GetMD5(queryString)}";
                 var sign = Convert.ToBase64String(Encoding.UTF8.GetBytes(GetSHA1(str, SecretKey)));
                 
-                Console.WriteLine(sign);
                 if (!string.IsNullOrEmpty(queryString))
                 {
                     requestUri = $"{requestUri}?{queryString}";
                 }
-                Console.WriteLine(requestUri);
                 var request = new HttpRequestMessage(method, requestUri);
                 request.Headers.TryAddWithoutValidation("Authorization", UserKey + ":" + sign);
 

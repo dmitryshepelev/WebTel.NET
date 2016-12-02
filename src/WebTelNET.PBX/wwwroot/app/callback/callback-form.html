@@ -2,29 +2,19 @@
     <div class="row">
         <div class="col-md-5">
             <div class="form-group row">
-                <!--                <label for="from" class="col-md-3 col-form-label">Откуда</label>-->
                 <div class="col-md-12">
-                    <input type="text" class="form-control" tabindex="1" inputLoader
+                    <input type="text" class="form-control" tabindex="1"
                            [textMask]="{mask: mask, placeholderChar: placeholderChar}" (change)="onFromChanged()"
                            id="from" placeholder="Откуда звоним" formControlName="from" name="from" autocomplete="off" />
                     <i *ngIf="fromLoading" [@InOut]="fromLoading" class="fa fa-circle-o-notch fa-spin fa-fw input-loader"></i>
                 </div>
             </div>
-            <price-info class="row" *ngIf="fromPriceInfo" [@InOut]="fromPriceInfo">
-                <!--<div class="col-md-12">
-                    <div class="card card-block">
-                        <h4 class="card-title">{{ fromPriceInfo.price }} {{ fromPriceInfo.currency }}</h4>
-                        <p class="card-text">{{ fromPriceInfo.description }} (+{{ fromPriceInfo.prefix }})</p>
-                    </div>
-                </div>-->
-            </price-info>
+            <price-info *ngIf="fromPriceInfo" [@InOut]="fromPriceInfo" [model]="fromPriceInfo"></price-info>
         </div>
         <div class="col-md-2 text-xs-center">
             <div class="form-group row">
-                <!--<label for="to" class="col-md-3 col-form-label"></label>-->
                 <div class="col-md-12">
-                    <button class="btn btn-link" tooltip="here is the tooltip" type="button" (click)="replaceNumbers()"><i class="fa fa-exchange text-muted"></i></button>
-                    <!--<span class="fa fa-exchange text-muted" (click)="replaceNumbers()"></span>-->
+                    <button class="btn btn-link" type="button" (click)="replaceNumbers()"><i class="fa fa-exchange text-muted"></i></button>
                 </div>
             </div>
             <div class="form-group row hidden-sm-down">
@@ -35,7 +25,6 @@
         </div>
         <div class="col-md-5">
             <div class="form-group row">
-                <!--<label for="to" class="col-md-3 col-form-label">Куда</label>-->
                 <div class="col-md-12">
                     <input type="text" class="form-control" tabindex="2"
                            [textMask]="{mask: mask, placeholderChar: placeholderChar}" (change)="onToChanged()"
@@ -43,14 +32,7 @@
                     <i *ngIf="toLoading" [@InOut]="toLoading" class="fa fa-circle-o-notch fa-spin fa-fw input-loader"></i>
                 </div>
             </div>
-            <div class="row" *ngIf="toPriceInfo" [@InOut]="toPriceInfo">
-                <div class="col-md-12">
-                    <div class="card card-block">
-                        <h4 class="card-title">{{ toPriceInfo.price }} {{ toPriceInfo.currency }}</h4>
-                        <p class="card-text">{{ toPriceInfo.description }} (+{{ toPriceInfo.prefix }})</p>
-                    </div>
-                </div>
-            </div>
+            <price-info *ngIf="toPriceInfo" [@InOut]="toPriceInfo" [model]="toPriceInfo"></price-info>
         </div>
     </div>
     <div class="form-group row hidden-md-up">
