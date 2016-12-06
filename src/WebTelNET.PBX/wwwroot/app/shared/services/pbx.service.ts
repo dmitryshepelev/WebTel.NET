@@ -15,8 +15,16 @@ export class PBXService extends ServiceBase {
     }
 
     getPriceInfo(number: string): Promise<any> {
-        return this.post(this.baseUrl + '/priceinfo/', { number: number });
+        return this.post(this.baseUrl + "/priceinfo/", { number: number });
     }
 
-    callback() {}
+    callback() { }
+
+    getPBXStatistics(): Promise<any> {
+        return this.post(this.baseUrl + "/pbxstatistics/", {});
+    }
+
+    getOverallStatistics(): Promise<any> {
+        return this.post(this.baseUrl + "/overallstatistics/", {});
+    }
 }

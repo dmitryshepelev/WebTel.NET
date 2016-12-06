@@ -1,0 +1,70 @@
+<div>
+    <statistics-form *ngIf="shownFilters" [startDate]="startDate" [endDate]="endDate"></statistics-form>    
+</div>
+<button type="button" class="btn btn-link" (click)="toggleFilterPanel()"><i class="fa fa-filter"></i></button>
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Callstart</th>
+            <th>call_id</th>
+            <th>clid</th>
+            <th>destination</th>
+            <th>disposition</th>
+            <th>is_Recorded</th>
+            <th>pbx_call_id</th>
+            <th>seconds</th>
+            <th>sip</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let s of pbxStatistics; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ s.callStart }}</td>
+            <td>{{ s.call_Id }}</td>
+            <td>{{ s.clid }}</td>
+            <td>{{ s.destination }}</td>
+            <td>{{ s.disposition }}</td>
+            <td>{{ s.is_Recorded }}</td>
+            <td>{{ s.pbx_call_id }}</td>
+            <td>{{ s.seconds }}</td>
+            <td>{{ s.sip }}</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>billCost</th>
+            <th>billSeconds</th>
+            <th>callStart</th>
+            <th>cost</th>
+            <th>currency</th>
+            <th>description</th>
+            <th>disposition</th>
+            <th>from</th>
+            <th>id</th>
+            <th>sip</th>
+            <th>to</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let s of overallStatistics; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ s.billCost }}</td>
+            <td>{{ s.billSeconds }}</td>
+            <td>{{ s.callStart }}</td>
+            <td>{{ s.cost }}</td>
+            <td>{{ s.currency }}</td>
+            <td>{{ s.description }}</td>
+            <td>{{ s.disposition }}</td>
+            <td>{{ s.from }}</td>
+            <td>{{ s.id }}</td>
+            <td>{{ s.sip }}</td>
+            <td>{{ s.to }}</td>
+        </tr>
+    </tbody>
+</table>

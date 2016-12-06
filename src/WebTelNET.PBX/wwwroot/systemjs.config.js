@@ -31,7 +31,9 @@
 
             'angular2-text-mask': 'npm:angular2-text-mask/dist/angular2TextMask.js',
             'text-mask-core': 'npm:text-mask-core',
-            "ng2-tooltip": "node_modules/ng2-tooltip"
+            'ng2-bootstrap/ng2-bootstrap': 'npm:ng2-bootstrap/bundles/ng2-bootstrap.umd.js',
+            'moment': 'npm:moment/moment.js',
+            'moment_ru': 'npm:moment/locale/ru.js'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {
@@ -42,9 +44,12 @@
             rxjs: {
                 defaultExtension: 'js'
             },
-            "ng2-tooltip": {
-                main: "index.js",
-                defaultExtension: "js"
+            'ng2-tooltip': {
+                main: 'index.js',
+                defaultExtension: 'js'
+            },
+            mydaterangepicker: {
+                defaultExtension: 'js'
             }
         }
     });

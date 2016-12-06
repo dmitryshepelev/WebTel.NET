@@ -6,5 +6,13 @@
   {
     "outputFile": "wwwroot/styles/styles.css",
     "inputFile": "wwwroot/styles/styles.scss"
+  },
+  {
+    "outputFile": "wwwroot/styles/daterange-picker.css",
+    "inputFile": "wwwroot/styles/daterange-picker.scss"
+  },
+  {
+    "outputFile": "wwwroot/styles/datepicker.css",
+    "inputFile": "wwwroot/styles/datepicker.scss"
   }
 ]

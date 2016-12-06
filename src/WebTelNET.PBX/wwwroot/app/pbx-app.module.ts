@@ -3,13 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { TextMaskModule } from "angular2-text-mask";
-import { TooltipModule } from "ng2-tooltip";
+import { DatepickerModule } from "ng2-bootstrap/ng2-bootstrap";
 
 import { ServicesModule, StorageService } from "@commonclient/services";
 import { AlertComponent } from "@commonclient/controls";
 
 import { PBXAppComponent }  from './pbx-app.component';
-import { StatisticPageComponent } from './statistic/statistic-page.component';
+import { StatisticsPageComponent } from './statistics/statistics-page.component';
+import { StatisticsFormComponent } from './statistics/statistics-form.component';
 import { CallCostPageComponent } from './call-cost/call-cost-page.component';
 import { CallbackPageComponent } from "./callback/callback-page.component";
 import { CallbackFormComponent } from "./callback/callback-form.component";
@@ -27,7 +28,7 @@ import { PriceInfoComponent } from "./shared/components/price-info.component";
         routing,
         ServicesModule,
         TextMaskModule,
-        TooltipModule
+        DatepickerModule
     ],
     providers: [
         appRoutingProviders,
@@ -36,7 +37,8 @@ import { PriceInfoComponent } from "./shared/components/price-info.component";
     ],
     declarations: [
         PBXAppComponent,
-        StatisticPageComponent,
+        StatisticsPageComponent,
+        StatisticsFormComponent,
         CallCostPageComponent,
         CallbackFormComponent,
         CallbackPageComponent,

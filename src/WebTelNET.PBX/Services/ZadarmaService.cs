@@ -133,6 +133,15 @@ namespace WebTelNET.PBX.Services
     {
         public ResponseVersion Version { get; set; }
         public IList<PBXStatisticsInfo> Stats { get; set; }
+
+        public IEnumerable<IGrouping<string, PBXStatisticsInfo>> Group()
+        {
+            if (Version == ResponseVersion.New)
+            {
+                return Stats.GroupBy(x => x.pbx_call_id);
+            }
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -176,7 +185,7 @@ namespace WebTelNET.PBX.Services
         public string Destination { get; set; }
         public int Seconds { get; set; }
         public bool Is_Recorded { get; set; }
-        public string PBX_Call_Id { get; set; }
+        public string pbx_call_id { get; set; }
     }
 
     #endregion
@@ -290,10 +299,12 @@ namespace WebTelNET.PBX.Services
                 var str = $"{requestUri}{queryString}{GetMD5(queryString)}";
                 var sign = Convert.ToBase64String(Encoding.UTF8.GetBytes(GetSHA1(str, SecretKey)));
                 
+                Console.WriteLine(sign);
                 if (!string.IsNullOrEmpty(queryString))
                 {
                     requestUri = $"{requestUri}?{queryString}";
                 }
+                Console.WriteLine(requestUri);
                 var request = new HttpRequestMessage(method, requestUri);
                 request.Headers.TryAddWithoutValidation("Authorization", UserKey + ":" + sign);
 
@@ -331,14 +342,13 @@ namespace WebTelNET.PBX.Services
         public async Task<ZadarmaResponseModel> GetOverallStatisticsAsync(DateTime? start = null, DateTime? end = null)
         {
             var parameters = new Dictionary<string, string>();
-            if (start != null)
-            {
-                parameters.Add(nameof(start), start.Value.ToString(DateTimeTemplate));
-            }
-            if (end != null)
-            {
-                parameters.Add(nameof(end), end.Value.ToString(DateTimeTemplate));
-            }
+
+            start = start ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+            parameters.Add(nameof(start), start.Value.ToString(DateTimeTemplate));
+
+            end = end ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 23, 59, 59, DateTimeKind.Unspecified);
+            parameters.Add(nameof(end), end.Value.ToString(DateTimeTemplate));
+
             var response = await ExecuteRequestAsync(HttpMethod.Get, "statistics", parameters);
             return await ResolveRequestContentAsync<OverallStatisticsResponseModel>(response.Content, response.IsSuccessStatusCode);
         }
@@ -348,18 +358,18 @@ namespace WebTelNET.PBX.Services
         /// </summary>
         /// <param name="start">Start date of the statistics</param>
         /// <param name="end">End date of the statistics</param>
+        /// <param name="version">Format of the result: 2 - the new format, 1 - the old format</param>
         /// <returns></returns>
-        public async Task<ZadarmaResponseModel> GetPBXStatisticsAsync(DateTime? start = null, DateTime? end = null)
+        public async Task<ZadarmaResponseModel> GetPBXStatisticsAsync(DateTime? start = null, DateTime? end = null, ResponseVersion version = ResponseVersion.New)
         {
-            var parameters = new Dictionary<string, string>();
-            if (start != null)
-            {
-                parameters.Add(nameof(start), start.Value.ToString(DateTimeTemplate));
-            }
-            if (end != null)
-            {
-                parameters.Add(nameof(end), end.Value.ToString(DateTimeTemplate));
-            }
+            var parameters = new Dictionary<string, string> { { nameof(version), ((int)version).ToString() } };
+
+            start = start ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+            parameters.Add(nameof(start), start.Value.ToString(DateTimeTemplate));
+
+            end = end ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 23, 59, 59, DateTimeKind.Unspecified);
+            parameters.Add(nameof(end), end.Value.ToString(DateTimeTemplate));
+
             var response = await ExecuteRequestAsync(HttpMethod.Get, "statistics/pbx", parameters);
             return await ResolveRequestContentAsync<PBXStatisticsResponseModel>(response.Content, response.IsSuccessStatusCode);
         }
