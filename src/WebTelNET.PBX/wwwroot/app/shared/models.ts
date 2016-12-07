@@ -7,3 +7,12 @@
     public from: string;
     public to: string;
 }
+
+export class StatisticsParamsModel {
+    constructor() {
+
+    }
+
+    public start: Date;
+    public end: Date;
+}

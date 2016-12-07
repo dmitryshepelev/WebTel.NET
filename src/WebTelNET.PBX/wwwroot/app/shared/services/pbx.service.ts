@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { ServiceBase } from "@commonclient/services";
 
-import { CallbackModel } from "../models";
+import { CallbackModel, StatisticsParamsModel } from "../models";
 
-
+import * as moment from "moment";
 
 @Injectable()
 export class PBXService extends ServiceBase {
@@ -20,11 +20,11 @@ export class PBXService extends ServiceBase {
 
     callback() { }
 
-    getPBXStatistics(): Promise<any> {
-        return this.post(this.baseUrl + "/pbxstatistics/", {});
+    getPBXStatistics(start: Date, end: Date): Promise<any> {
+        return this.post(this.baseUrl + "/pbxstatistics/", { start: start, end: end });
     }
 
-    getOverallStatistics(): Promise<any> {
-        return this.post(this.baseUrl + "/overallstatistics/", {});
+    getOverallStatistics(start: Date, end: Date): Promise<any> {
+        return this.post(this.baseUrl + "/overallstatistics/", { start: start, end: end });
     }
 }

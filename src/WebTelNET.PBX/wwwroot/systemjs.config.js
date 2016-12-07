@@ -33,7 +33,8 @@
             'text-mask-core': 'npm:text-mask-core',
             'ng2-bootstrap/ng2-bootstrap': 'npm:ng2-bootstrap/bundles/ng2-bootstrap.umd.js',
             'moment': 'npm:moment/moment.js',
-            'moment_ru': 'npm:moment/locale/ru.js'
+            'moment_ru': 'npm:moment/locale/ru.js',
+            'ng2-sidebar': 'npm:ng2-sidebar'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {
@@ -50,7 +51,11 @@
             },
             mydaterangepicker: {
                 defaultExtension: 'js'
-            }
+            },
+            'ng2-sidebar': {
+                main: 'lib/index',
+                defaultExtension: 'js'
+            },
         }
     });
 })(this);

@@ -14,5 +14,9 @@
   {
     "outputFile": "wwwroot/styles/datepicker.css",
     "inputFile": "wwwroot/styles/datepicker.scss"
+  },
+  {
+    "outputFile": "wwwroot/styles/sidebar.css",
+    "inputFile": "wwwroot/styles/sidebar.scss"
   }
 ]

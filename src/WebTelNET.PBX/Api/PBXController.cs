@@ -98,7 +98,7 @@ namespace WebTelNET.PBX.Api
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
 
             var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
-            var result = await service.GetPBXStatisticsAsync();
+            var result = await service.GetPBXStatisticsAsync(model.Start, model.End);
 
             if (result.Status == ZadarmaResponseStatus.Success)
             {
@@ -125,7 +125,7 @@ namespace WebTelNET.PBX.Api
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
 
             var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
-            var result = await service.GetOverallStatisticsAsync();
+            var result = await service.GetOverallStatisticsAsync(model.Start, model.End);
 
             if (result.Status == ZadarmaResponseStatus.Success)
             {

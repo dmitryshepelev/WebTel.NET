@@ -1,7 +1,17 @@
+﻿<ng2-sidebar [(open)]="shownFilters" [position]="'top'" [closeOnClickOutside]="true" [autoFocus]="false">
+    <div class="container-fluid">
+        <statistics-form [startDate]="startDate" [endDate]="endDate" (onFormSubmitSuccess)="onFiltersFormSubmitSuccess($event)"></statistics-form>
+    </div>
+    <!--<a closeSidebar>Closes the sidebar</a>
+    gggg-->
+</ng2-sidebar>
+
 <div>
-    <statistics-form *ngIf="shownFilters" [startDate]="startDate" [endDate]="endDate"></statistics-form>    
+    
+
 </div>
 <button type="button" class="btn btn-link" (click)="toggleFilterPanel()"><i class="fa fa-filter"></i></button>
+<span>Данные c {{ startDate | date: "dd/MM/y" }} по {{ endDate | date: "dd/MM/y" }}</span>
 <table class="table table-hover table-sm">
     <thead>
         <tr>

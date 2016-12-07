@@ -1,19 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PBXService } from "../shared/services/pbx.service";
 import { StatisticsFormComponent } from "./statistics-form.component";
+import { ResponseModel } from "@commonclient/services";
 
+import * as moment from "moment";
 
 @Component({
     moduleId: module.id,
     templateUrl: "statistics-page.html"
 })
-export class StatisticsPageComponent implements OnInit {
+export class StatisticsPageComponent implements OnInit, AfterViewInit {
     pbxStatistics: any;
     overallStatistics: any;
 
     shownFilters = false;
     startDate = new Date();
-    endDate: Date;
+    endDate = new Date();
+    durationString: string;
 
     @ViewChild(StatisticsFormComponent)
     statisticsFormComponent: StatisticsFormComponent;
@@ -22,22 +25,20 @@ export class StatisticsPageComponent implements OnInit {
 
     toggleFilterPanel() {
         this.shownFilters = !this.shownFilters;
-        //console.log(this.shownFilters);
-        //this.statisticsFormComponent.initDate = new Date();
     }
 
-    ngOnInit() {
-        this._pbxService.getPBXStatistics()
-            .then(response => { console.log(response);
-                this.pbxStatistics = response.data.Stats;
-            })
-            .catch(error => console.log(error));
+    onFiltersFormSubmitSuccess(result: ResponseModel) {
+        console.log(result, 'here the result');
+        this.startDate = this.statisticsFormComponent.model.start;
+        this.endDate = this.statisticsFormComponent.model.end;
 
-        this._pbxService.getOverallStatistics()
-            .then(response => {
-                console.log(response);
-                this.overallStatistics = response.data.Stats;
-            })
-            .catch(error => console.log(error));
+        this.pbxStatistics = result.data[0].data.Stats;
+        this.overallStatistics = result.data[1].data.Stats;
+    }
+
+    ngOnInit() {}
+
+    ngAfterViewInit(): void {
+        this.statisticsFormComponent.onSubmit();
     }
 }

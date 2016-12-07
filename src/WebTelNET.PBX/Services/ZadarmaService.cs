@@ -46,6 +46,12 @@ namespace WebTelNET.PBX.Services
         New = 2
     }
 
+    public enum BoundDateTimeKind
+    {
+        Start,
+        End
+    }
+
     #region Abstractions
 
     /// <summary>
@@ -312,6 +318,16 @@ namespace WebTelNET.PBX.Services
             }
         }
 
+        private DateTime GetBoundDateTime(DateTime? dateTime, BoundDateTimeKind kind)
+        {
+            DateTime dt = dateTime ?? DateTime.Today;
+            if (kind == BoundDateTimeKind.Start)
+            {
+                return new DateTime(dt.Year, dt.Month, dateTime?.Day ?? 1, 0, 0, 0, DateTimeKind.Unspecified);
+            }
+            return new DateTime(dt.Year, dt.Month, dt.Day, 23, 59, 59, DateTimeKind.Unspecified);
+        }
+
         /// <summary>
         /// Get current balance of zadarma profile
         /// </summary>
@@ -343,10 +359,10 @@ namespace WebTelNET.PBX.Services
         {
             var parameters = new Dictionary<string, string>();
 
-            start = start ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+            start = GetBoundDateTime(start?.ToLocalTime(), BoundDateTimeKind.Start);
             parameters.Add(nameof(start), start.Value.ToString(DateTimeTemplate));
 
-            end = end ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 23, 59, 59, DateTimeKind.Unspecified);
+            end = GetBoundDateTime(end?.ToLocalTime(), BoundDateTimeKind.End);
             parameters.Add(nameof(end), end.Value.ToString(DateTimeTemplate));
 
             var response = await ExecuteRequestAsync(HttpMethod.Get, "statistics", parameters);
@@ -364,10 +380,10 @@ namespace WebTelNET.PBX.Services
         {
             var parameters = new Dictionary<string, string> { { nameof(version), ((int)version).ToString() } };
 
-            start = start ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+            start = GetBoundDateTime(start?.ToLocalTime(), BoundDateTimeKind.Start);
             parameters.Add(nameof(start), start.Value.ToString(DateTimeTemplate));
 
-            end = end ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 23, 59, 59, DateTimeKind.Unspecified);
+            end = GetBoundDateTime(end?.ToLocalTime(), BoundDateTimeKind.End);
             parameters.Add(nameof(end), end.Value.ToString(DateTimeTemplate));
 
             var response = await ExecuteRequestAsync(HttpMethod.Get, "statistics/pbx", parameters);

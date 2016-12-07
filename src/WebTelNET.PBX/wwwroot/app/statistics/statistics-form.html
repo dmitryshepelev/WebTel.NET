@@ -1,25 +1,34 @@
-﻿<form [formGroup]="form">
+﻿<form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-xs-12 col-sm-6 col-md-4">
             <div class="form-group row">
                 <div class="col-md-12">
                     <label for="start" class="col-form-label">Дата начала</label>
-                    <datepicker [(ngModel)]="start" id="start" [maxDate]="end" [showWeeks]="false" [initDate]="startDate" [startingDay]="1" [ngModelOptions]="{standalone: true}"></datepicker>
+                    <datepicker [(ngModel)]="model.start" id="start" [maxDate]="model.end" [showWeeks]="false" [initDate]="startDate" [startingDay]="1" [ngModelOptions]="{standalone: true}"></datepicker>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-xs-12 col-sm-6 col-md-4">
             <div class="form-group row">
                 <div class="col-md-12">
                     <label for="end" class="col-form-label">Дата конца</label>
-                    <datepicker [(ngModel)]="end" id="end" [minDate]="start" [showWeeks]="false" [initDate]="endDate" [startingDay]="1" [ngModelOptions]="{standalone: true}"></datepicker>
+                    <datepicker [(ngModel)]="model.end" id="end" [minDate]="model.start" [showWeeks]="false" [initDate]="endDate" [startingDay]="1" [ngModelOptions]="{standalone: true}"></datepicker>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    haha
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Применить</button>
                 </div>
             </div>
         </div>
     </div>
 </form>
-
-<!--<label for="login-input" class="col-md-3 col-form-label">Логин</label>
-<div class="col-md-9">
-    <input type="text" class="form-control" id="login-input" placeholder="Введите свой логин" formControlName="login" name="login" autocomplete="off" />
-</div>-->

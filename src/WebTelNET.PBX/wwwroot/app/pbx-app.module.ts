@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { TextMaskModule } from "angular2-text-mask";
 import { DatepickerModule } from "ng2-bootstrap/ng2-bootstrap";
+import { SidebarModule } from "ng2-sidebar";
 
 import { ServicesModule, StorageService } from "@commonclient/services";
 import { AlertComponent } from "@commonclient/controls";
@@ -28,7 +29,8 @@ import { PriceInfoComponent } from "./shared/components/price-info.component";
         routing,
         ServicesModule,
         TextMaskModule,
-        DatepickerModule
+        DatepickerModule,
+        SidebarModule
     ],
     providers: [
         appRoutingProviders,

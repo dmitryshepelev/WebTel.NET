@@ -52,7 +52,7 @@ datepicker {
                     }
 
                     &.btn-info {
-                        &.active {
+                        &.active, &.btn-default {
                             background-color: $brand-primary !important;
                             border-color: $brand-primary !important;
                             
