@@ -1,8 +1,10 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebTelNET.CommonNET.Libs.Exceptions;
 using WebTelNET.CommonNET.Models;
 using WebTelNET.Models.Models;
 using WebTelNET.Models.Repository;
@@ -20,17 +22,20 @@ namespace WebTelNET.PBX.Api
         private readonly UserManager<WTUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IZadarmaAccountRepository _zadarmaAccountRepository;
+        private readonly IPBXManager _pbxManager;
 
         private readonly string _currentUserId;
 
         public PBXController(
             UserManager<WTUser> userManager,
             IZadarmaAccountRepository zadarmaAccountRepository,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IPBXManager pbxManager)
         {
             _userManager = userManager;
             _zadarmaAccountRepository = zadarmaAccountRepository;
             _httpContextAccessor = httpContextAccessor;
+            _pbxManager = pbxManager;
 
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
@@ -40,7 +45,7 @@ namespace WebTelNET.PBX.Api
         [Produces(typeof(string[]))]
         public async Task<IActionResult> GetPriceInfo([FromBody] PriceInfoModel model)
         {
-            if (string.IsNullOrEmpty(_currentUserId)) return BadRequest(new ApiNotAuthorizedResponseModel());
+            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
 
             var response = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
@@ -66,7 +71,7 @@ namespace WebTelNET.PBX.Api
         [Produces(typeof(string[]))]
         public async Task<IActionResult> Callback([FromBody] CallbackModel model)
         {
-            if (string.IsNullOrEmpty(_currentUserId)) return BadRequest(new ApiNotAuthorizedResponseModel());
+            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
 
             var response = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
@@ -87,12 +92,14 @@ namespace WebTelNET.PBX.Api
             return BadRequest(errorModel);
         }
 
+        #region To be deprecated
+
         [Route("pbxstatistics")]
         [HttpPost]
         [Produces(typeof(string[]))]
         public async Task<IActionResult> PBXStatistics([FromBody] PBXStatisticsModel model)
         {
-            if (string.IsNullOrEmpty(_currentUserId)) return BadRequest(new ApiNotAuthorizedResponseModel());
+            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
 
             var response  = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
@@ -103,9 +110,6 @@ namespace WebTelNET.PBX.Api
             if (result.Status == ZadarmaResponseStatus.Success)
             {
                 var pbxModel = (PBXStatisticsResponseModel) result;
-
-                var groupedStatistics = pbxModel.Group();
-
                 response.Data.Add(nameof(pbxModel.Stats), pbxModel.Stats);
                 return Ok(response);
             }
@@ -119,7 +123,7 @@ namespace WebTelNET.PBX.Api
         [Produces(typeof(string[]))]
         public async Task<IActionResult> OverallStatistics([FromBody] OverallStatisticsModel model)
         {
-            if (string.IsNullOrEmpty(_currentUserId)) return BadRequest(new ApiNotAuthorizedResponseModel());
+            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
 
             var response = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
@@ -136,6 +140,37 @@ namespace WebTelNET.PBX.Api
             var errorModel = (ErrorResponseModel)result;
             response.Message = errorModel.Message;
             return BadRequest(errorModel);
+        }
+        
+        #endregion
+
+        [Route("statistics")]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public async Task<IActionResult> Statistics([FromBody] StatisticsModel model)
+        {
+            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
+
+            var response = new ApiResponseModel();
+            //var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
+
+            //var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
+            //var resultPbx = await service.GetPBXStatisticsAsync();
+            //var resultOverall = await service.GetOverallStatisticsAsync();
+
+            //if (resultPbx.Status == ZadarmaResponseStatus.Success && resultOverall.Status == ZadarmaResponseStatus.Success)
+            //{
+            //    var pbxModel = (PBXStatisticsResponseModel) resultPbx;
+            //    var overallModel = (OverallStatisticsResponseModel)resultOverall;
+
+            //    var pbxModelGrouped = new GroupedPBXStatistics(pbxModel.Stats);
+            //    var definedPBXStatisticsRecords = _pbxManager.DefinePBXStatisticsRecords(pbxModelGrouped);
+
+            //    response.Data.Add("defined", definedPBXStatisticsRecords);
+            //    return Ok(response);
+            //}
+            response.Message = "Not implemented yet..";
+            return BadRequest(response);
         }
     }
 }

@@ -36,7 +36,6 @@ export class StatisticsFormComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         moment.locale("ru");
-        console.log("Form Initialized");
     }
 
     ngAfterViewInit(): void {
@@ -44,11 +43,6 @@ export class StatisticsFormComponent implements OnInit, AfterViewInit {
     }
 
     onSubmit() {
-        console.log("onSubmit", this.model.start, this.model.end);
-
-        console.log(this.model.end.getTime() - this.model.start.getTime());
-        console.log(moment.duration(new Date(this.model.end.getTime() - this.model.start.getTime()).getDate(), "days").humanize());
-
         Promise.all([this._pbxService.getPBXStatistics(this.model.start, this.model.end), this._pbxService.getOverallStatistics(this.model.start, this.model.end)])
             .then(response => {
                 var result = new ResponseModel();

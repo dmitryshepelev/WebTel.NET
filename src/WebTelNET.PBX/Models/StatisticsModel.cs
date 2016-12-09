@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebTelNET.PBX.Models
 {
-    public abstract class StatisticsModel
+    public class StatisticsModel
     {
         public DateTime Start { get; set; }
         public DateTime End { get; set; }

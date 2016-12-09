@@ -28,7 +28,6 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit {
     }
 
     onFiltersFormSubmitSuccess(result: ResponseModel) {
-        console.log(result, 'here the result');
         this.startDate = this.statisticsFormComponent.model.start;
         this.endDate = this.statisticsFormComponent.model.end;
 
@@ -36,7 +35,11 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit {
         this.overallStatistics = result.data[1].data.Stats;
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+    //    this._pbxService.getStatistics()
+    //        .then(response => console.log(response))
+    //        .catch(error => console.log(error));
+    }
 
     ngAfterViewInit(): void {
         this.statisticsFormComponent.onSubmit();

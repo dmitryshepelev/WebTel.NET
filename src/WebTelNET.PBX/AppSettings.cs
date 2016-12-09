@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebTelNET.CommonNET.Libs;
 
 namespace WebTelNET.PBX
 {
@@ -9,5 +10,6 @@ namespace WebTelNET.PBX
     {
         public string LoginUrl { get; set; }
         public string RedirectUrlParameter { get; set; }
+        public MailSettings MailSettings { get; set; }
     }
 }

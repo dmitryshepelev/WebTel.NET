@@ -4,7 +4,7 @@ using WebTelNET.CommonNET.Libs;
 
 namespace WebTelNET.CommonNET.Services
 {
-    public interface IMailCreator
+    public interface IMailCreator : IErrorMailCreator
     {
         MimeMessage Create(MailContext context);
         MimeMessage Create(MailContext context, string subject);

@@ -52,6 +52,18 @@ namespace WebTelNET.PBX.Services
         End
     }
 
+    public enum DispositionType
+    {
+
+    }
+
+    public struct CallType
+    {
+        public static string Incoming => "incoming";
+        public static string Outgoing => "outgoing";
+        public static string Internal => "internal";
+    }
+
     #region Abstractions
 
     /// <summary>
@@ -139,15 +151,6 @@ namespace WebTelNET.PBX.Services
     {
         public ResponseVersion Version { get; set; }
         public IList<PBXStatisticsInfo> Stats { get; set; }
-
-        public IEnumerable<IGrouping<string, PBXStatisticsInfo>> Group()
-        {
-            if (Version == ResponseVersion.New)
-            {
-                return Stats.GroupBy(x => x.pbx_call_id);
-            }
-            throw new NotImplementedException();
-        }
     }
 
     /// <summary>
@@ -318,7 +321,13 @@ namespace WebTelNET.PBX.Services
             }
         }
 
-        private DateTime GetBoundDateTime(DateTime? dateTime, BoundDateTimeKind kind)
+        /// <summary>
+        /// Create bound DateTime form a specified DateTime
+        /// </summary>
+        /// <param name="dateTime">Specified DateTime</param>
+        /// <param name="kind">The kind of bound DateTime</param>
+        /// <returns></returns>
+        public static DateTime GetBoundDateTime(DateTime? dateTime, BoundDateTimeKind kind)
         {
             DateTime dt = dateTime ?? DateTime.Today;
             if (kind == BoundDateTimeKind.Start)

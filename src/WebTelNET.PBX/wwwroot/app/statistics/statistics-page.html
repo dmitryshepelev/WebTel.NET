@@ -1,9 +1,8 @@
-﻿<ng2-sidebar [(open)]="shownFilters" [position]="'top'" [closeOnClickOutside]="true" [autoFocus]="false">
+﻿<ng2-sidebar [(open)]="shownFilters" [position]="'top'" [closeOnClickOutside]="false" [autoFocus]="false">
     <div class="container-fluid">
         <statistics-form [startDate]="startDate" [endDate]="endDate" (onFormSubmitSuccess)="onFiltersFormSubmitSuccess($event)"></statistics-form>
     </div>
-    <!--<a closeSidebar>Closes the sidebar</a>
-    gggg-->
+    <a closeSidebar>Closes the sidebar</a>
 </ng2-sidebar>
 
 <div>

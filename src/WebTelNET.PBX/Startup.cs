@@ -18,6 +18,7 @@ using WebTelNET.Models.Libs;
 using WebTelNET.Models.Models;
 using WebTelNET.Models.Repository;
 using WebTelNET.PBX.Libs;
+using WebTelNET.PBX.Services;
 
 namespace WebTelNET.PBX
 {
@@ -48,11 +49,31 @@ namespace WebTelNET.PBX
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IZadarmaAccountRepository, ZadarmaAccountRepository>();
             services.AddScoped<UserManager<WTUser>, WTUserManager<WTUser>>();
+            services.AddScoped<IPBXManager, ZadarmaManager>();
 
-            services.AddMvc();
+            services.AddMvc(config =>
+            {
+                config.Filters.Add(typeof(GlobalExceptionHandler));
+            });
+
+            services.Configure<AppSettings>(settings =>
+            {
+                var appSettings = nameof(AppSettings);
+                var mailSettings = nameof(MailSettings);
+                settings.MailSettings = new MailSettings
+                {
+                    LocalDomain = Configuration[$"{appSettings}:{mailSettings}:LocalDomain"],
+                    SMTPServer = Configuration[$"{appSettings}:{mailSettings}:SMTPServer"],
+                    Port = int.Parse(Configuration[$"{appSettings}:{mailSettings}:Port"]),
+                    Login = Configuration[$"{appSettings}:{mailSettings}:Login"],
+                    Password = Configuration[$"{appSettings}:{mailSettings}:Password"]
+                };
+            });
 
             //services.AddScoped<ConsoleLogActionOneFilter>();
             services.AddScoped<ClassConsoleLogActionOneFilter>();
+            services.AddScoped<IMailManager, MailManager>();
+            services.AddScoped<IMailCreator, PBXMailCreator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

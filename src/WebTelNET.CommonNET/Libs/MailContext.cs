@@ -8,4 +8,11 @@ namespace WebTelNET.CommonNET.Libs
     public class MailContext
     {
     }
+
+    public class ErrorMailContext : MailContext
+    {
+        public DateTime DateTime { get; set; }
+        public string ErrorType { get; set; }
+        public string StackTrace { get; set; }
+    }
 }

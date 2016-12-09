@@ -7,7 +7,7 @@ using WebTelNET.CommonNET.Libs;
 
 namespace WebTelNET.CommonNET.Services
 {
-    public class MailCreator : IMailCreator
+    public class MailCreator : IMailCreator, IErrorMailCreator
     {
         private readonly IHostingEnvironment _hostingEnvironment;
 
@@ -53,6 +53,17 @@ namespace WebTelNET.CommonNET.Services
             {
                 message.From.Add(new MailboxAddress(sender));
             }
+            return message;
+        }
+
+        public MimeMessage CreateErrorMessage(MailContext context, string subject, IList<string> senders, IList<string> recievers)
+        {
+            TemplateName = "ErrorTemplate.cshtml";
+            if (string.IsNullOrEmpty(subject))
+            {
+                subject = "The error was occured";
+            }
+            var message = Create(context, subject, senders, recievers);
             return message;
         }
 

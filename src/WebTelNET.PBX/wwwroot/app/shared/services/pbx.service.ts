@@ -27,4 +27,8 @@ export class PBXService extends ServiceBase {
     getOverallStatistics(start: Date, end: Date): Promise<any> {
         return this.post(this.baseUrl + "/overallstatistics/", { start: start, end: end });
     }
+
+    getStatistics(): Promise<any> {
+        return this.post(this.baseUrl + "/statistics/", {});
+    }
 }
