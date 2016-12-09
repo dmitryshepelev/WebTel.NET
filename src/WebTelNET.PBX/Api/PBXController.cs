@@ -1,10 +1,9 @@
-﻿using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebTelNET.CommonNET.Libs.Exceptions;
+using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Models;
 using WebTelNET.Models.Models;
 using WebTelNET.Models.Repository;
@@ -16,6 +15,7 @@ namespace WebTelNET.PBX.Api
 {
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [ServiceFilter(typeof(ApiAuthorizeAttribute))]
     [ServiceFilter(typeof(ClassConsoleLogActionOneFilter))]
     public class PBXController : Controller
     {
@@ -45,8 +45,6 @@ namespace WebTelNET.PBX.Api
         [Produces(typeof(string[]))]
         public async Task<IActionResult> GetPriceInfo([FromBody] PriceInfoModel model)
         {
-            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
-
             var response = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
             
@@ -71,8 +69,6 @@ namespace WebTelNET.PBX.Api
         [Produces(typeof(string[]))]
         public async Task<IActionResult> Callback([FromBody] CallbackModel model)
         {
-            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
-
             var response = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
             model.From = model.From.Trim();
@@ -99,8 +95,6 @@ namespace WebTelNET.PBX.Api
         [Produces(typeof(string[]))]
         public async Task<IActionResult> PBXStatistics([FromBody] PBXStatisticsModel model)
         {
-            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
-
             var response  = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
 
@@ -123,8 +117,6 @@ namespace WebTelNET.PBX.Api
         [Produces(typeof(string[]))]
         public async Task<IActionResult> OverallStatistics([FromBody] OverallStatisticsModel model)
         {
-            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
-
             var response = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
 
@@ -149,8 +141,6 @@ namespace WebTelNET.PBX.Api
         [Produces(typeof(string[]))]
         public async Task<IActionResult> Statistics([FromBody] StatisticsModel model)
         {
-            if (string.IsNullOrEmpty(_currentUserId)) throw new NotAuthorizedForApi();
-
             var response = new ApiResponseModel();
             //var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
 

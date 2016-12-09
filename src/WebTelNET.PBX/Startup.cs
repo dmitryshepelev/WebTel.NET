@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using WebTelNET.CommonNET.Libs;
 using WebTelNET.CommonNET.Libs.ExceptionResolvers;
+using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Services;
 using WebTelNET.Models;
 using WebTelNET.Models.Libs;
@@ -70,7 +71,7 @@ namespace WebTelNET.PBX
                 };
             });
 
-            //services.AddScoped<ConsoleLogActionOneFilter>();
+            services.AddScoped<ApiAuthorizeAttribute>();
             services.AddScoped<ClassConsoleLogActionOneFilter>();
             services.AddScoped<IMailManager, MailManager>();
             services.AddScoped<IMailCreator, PBXMailCreator>();

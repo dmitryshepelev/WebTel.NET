@@ -404,7 +404,7 @@ namespace WebTelNET.PBX.Services
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        /// <param name="isPredicted">if the param is true, system will call "to" number first and then connect "from" on success</param>
+        /// <param name="isPredicted">If the param is true, system will call "to" number first and then connect "from" on success</param>
         /// <returns></returns>
         public async Task<ZadarmaResponseModel> RequestCallbackAsync(string from, string to, bool isPredicted = true)
         {

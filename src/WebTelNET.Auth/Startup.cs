@@ -77,7 +77,7 @@ namespace WebTelNET.Auth
 
                 var databaseSettings = nameof(DatabaseSettings);
                 var roleSettings = nameof(RoleSettings);
-                settings.Roles = new RoleSettings
+                settings.DatabaseSettings.Roles = new RoleSettings
                 {
                     AdminRole = Configuration[$"{appSettings}:{databaseSettings}:{roleSettings}:AdminRole"],
                     UserRole = Configuration[$"{appSettings}:{databaseSettings}:{roleSettings}:UserRole"]
@@ -123,7 +123,7 @@ namespace WebTelNET.Auth
                     var roleManager = app.ApplicationServices.GetService<RoleManager<WTRole>>();
                     var appSettings = app.ApplicationServices.GetService<IOptions<AppSettings>>();
 
-                    serviceScope.ServiceProvider.GetService<WTIdentityDbContext>().EnsureSeedData(userManager, roleManager, appSettings.Value);
+                    serviceScope.ServiceProvider.GetService<WTIdentityDbContext>().EnsureSeedData(userManager, roleManager, appSettings.Value.DatabaseSettings);
                 }
             }
             catch (Exception)

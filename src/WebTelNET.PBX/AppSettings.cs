@@ -6,10 +6,8 @@ using WebTelNET.CommonNET.Libs;
 
 namespace WebTelNET.PBX
 {
-    public class AppSettings
+    public class AppSettings : IMailSettings
     {
-        public string LoginUrl { get; set; }
-        public string RedirectUrlParameter { get; set; }
         public MailSettings MailSettings { get; set; }
     }
 }

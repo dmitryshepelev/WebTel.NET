@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 
 namespace WebTelNET.Models.Libs
 {
+    public interface IDatabaseSettings
+    {
+        DatabaseSettings DatabaseSettings { get; set; }
+    }
+
     public class DatabaseSettings
     {
         public RoleSettings Roles { get; set; }

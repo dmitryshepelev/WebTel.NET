@@ -80,7 +80,7 @@ namespace WebTelNET.Auth.Api
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
-                        await _userManager.AddToRoleAsync(user, _appSettings.Value.Roles.UserRole);
+                        await _userManager.AddToRoleAsync(user, _appSettings.Value.DatabaseSettings.Roles.UserRole);
 
                         var message = _authMailCreator.CreateAccountConfirmationMail(
                             new AccountConfirmationMailContext { SignUpViewModel = model, DateTime = DateTime.Now },

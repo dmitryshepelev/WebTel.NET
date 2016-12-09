@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using WebTelNET.CommonNET.Libs;
 using WebTelNET.CommonNET.Libs.Exceptions;
@@ -21,7 +22,11 @@ namespace WebTelNET.CommonNET.Services
         private readonly IMailManager _mailManager;
         private readonly IMailCreator _mailCreator;
 
-        public GlobalExceptionHandler(IHostingEnvironment hostingEnvironment, IMailManager mailManager, IMailCreator mailCreator)
+        public GlobalExceptionHandler(
+            IHostingEnvironment hostingEnvironment,
+            IMailManager mailManager,
+            IMailCreator mailCreator
+        )
         {
             _hostingEnvironment = hostingEnvironment;
             _mailManager = mailManager;
@@ -33,6 +38,7 @@ namespace WebTelNET.CommonNET.Services
             var responseModel = new ApiResponseModel();
 
             HttpStatusCode status = HttpStatusCode.InternalServerError;
+            bool sendToAdmin = false;
             string message = context.Exception.Message;
 
             var exceptionType = context.Exception.GetType();
@@ -44,13 +50,10 @@ namespace WebTelNET.CommonNET.Services
             else
             {
                 responseModel.Message = DefaultResource.DefaultError;
+                sendToAdmin = true;
             }
 
-            if (_hostingEnvironment.IsDevelopment())
-            {
-
-            }
-            else
+            if (_hostingEnvironment.IsProduction() && sendToAdmin)
             {
                 var email = "info@web-tel.ru";
                 var mailContext = new ErrorMailContext { DateTime = DateTime.Now, ErrorType = exceptionType.Name, StackTrace = context.Exception.StackTrace };

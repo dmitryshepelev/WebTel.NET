@@ -1,5 +1,15 @@
 ﻿namespace WebTelNET.CommonNET.Libs
 {
+    public class AppSettings : IMailSettings
+    {
+        public MailSettings MailSettings { get; set; }
+    }
+
+    public interface IMailSettings
+    {
+        MailSettings MailSettings { get; set; }
+    }
+
     public class MailSettings
     {
         public string LocalDomain { get; set; }
