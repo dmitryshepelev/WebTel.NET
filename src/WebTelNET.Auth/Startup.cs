@@ -77,10 +77,13 @@ namespace WebTelNET.Auth
 
                 var databaseSettings = nameof(DatabaseSettings);
                 var roleSettings = nameof(RoleSettings);
-                settings.DatabaseSettings.Roles = new RoleSettings
+                settings.DatabaseSettings = new DatabaseSettings
                 {
-                    AdminRole = Configuration[$"{appSettings}:{databaseSettings}:{roleSettings}:AdminRole"],
-                    UserRole = Configuration[$"{appSettings}:{databaseSettings}:{roleSettings}:UserRole"]
+                    RoleSettings = new RoleSettings
+                    {
+                        AdminRole = Configuration[$"{appSettings}:{databaseSettings}:{roleSettings}:AdminRole"],
+                        UserRole = Configuration[$"{appSettings}:{databaseSettings}:{roleSettings}:UserRole"]
+                    }
                 };
             });
 
@@ -126,8 +129,11 @@ namespace WebTelNET.Auth
                     serviceScope.ServiceProvider.GetService<WTIdentityDbContext>().EnsureSeedData(userManager, roleManager, appSettings.Value.DatabaseSettings);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine("The ERROR was occured during the database migration. -->");
+                Console.WriteLine(e);
+                Console.WriteLine("-- End Error --");
             }
         }
     }

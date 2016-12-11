@@ -26,13 +26,13 @@ namespace WebTelNET.Models
 
         public async void EnsureSeedData(UserManager<WTUser> userManager, RoleManager<WTRole> roleManager, DatabaseSettings databaseSettings)
         {
-            if (await roleManager.FindByNameAsync(databaseSettings.Roles.UserRole) == null)
+            if (await roleManager.FindByNameAsync(databaseSettings.RoleSettings.UserRole) == null)
             {
-                await roleManager.CreateAsync(new WTRole {Name = databaseSettings.Roles.UserRole});
+                await roleManager.CreateAsync(new WTRole {Name = databaseSettings.RoleSettings.UserRole});
             }
-            if (await roleManager.FindByNameAsync(databaseSettings.Roles.AdminRole) == null)
+            if (await roleManager.FindByNameAsync(databaseSettings.RoleSettings.AdminRole) == null)
             {
-                await roleManager.CreateAsync(new WTRole { Name = databaseSettings.Roles.AdminRole });
+                await roleManager.CreateAsync(new WTRole { Name = databaseSettings.RoleSettings.AdminRole });
             }
         }
     }

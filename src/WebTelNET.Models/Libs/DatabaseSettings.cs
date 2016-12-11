@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebTelNET.Models.Libs
+﻿namespace WebTelNET.Models.Libs
 {
     public interface IDatabaseSettings
     {
@@ -12,7 +7,7 @@ namespace WebTelNET.Models.Libs
 
     public class DatabaseSettings
     {
-        public RoleSettings Roles { get; set; }
+        public RoleSettings RoleSettings { get; set; }
     }
 
     public class RoleSettings
