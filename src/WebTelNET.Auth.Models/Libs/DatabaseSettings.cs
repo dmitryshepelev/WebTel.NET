@@ -1,4 +1,4 @@
-﻿namespace WebTelNET.Models.Libs
+﻿namespace WebTelNET.Auth.Models.Libs
 {
     public interface IDatabaseSettings
     {

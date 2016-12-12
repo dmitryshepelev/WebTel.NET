@@ -242,6 +242,7 @@ src/**/wwwroot/app/**/*.js
 src/**/wwwroot/app/**/*.map
 src/**/.vscode/
 
-src/WebTelNET.Models/Migrations/
+src/WebTelNET.Auth.Models/Migrations/
+src/WebTelNET.PBX.Models/Migrations/
 
 .idea/

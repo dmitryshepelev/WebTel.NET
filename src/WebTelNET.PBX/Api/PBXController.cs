@@ -3,23 +3,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Models;
-using WebTelNET.Models.Models;
-using WebTelNET.Models.Repository;
 using WebTelNET.PBX.Libs;
 using WebTelNET.PBX.Models;
+using WebTelNET.PBX.Models.Repository;
 using WebTelNET.PBX.Services;
 
 namespace WebTelNET.PBX.Api
 {
     [Route("api/[controller]")]
     [Produces("application/json")]
-    [ServiceFilter(typeof(ApiAuthorizeAttribute))]
     [ServiceFilter(typeof(ClassConsoleLogActionOneFilter))]
     public class PBXController : Controller
     {
-        private readonly UserManager<WTUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IZadarmaAccountRepository _zadarmaAccountRepository;
         private readonly IPBXManager _pbxManager;
@@ -27,12 +25,10 @@ namespace WebTelNET.PBX.Api
         private readonly string _currentUserId;
 
         public PBXController(
-            UserManager<WTUser> userManager,
             IZadarmaAccountRepository zadarmaAccountRepository,
             IHttpContextAccessor httpContextAccessor,
             IPBXManager pbxManager)
         {
-            _userManager = userManager;
             _zadarmaAccountRepository = zadarmaAccountRepository;
             _httpContextAccessor = httpContextAccessor;
             _pbxManager = pbxManager;
@@ -41,6 +37,7 @@ namespace WebTelNET.PBX.Api
         }
 
         [Route("priceinfo")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
         [HttpPost]
         [Produces(typeof(string[]))]
         public async Task<IActionResult> GetPriceInfo([FromBody] PriceInfoModel model)
@@ -65,6 +62,7 @@ namespace WebTelNET.PBX.Api
         }
 
         [Route("callback")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
         [HttpPost]
         [Produces(typeof(string[]))]
         public async Task<IActionResult> Callback([FromBody] CallbackModel model)
@@ -91,6 +89,7 @@ namespace WebTelNET.PBX.Api
         #region To be deprecated
 
         [Route("pbxstatistics")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
         [HttpPost]
         [Produces(typeof(string[]))]
         public async Task<IActionResult> PBXStatistics([FromBody] PBXStatisticsModel model)
@@ -113,6 +112,7 @@ namespace WebTelNET.PBX.Api
         }
 
         [Route("overallstatistics")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
         [HttpPost]
         [Produces(typeof(string[]))]
         public async Task<IActionResult> OverallStatistics([FromBody] OverallStatisticsModel model)
@@ -137,6 +137,7 @@ namespace WebTelNET.PBX.Api
         #endregion
 
         [Route("statistics")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
         [HttpPost]
         [Produces(typeof(string[]))]
         public async Task<IActionResult> Statistics([FromBody] StatisticsModel model)
@@ -161,6 +162,34 @@ namespace WebTelNET.PBX.Api
             //}
             response.Message = "Not implemented yet..";
             return BadRequest(response);
+        }
+
+        [Route("notify/{id?}")]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public async Task<IActionResult> Notify(string id, [FromBody] JObject model)
+        {
+            var response = new ApiResponseModel();
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest(response);
+            }
+            var zadarmaAccount = _zadarmaAccountRepository.GetAccount(id);
+            if (zadarmaAccount == null)
+            {
+                return BadRequest(response);
+            }
+
+            var baseModel = model.ToObject<CallNotificationModel>();
+
+            if (baseModel.Event == CallNotificationKind.NotifyStart)
+            {
+                baseModel = model.ToObject<IncomingCallStartNotificationModel>();
+            }
+            response.Data.Add("user_id", id);;
+            response.Data.Add("cnmodel", baseModel);
+            return Ok(response);
         }
     }
 }

@@ -8,17 +8,16 @@ using Microsoft.Extensions.Logging;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using WebTelNET.CommonNET.Libs;
 using WebTelNET.CommonNET.Libs.ExceptionResolvers;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Services;
-using WebTelNET.Models;
-using WebTelNET.Models.Libs;
-using WebTelNET.Models.Models;
-using WebTelNET.Models.Repository;
 using WebTelNET.PBX.Libs;
+using WebTelNET.PBX.Models;
+using WebTelNET.PBX.Models.Repository;
 using WebTelNET.PBX.Services;
 
 namespace WebTelNET.PBX
@@ -41,15 +40,14 @@ namespace WebTelNET.PBX
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<WTIdentityDbContext>(
+            services.AddDbContext<PBXDbContext>(
                 options => options.UseNpgsql(Configuration.GetConnectionString("PostgresConnectionString")));
-            services.AddIdentity<WTUser, WTRole>()
-                .AddEntityFrameworkStores<WTIdentityDbContext>()
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<PBXDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IZadarmaAccountRepository, ZadarmaAccountRepository>();
-            services.AddScoped<UserManager<WTUser>, WTUserManager<WTUser>>();
             services.AddScoped<IPBXManager, ZadarmaManager>();
 
             services.AddMvc(config =>

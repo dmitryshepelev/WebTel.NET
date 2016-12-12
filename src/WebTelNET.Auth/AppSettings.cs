@@ -1,5 +1,5 @@
 ﻿using WebTelNET.CommonNET.Libs;
-using WebTelNET.Models.Libs;
+using WebTelNET.Auth.Models.Libs;
 
 namespace WebTelNET.Auth
 {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebTelNET.Auth.Libs;
 using WebTelNET.Auth.Models;
 using WebTelNET.Auth.Resources;
 using WebTelNET.Auth.Services;
-using WebTelNET.Models.Models;
 using WebTelNET.CommonNET.Models;
 using WebTelNET.CommonNET.Services;
 
@@ -19,20 +19,20 @@ namespace WebTelNET.Auth.Api
     [Produces("application/json")]
     public class AccountController : Controller
     {
-        private readonly SignInManager<WTUser> _signInManager;
-        private readonly UserManager<WTUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IAccountResourceManager _resourceManager;
         private readonly IMailManager _mailManager;
         private readonly IOptions<AppSettings> _appSettings;
         private readonly IAuthMailCreator _authMailCreator;
 
         public AccountController(
-            SignInManager<WTUser> signInManager,
+            SignInManager<IdentityUser> signInManager,
             IAccountResourceManager resourceManager,
             IMailManager mailManager,
             IOptions<AppSettings> appSettings,
             IAuthMailCreator authMailCreator,
-            UserManager<WTUser> userManager)
+            UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _resourceManager = resourceManager;
@@ -76,7 +76,7 @@ namespace WebTelNET.Auth.Api
             {
                 try
                 {
-                    var user = new WTUser {Email = model.Email, UserName = model.Login};
+                    var user = new IdentityUser { Email = model.Email, UserName = model.Login};
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {

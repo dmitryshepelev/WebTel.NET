@@ -3,13 +3,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
-namespace WebTelNET.Models.Repository
+namespace WebTelNET.CommonNET.Libs.Repository
 {
     public class RepositoryBase<T> : IRepository<T> where T : class
     {
-        protected WTIdentityDbContext Context { get; }
+        protected DbContext Context { get; }
 
-        public RepositoryBase(WTIdentityDbContext context)
+        public RepositoryBase(DbContext context)
         {
             Context = context;
         }

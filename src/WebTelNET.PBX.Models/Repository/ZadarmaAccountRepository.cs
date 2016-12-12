@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebTelNET.Models.Models;
+using WebTelNET.CommonNET.Libs.Repository;
+using WebTelNET.PBX.Models.Models;
 
-namespace WebTelNET.Models.Repository
+namespace WebTelNET.PBX.Models.Repository
 {
+    public interface IZadarmaAccountRepository
+    {
+        ZadarmaAccount GetAccount(string userId);
+    }
+
     public class ZadarmaAccountRepository : RepositoryBase<ZadarmaAccount>, IZadarmaAccountRepository
     {
-        public ZadarmaAccountRepository(WTIdentityDbContext context) : base(context)
+        public ZadarmaAccountRepository(PBXDbContext context) : base(context)
         {
         }
 

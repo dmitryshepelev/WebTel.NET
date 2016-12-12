@@ -10,8 +10,6 @@ using WebTelNET.Auth.Models;
 using WebTelNET.Auth.Resources;
 using WebTelNET.CommonNET.Models;
 using WebTelNET.CommonNET.Services;
-using WebTelNET.Models.Models;
-using WebTelNET.Models.Repository;
 using Xunit;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 

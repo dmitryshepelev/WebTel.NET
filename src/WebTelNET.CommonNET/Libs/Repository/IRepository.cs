@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace WebTelNET.Models.Repository
+namespace WebTelNET.CommonNET.Libs.Repository
 {
     public interface IRepository<T> where T : class
     {

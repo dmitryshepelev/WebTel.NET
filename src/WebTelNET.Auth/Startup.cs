@@ -7,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using WebTelNET.Auth.Resources;
@@ -14,11 +15,8 @@ using WebTelNET.Auth.Services;
 using WebTelNET.CommonNET.Libs;
 using WebTelNET.CommonNET.Libs.ExceptionResolvers;
 using WebTelNET.CommonNET.Services;
-using WebTelNET.Models;
-using WebTelNET.Models.Libs;
-using WebTelNET.Models.Models;
-using WebTelNET.Models.Repository;
-using WebTelNET.Auth;
+using WebTelNET.Auth.Models;
+using WebTelNET.Auth.Models.Libs;
 
 namespace WebTelNET.Auth
 {
@@ -40,10 +38,10 @@ namespace WebTelNET.Auth
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<WTIdentityDbContext>(
+            services.AddDbContext<AuthDbContext>(
                 options => options.UseNpgsql(Configuration.GetConnectionString("PostgresConnectionString")));
-            services.AddIdentity<WTUser, WTRole>()
-                .AddEntityFrameworkStores<WTIdentityDbContext>()
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AuthDbContext>()
                 .AddDefaultTokenProviders();
             services.AddMvc();
 
@@ -51,7 +49,7 @@ namespace WebTelNET.Auth
                 .AddTemporarySigningCredential()
                 .AddInMemoryScopes(IdentityServerConfig.GetScopes())
                 .AddInMemoryClients(IdentityServerConfig.GetClients())
-                .AddAspNetIdentity<WTUser>();
+                .AddAspNetIdentity<IdentityUser>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -87,8 +85,6 @@ namespace WebTelNET.Auth
                 };
             });
 
-            services.AddScoped<SignInManager<WTUser>, WTSignInManager<WTUser>>();
-            services.AddScoped<UserManager<WTUser>, WTUserManager<WTUser>>();
             services.AddScoped<IAccountResourceManager, AccountResourceManager>();
             services.AddScoped<IMailManager, MailManager>();
             services.AddScoped<IAuthMailCreator, AuthMailCreator>();
@@ -120,13 +116,13 @@ namespace WebTelNET.Auth
             {
                 using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
-                    serviceScope.ServiceProvider.GetService<WTIdentityDbContext>().Database.Migrate();
+                    serviceScope.ServiceProvider.GetService<AuthDbContext>().Database.Migrate();
 
-                    var userManager = app.ApplicationServices.GetService<UserManager<WTUser>>();
-                    var roleManager = app.ApplicationServices.GetService<RoleManager<WTRole>>();
+                    var userManager = app.ApplicationServices.GetService<UserManager<IdentityUser>>();
+                    var roleManager = app.ApplicationServices.GetService<RoleManager<IdentityRole>>();
                     var appSettings = app.ApplicationServices.GetService<IOptions<AppSettings>>();
 
-                    serviceScope.ServiceProvider.GetService<WTIdentityDbContext>().EnsureSeedData(userManager, roleManager, appSettings.Value.DatabaseSettings);
+                    serviceScope.ServiceProvider.GetService<AuthDbContext>().EnsureSeedData(userManager, roleManager, appSettings.Value.DatabaseSettings);
                 }
             }
             catch (Exception e)
