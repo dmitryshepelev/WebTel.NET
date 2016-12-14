@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebTelNET.CommonNET.Libs.Repository;
+﻿using WebTelNET.CommonNET.Libs.Repository;
 using WebTelNET.PBX.Models.Models;
 
 namespace WebTelNET.PBX.Models.Repository

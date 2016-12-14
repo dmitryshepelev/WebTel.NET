@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace WebTelNET.PBX.Models.Models
 {
@@ -13,5 +10,8 @@ namespace WebTelNET.PBX.Models.Models
         public string SecretKey { get; set; }
 
         public string UserId { get; set; }
+
+        public ICollection<IncomingCallNotification> IncomingCallNotifications { get; set; }
+        public ICollection<OutgoingCallNotification> OutgoingCallNotifications { get; set; }
     }
 }

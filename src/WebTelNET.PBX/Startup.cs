@@ -6,13 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using WebTelNET.CommonNET.Libs;
-using WebTelNET.CommonNET.Libs.ExceptionResolvers;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Services;
 using WebTelNET.PBX.Libs;
@@ -24,6 +22,8 @@ namespace WebTelNET.PBX
 {
     public class Startup
     {
+        private readonly MapperConfiguration _mapperConfiguration;
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -32,6 +32,14 @@ namespace WebTelNET.PBX
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            _mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.SourceMemberNamingConvention = new LowerUnderscoreNamingConvention();
+                config.DestinationMemberNamingConvention = new PascalCaseNamingConvention();
+                config.AddProfile(new AutoMapperConfiguration());
+//                config.ReplaceMemberName("Event", );
+            });
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -73,6 +81,12 @@ namespace WebTelNET.PBX
             services.AddScoped<ClassConsoleLogActionOneFilter>();
             services.AddScoped<IMailManager, MailManager>();
             services.AddScoped<IMailCreator, PBXMailCreator>();
+            services.AddScoped<IDispositionTypeRepository, DispositionTypeRepository>();
+            services.AddScoped<INotificationTypeRepository, NotificationTypeRepository>();
+            services.AddScoped<IOutgoingCallNotificationRepository, OutgoingCallNotificationRepository>();
+            services.AddScoped<IIncomingCallNotificationRepository, IncomingCallNotificationRepository>();
+
+            services.AddSingleton<IMapper>(x => _mapperConfiguration.CreateMapper());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,7 +128,7 @@ namespace WebTelNET.PBX
 
             app.UseMvc(routes =>
             {
-                routes.MapSpaFallbackRoute("spa-fallback", new { controller = "home", action = "index" });
+                routes.MapSpaFallbackRoute("spa-fallback", new {controller = "home", action = "index"});
             });
         }
     }

@@ -16,13 +16,13 @@ namespace WebTelNET.PBX.Models
     public class CallNotificationModel
     {
         public string Event { get; set; }
-        public DateTime Call_Start { get; set; }
-        public string Pbx_call_id { get; set; }
+        public DateTime call_start { get; set; }
+        public string pbx_call_id { get; set; }
     }
 
     public class IncomingCallStartNotificationModel : CallNotificationModel
     {
-        public string Caller_Id { get; set; }
-        public string Called_Did { get; set; }
+        public string caller_id { get; set; }
+        public string called_did { get; set; }
     }
 }
