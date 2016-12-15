@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -57,6 +58,16 @@ namespace WebTelNET.PBX.Services
 
     }
 
+    public enum CallNotificationType
+    {
+        NotifyStart = 1,
+        NotifyInternal,
+        NotifyEnd,
+        NotifyOutStart,
+        NotifyOutEnd
+    }
+
+    // TODO: Deprecate
     public struct CallType
     {
         public static string Incoming => "incoming";
@@ -217,6 +228,26 @@ namespace WebTelNET.PBX.Services
             SecretKey = secretKey;
 
             UseV1();
+        }
+
+        public static CallNotificationType ParseNotificationType(string notificationType)
+        {
+            if (string.IsNullOrEmpty(notificationType)) throw new Exception("String musn't be null or empty");
+            var notificationTypeString = notificationType.Replace("_", string.Empty);
+//            var words = notificationType.Split('_');
+//            foreach (var word in words)
+//            {
+//                var firstLetter = word[0].ToString().ToUpper();
+//                var restStr = word.Substring(1).ToLower();
+//                notificationTypeString.Append($"{firstLetter}{restStr}");
+//            }
+            CallNotificationType callNotificationType;
+            var succeeded = Enum.TryParse(notificationTypeString, true, out callNotificationType);
+            if (succeeded)
+            {
+                return callNotificationType;
+            }
+            throw new InvalidCastException($"The string '{notificationType}' cannot be parsed to CallNotificationType enum");
         }
 
         private string GetMD5(string str)

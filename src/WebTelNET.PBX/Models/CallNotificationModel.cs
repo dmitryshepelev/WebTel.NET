@@ -2,17 +2,6 @@
 
 namespace WebTelNET.PBX.Models
 {
-//    public interface I
-
-    public static class CallNotificationKind
-    {
-        public static string NotifyStart => "NOTIFY_START";
-        public static string NotifyInternal => "NOTIFY_INTERNAL";
-        public static string NotifyEnd => "NOTIFY_END";
-        public static string NotifyOutStart => "NOTIFY_OUT_START";
-        public static string NotifyOutEnd => "NOTIFY_OUT_END";
-    }
-
     public class CallNotificationModel
     {
         public string Event { get; set; }
@@ -24,5 +13,18 @@ namespace WebTelNET.PBX.Models
     {
         public string caller_id { get; set; }
         public string called_did { get; set; }
+    }
+
+    public abstract class CallNotificationViewModel
+    {
+        public int NotificationType { get; set; }
+        public DateTime CallStart { get; set; }
+        public string PBXCallId { get; set; }
+    }
+
+    public class IncomingCallNotificationViewModel : CallNotificationViewModel
+    {
+        public string CallerId { get; set; }
+        public string CalledDid { get; set; }
     }
 }

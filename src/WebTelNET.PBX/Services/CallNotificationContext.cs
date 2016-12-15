@@ -24,10 +24,10 @@ namespace WebTelNET.PBX.Services
         public NotifyCallContext(CallNotificationModel model)
         {
             _model = model;
-            if (model.Event == CallNotificationKind.NotifyStart)
-            {
-                _stategy = new IncomingClassStartNotificationStrategy();
-            }
+//            if (model.Event == CallNotificationKind.NotifyStart)
+//            {
+//                _stategy = new IncomingClassStartNotificationStrategy();
+//            }
         }
 
         public void ApplyCall()

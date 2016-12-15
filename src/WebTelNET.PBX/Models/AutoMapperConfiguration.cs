@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using WebTelNET.PBX.Models.Models;
+using WebTelNET.PBX.Services;
 
 namespace WebTelNET.PBX.Models
 {
@@ -7,8 +8,15 @@ namespace WebTelNET.PBX.Models
     {
         protected override void Configure()
         {
-            base.Configure();
-            CreateMap<IncomingCallStartNotificationModel, IncomingCallNotification>();
+            CreateMap<IncomingCallStartNotificationModel, IncomingCallNotification>()
+                .ForMember(m => m.NotificationTypeId, o => o.MapFrom(s => (int)ZadarmaService.ParseNotificationType(s.Event)))
+                .ForMember(m => m.CallStart, o => o.MapFrom(s => s.call_start))
+                .ForMember(m => m.PBXCallId, o => o.MapFrom(s => s.pbx_call_id))
+                .ForMember(m => m.CalledDid, o => o.MapFrom(s => s.called_did));
+
+            CreateMap<IncomingCallNotification, IncomingCallNotificationViewModel>()
+                .ForMember(m => m.NotificationType, o => o.MapFrom(s => s.NotificationTypeId))
+                .ForMember(m => m.CallerId, o => o.MapFrom(s => s.Caller != null ? s.Caller.Number : null ));
         }
     }
 }

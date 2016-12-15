@@ -35,10 +35,7 @@ namespace WebTelNET.PBX
 
             _mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.SourceMemberNamingConvention = new LowerUnderscoreNamingConvention();
-                config.DestinationMemberNamingConvention = new PascalCaseNamingConvention();
                 config.AddProfile(new AutoMapperConfiguration());
-//                config.ReplaceMemberName("Event", );
             });
         }
 
@@ -85,6 +82,7 @@ namespace WebTelNET.PBX
             services.AddScoped<INotificationTypeRepository, NotificationTypeRepository>();
             services.AddScoped<IOutgoingCallNotificationRepository, OutgoingCallNotificationRepository>();
             services.AddScoped<IIncomingCallNotificationRepository, IncomingCallNotificationRepository>();
+            services.AddScoped<ICallerRepository, CallerRepository>();
 
             services.AddSingleton<IMapper>(x => _mapperConfiguration.CreateMapper());
         }

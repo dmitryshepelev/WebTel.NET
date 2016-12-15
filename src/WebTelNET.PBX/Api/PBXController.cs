@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using WebTelNET.CommonNET.Libs.Filters;
@@ -24,6 +23,7 @@ namespace WebTelNET.PBX.Api
         private readonly IZadarmaAccountRepository _zadarmaAccountRepository;
         private readonly IPBXManager _pbxManager;
         private readonly IIncomingCallNotificationRepository _incomingCallNotificationRepository;
+        private readonly ICallerRepository _callerRepository;
         private readonly IMapper _mapper;
 
         private readonly string _currentUserId;
@@ -33,7 +33,8 @@ namespace WebTelNET.PBX.Api
             IHttpContextAccessor httpContextAccessor,
             IPBXManager pbxManager,
             IIncomingCallNotificationRepository incomingCallNotificationRepository,
-            IMapper mapper
+            IMapper mapper,
+            ICallerRepository callerRepository
         )
         {
             _zadarmaAccountRepository = zadarmaAccountRepository;
@@ -41,6 +42,7 @@ namespace WebTelNET.PBX.Api
             _pbxManager = pbxManager;
             _incomingCallNotificationRepository = incomingCallNotificationRepository;
             _mapper = mapper;
+            _callerRepository = callerRepository;
 
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
@@ -191,15 +193,22 @@ namespace WebTelNET.PBX.Api
             }
 
             var baseModel = model.ToObject<CallNotificationModel>();
+            var callNotificationType = ZadarmaService.ParseNotificationType(baseModel.Event);
 
-            IncomingCallNotification mapped = new IncomingCallNotification();
-            if (baseModel.Event == CallNotificationKind.NotifyStart)
+            if (callNotificationType == CallNotificationType.NotifyStart)
             {
-                baseModel = model.ToObject<IncomingCallStartNotificationModel>();
-                mapped = _mapper.Map<IncomingCallNotification>(baseModel);
+                var requestModel = model.ToObject<IncomingCallStartNotificationModel>();
+                var caller = _callerRepository.GetOrCreate(new Caller {Number = requestModel.caller_id});
+
+                var mapped = _mapper.Map<IncomingCallNotification>(requestModel);
+                mapped.CallerId = caller.Id;
+                mapped.ZadarmaAccountId = zadarmaAccount.Id;
+
+                var incomingCallNotification = _incomingCallNotificationRepository.Create(mapped);
+                response.Data.Add("model", _mapper.Map<IncomingCallNotificationViewModel>(incomingCallNotification));
+
             }
             response.Data.Add("user_id", id);
-            response.Data.Add("cnmodel", mapped);
             return Ok(response);
         }
     }
