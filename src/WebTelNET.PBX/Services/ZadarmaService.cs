@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -67,6 +66,11 @@ namespace WebTelNET.PBX.Services
         NotifyOutEnd
     }
 
+    public enum ZadarmaApiVersion
+    {
+        V1
+    }
+
     // TODO: Deprecate
     public struct CallType
     {
@@ -113,6 +117,23 @@ namespace WebTelNET.PBX.Services
     public interface ICurrency
     {
         string Currency { get; set; }
+    }
+
+    #endregion
+
+    #region RequestModels
+
+    public class CallRequestModel
+    {
+        public string Event { get; set; }
+        public DateTime call_start { get; set; }
+        public string pbx_call_id { get; set; }
+    }
+
+    public class IncomingCallStartRequestModel : CallRequestModel
+    {
+        public string caller_id { get; set; }
+        public string called_did { get; set; }
     }
 
     #endregion
@@ -210,10 +231,58 @@ namespace WebTelNET.PBX.Services
 
     #endregion
 
+    public interface IZadarmaService
+    {
+        /// <summary>
+        /// Get current balance of zadarma profile
+        /// </summary>
+        /// <returns>Something</returns>
+        Task<ZadarmaResponseModel> GetBalanceAsync();
+
+        /// <summary>
+        /// Get call price info to call a certain phone number
+        /// </summary>
+        /// <param name="number">A phone number to call</param>
+        /// <returns></returns>
+        Task<ZadarmaResponseModel> GetPriceInfoAsync(string number);
+
+        /// <summary>
+        /// Get overall statistics
+        /// </summary>
+        /// <param name="start">Start date of the statistics</param>
+        /// <param name="end">End date of the statistics</param>
+        /// <returns></returns>
+        Task<ZadarmaResponseModel> GetOverallStatisticsAsync(DateTime? start = null, DateTime? end = null);
+
+        /// <summary>
+        /// Get PBX statitics
+        /// </summary>
+        /// <param name="start">Start date of the statistics</param>
+        /// <param name="end">End date of the statistics</param>
+        /// <param name="version">Format of the result: 2 - the new format, 1 - the old format</param>
+        /// <returns></returns>
+        Task<ZadarmaResponseModel> GetPBXStatisticsAsync(DateTime? start = null, DateTime? end = null,
+            ResponseVersion version = ResponseVersion.New);
+
+        /// <summary>
+        /// Send a request to callback
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="isPredicted">If the param is true, system will call "to" number first and then connect "from" on success</param>
+        /// <returns></returns>
+        Task<ZadarmaResponseModel> RequestCallbackAsync(string from, string to, bool isPredicted = true);
+
+        /// <summary>
+        /// Force the service to use api version
+        /// </summary>
+        void UseApiVersion(ZadarmaApiVersion version = ZadarmaApiVersion.V1);
+    }
+
     /// <summary>
     /// Service to provide access to Zadarma API
     /// </summary>
-    public class ZadarmaService
+    public class ZadarmaService : IZadarmaService
     {
         private const string BaseAddress = "https://api.zadarma.com";
         private const string DateTimeTemplate = "yyyy-MM-dd HH:mm:ss";
@@ -227,27 +296,7 @@ namespace WebTelNET.PBX.Services
             UserKey = userKey;
             SecretKey = secretKey;
 
-            UseV1();
-        }
-
-        public static CallNotificationType ParseNotificationType(string notificationType)
-        {
-            if (string.IsNullOrEmpty(notificationType)) throw new Exception("String musn't be null or empty");
-            var notificationTypeString = notificationType.Replace("_", string.Empty);
-//            var words = notificationType.Split('_');
-//            foreach (var word in words)
-//            {
-//                var firstLetter = word[0].ToString().ToUpper();
-//                var restStr = word.Substring(1).ToLower();
-//                notificationTypeString.Append($"{firstLetter}{restStr}");
-//            }
-            CallNotificationType callNotificationType;
-            var succeeded = Enum.TryParse(notificationTypeString, true, out callNotificationType);
-            if (succeeded)
-            {
-                return callNotificationType;
-            }
-            throw new InvalidCastException($"The string '{notificationType}' cannot be parsed to CallNotificationType enum");
+            UseApiVersion();
         }
 
         private string GetMD5(string str)
@@ -353,6 +402,27 @@ namespace WebTelNET.PBX.Services
         }
 
         /// <summary>
+        /// Parse notification type string into CallNotificationType
+        /// </summary>
+        /// <param name="notificationType"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="InvalidCastException"></exception>
+        public static CallNotificationType ParseNotificationType(string notificationType)
+        {
+            if (string.IsNullOrEmpty(notificationType)) throw new Exception("String musn't be null or empty");
+            var notificationTypeString = notificationType.Replace("_", string.Empty);
+
+            CallNotificationType callNotificationType;
+            var succeeded = Enum.TryParse(notificationTypeString, true, out callNotificationType);
+            if (succeeded)
+            {
+                return callNotificationType;
+            }
+            throw new InvalidCastException($"The string '{notificationType}' cannot be parsed to CallNotificationType enum");
+        }
+
+        /// <summary>
         /// Create bound DateTime form a specified DateTime
         /// </summary>
         /// <param name="dateTime">Specified DateTime</param>
@@ -445,11 +515,12 @@ namespace WebTelNET.PBX.Services
         }
 
         /// <summary>
-        /// Force the service to use 'v1' api version
+        /// Force the service to use api version
         /// </summary>
-        public void UseV1()
+        public void UseApiVersion(ZadarmaApiVersion version = ZadarmaApiVersion.V1)
         {
-            ApiVersion = "v1";
+            var versionStr = Enum.GetName(version.GetType(), version);
+            ApiVersion = versionStr.ToLower();
         }
     }
 }

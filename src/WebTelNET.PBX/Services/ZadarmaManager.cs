@@ -1,80 +1,57 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using Newtonsoft.Json.Linq;
+using WebTelNET.PBX.Models.Models;
+using WebTelNET.PBX.Models.Repository;
 
 namespace WebTelNET.PBX.Services
 {
-    public class PBXStatisticsInfoTyped : PBXStatisticsInfo
-    {
-        public CallType Type { get; set; }
-    }
-
-    public class PBXStatisticsGroup<T> where T : PBXStatisticsInfo
-    {
-        public IGrouping<string, T> Group { get; }
-
-        public PBXStatisticsGroup(IGrouping<string, T> group)
-        {
-            Group = group;
-        }
-
-        public T GetCallByDestination(string destination)
-        {
-            return Group.FirstOrDefault(x => x.Destination == destination);
-        }
-
-        public IEnumerable<T> GetCallsByDisposition(string disposition)
-        {
-            return Group.Where(x => x.Disposition == disposition);
-        }
-
-        public T GetCallWithSameDisposition(T call)
-        {
-            var callsWithDisposition = GetCallsByDisposition(call.Disposition);
-            return callsWithDisposition.FirstOrDefault(x => x.Destination != call.Destination);
-        }
-    }
-
-    /// <summary>
-    /// Class represents grouped pbx statistics state
-    /// </summary>
-    public class GroupedPBXStatistics
-    {
-        public IList<PBXStatisticsGroup<PBXStatisticsInfo>> Stats { get; }
-
-        public GroupedPBXStatistics(IList<PBXStatisticsInfo> stats, ResponseVersion statsVersion = ResponseVersion.New)
-        {
-            Stats = new List<PBXStatisticsGroup<PBXStatisticsInfo>>();
-            if (statsVersion == ResponseVersion.New)
-            {
-                var groups = stats.GroupBy(x => x.pbx_call_id);
-                foreach (var group in groups)
-                {
-                    Stats.Add(new PBXStatisticsGroup<PBXStatisticsInfo>(group));
-                }
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-        }
-    }
-
     public class ZadarmaManager : IPBXManager
     {
-        public IList<PBXStatisticsInfoTyped> DefinePBXStatisticsRecords(GroupedPBXStatistics groupedPbxStatistics)
-        {
-            var definedPBXStatisticsRecords = new List<PBXStatisticsInfoTyped>();
-            foreach (var group in groupedPbxStatistics.Stats)
-            {
-                var incomingCallRecord = group.GetCallByDestination(CallType.Incoming);
-                var targetCallRecord = (incomingCallRecord == null ? group.Group.First() : group.GetCallWithSameDisposition(incomingCallRecord)) as PBXStatisticsInfoTyped;
+        private readonly IMapper _mapper;
+        private readonly ICallerRepository _callerRepository;
+        private readonly ICallRepository _callRepository;
 
-                definedPBXStatisticsRecords.Add(targetCallRecord);
+        public ZadarmaManager(
+            IMapper mapper,
+            ICallerRepository callerRepository,
+            ICallRepository callRepository
+        )
+        {
+            _mapper = mapper;
+            _callerRepository = callerRepository;
+            _callRepository = callRepository;
+        }
+
+        public Call ProcessCallNotification(JObject model, Guid zadarmaAccountId)
+        {
+            var baseModel = model.ToObject<CallRequestModel>();
+            var notificationType = ZadarmaService.ParseNotificationType(baseModel.Event);
+
+            CallNotificationStrategy strategy;
+            switch (notificationType)
+            {
+                case CallNotificationType.NotifyStart:
+                    strategy = new IncomingCallStartNotificationStrategy(_mapper, _callerRepository, _callRepository);
+                    break;
+                case CallNotificationType.NotifyInternal:
+                    strategy = new InternalCallNotificationStrategy(_mapper, _callerRepository, _callRepository);
+                    break;
+                case CallNotificationType.NotifyEnd:
+                    strategy = new IncomingCallEndNotificationStrategy(_mapper, _callerRepository, _callRepository);
+                    break;
+                case CallNotificationType.NotifyOutStart:
+                    strategy = new OutgoingCallStartNotificationStrategy(_mapper, _callerRepository, _callRepository);
+                    break;
+                case CallNotificationType.NotifyOutEnd:
+                    strategy = new OutgoingCallEndNotificationStrategy(_mapper, _callerRepository, _callRepository);
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
-            return definedPBXStatisticsRecords;
+
+            var context = new CallNotificationContext(strategy);
+            return context.ProcessNotification(model, zadarmaAccountId);
         }
     }
 }

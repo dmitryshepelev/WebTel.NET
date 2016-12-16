@@ -22,7 +22,7 @@ namespace WebTelNET.PBX.Api
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IZadarmaAccountRepository _zadarmaAccountRepository;
         private readonly IPBXManager _pbxManager;
-        private readonly IIncomingCallNotificationRepository _incomingCallNotificationRepository;
+        private readonly ICallRepository _callRepository;
         private readonly ICallerRepository _callerRepository;
         private readonly IMapper _mapper;
 
@@ -32,7 +32,7 @@ namespace WebTelNET.PBX.Api
             IZadarmaAccountRepository zadarmaAccountRepository,
             IHttpContextAccessor httpContextAccessor,
             IPBXManager pbxManager,
-            IIncomingCallNotificationRepository incomingCallNotificationRepository,
+            ICallRepository callRepository,
             IMapper mapper,
             ICallerRepository callerRepository
         )
@@ -40,7 +40,7 @@ namespace WebTelNET.PBX.Api
             _zadarmaAccountRepository = zadarmaAccountRepository;
             _httpContextAccessor = httpContextAccessor;
             _pbxManager = pbxManager;
-            _incomingCallNotificationRepository = incomingCallNotificationRepository;
+            _callRepository = callRepository;
             _mapper = mapper;
             _callerRepository = callerRepository;
 
@@ -54,7 +54,7 @@ namespace WebTelNET.PBX.Api
         public async Task<IActionResult> GetPriceInfo([FromBody] PriceInfoModel model)
         {
             var response = new ApiResponseModel();
-            var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
             
             model.Number = model.Number.Trim();
             var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
@@ -79,7 +79,7 @@ namespace WebTelNET.PBX.Api
         public async Task<IActionResult> Callback([FromBody] CallbackModel model)
         {
             var response = new ApiResponseModel();
-            var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
             model.From = model.From.Trim();
             model.To = model.To.Trim();
 
@@ -106,7 +106,7 @@ namespace WebTelNET.PBX.Api
         public async Task<IActionResult> PBXStatistics([FromBody] PBXStatisticsModel model)
         {
             var response  = new ApiResponseModel();
-            var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
 
             var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
             var result = await service.GetPBXStatisticsAsync(model.Start, model.End);
@@ -129,7 +129,7 @@ namespace WebTelNET.PBX.Api
         public async Task<IActionResult> OverallStatistics([FromBody] OverallStatisticsModel model)
         {
             var response = new ApiResponseModel();
-            var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
 
             var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
             var result = await service.GetOverallStatisticsAsync(model.Start, model.End);
@@ -154,7 +154,7 @@ namespace WebTelNET.PBX.Api
         public async Task<IActionResult> Statistics([FromBody] StatisticsModel model)
         {
             var response = new ApiResponseModel();
-            //var zadarmaAccount = _zadarmaAccountRepository.GetAccount(_currentUserId);
+            //var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
 
             //var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
             //var resultPbx = await service.GetPBXStatisticsAsync();
@@ -186,29 +186,16 @@ namespace WebTelNET.PBX.Api
             {
                 return BadRequest(response);
             }
-            var zadarmaAccount = _zadarmaAccountRepository.GetAccount(id);
+            var zadarmaAccount = _zadarmaAccountRepository.GetSingle(x => x.Id.ToString().Equals(id));
             if (zadarmaAccount == null)
             {
                 return BadRequest(response);
             }
 
-            var baseModel = model.ToObject<CallNotificationModel>();
-            var callNotificationType = ZadarmaService.ParseNotificationType(baseModel.Event);
+            var call = _pbxManager.ProcessCallNotification(model, zadarmaAccount.Id);
 
-            if (callNotificationType == CallNotificationType.NotifyStart)
-            {
-                var requestModel = model.ToObject<IncomingCallStartNotificationModel>();
-                var caller = _callerRepository.GetOrCreate(new Caller {Number = requestModel.caller_id});
-
-                var mapped = _mapper.Map<IncomingCallNotification>(requestModel);
-                mapped.CallerId = caller.Id;
-                mapped.ZadarmaAccountId = zadarmaAccount.Id;
-
-                var incomingCallNotification = _incomingCallNotificationRepository.Create(mapped);
-                response.Data.Add("model", _mapper.Map<IncomingCallNotificationViewModel>(incomingCallNotification));
-
-            }
-            response.Data.Add("user_id", id);
+            response.Data.Add("model", _mapper.Map<IncomingCallViewModel>(call));
+            response.Data.Add("account_id", id);
             return Ok(response);
         }
     }

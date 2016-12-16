@@ -80,9 +80,9 @@ namespace WebTelNET.PBX
             services.AddScoped<IMailCreator, PBXMailCreator>();
             services.AddScoped<IDispositionTypeRepository, DispositionTypeRepository>();
             services.AddScoped<INotificationTypeRepository, NotificationTypeRepository>();
-            services.AddScoped<IOutgoingCallNotificationRepository, OutgoingCallNotificationRepository>();
-            services.AddScoped<IIncomingCallNotificationRepository, IncomingCallNotificationRepository>();
+            services.AddScoped<ICallRepository, CallRepository>();
             services.AddScoped<ICallerRepository, CallerRepository>();
+            services.AddScoped<IPBXManager, ZadarmaManager>();
 
             services.AddSingleton<IMapper>(x => _mapperConfiguration.CreateMapper());
         }

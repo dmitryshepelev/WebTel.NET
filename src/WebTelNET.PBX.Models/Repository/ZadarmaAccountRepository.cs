@@ -3,9 +3,9 @@ using WebTelNET.PBX.Models.Models;
 
 namespace WebTelNET.PBX.Models.Repository
 {
-    public interface IZadarmaAccountRepository
+    public interface IZadarmaAccountRepository : IRepository<ZadarmaAccount>
     {
-        ZadarmaAccount GetAccount(string userId);
+        ZadarmaAccount GetUserAccount(string userId);
     }
 
     public class ZadarmaAccountRepository : RepositoryBase<ZadarmaAccount>, IZadarmaAccountRepository
@@ -14,7 +14,7 @@ namespace WebTelNET.PBX.Models.Repository
         {
         }
 
-        public ZadarmaAccount GetAccount(string userId)
+        public ZadarmaAccount GetUserAccount(string userId)
         {
             return GetSingle(x => x.UserId.Equals(userId));
         }

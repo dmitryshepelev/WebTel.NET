@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using WebTelNET.PBX.Models.Models;
-using WebTelNET.PBX.Models.Repository;
 
 namespace WebTelNET.PBX.Models
 {
@@ -17,9 +16,10 @@ namespace WebTelNET.PBX.Models
 
             modelBuilder.HasPostgresExtension("uuid-ossp");
 
+            modelBuilder.Entity<ZadarmaAccount>()
+                .HasIndex(x => x.UserId).IsUnique();
             modelBuilder.Entity<Caller>()
-                .HasIndex(x => x.Number)
-                .IsUnique();
+                .HasIndex(x => new { x.Number, x.ZadarmaAccountId }).IsUnique();
         }
 
         public DbSet<ZadarmaAccount> ZadarmaAccounts { get; set; }
@@ -27,7 +27,6 @@ namespace WebTelNET.PBX.Models
         public DbSet<DispositionType> DispositionTypes { get; set; }
         public DbSet<NotificationType> NotificationTypes { get; set; }
         public DbSet<Caller> Callers { get; set; }
-        public DbSet<OutgoingCallNotification> OutgoingCallNotifications { get; set; }
-        public DbSet<IncomingCallNotification> IncomingCallNotifications { get; set; }
+        public DbSet<Call> Calls { get; set; }
     }
 }

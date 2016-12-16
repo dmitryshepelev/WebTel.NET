@@ -11,12 +11,14 @@ namespace WebTelNET.PBX.Models.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [Required]
         public string UserKey { get; set; }
+        [Required]
         public string SecretKey { get; set; }
 
+        [Required]
         public string UserId { get; set; }
 
-        public ICollection<IncomingCallNotification> IncomingCallNotifications { get; set; }
-        public ICollection<OutgoingCallNotification> OutgoingCallNotifications { get; set; }
+        public ICollection<Caller> Callers { get; set; }
     }
 }
