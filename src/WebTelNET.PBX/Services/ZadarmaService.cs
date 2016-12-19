@@ -52,9 +52,19 @@ namespace WebTelNET.PBX.Services
         End
     }
 
-    public enum DispositionType
+    public enum CallDispositionType
     {
-
+        Answered = 1,
+        Busy,
+        Cancel,
+        NoAnswer,
+        Failed,
+        NoMoney,
+        UnallocatedNumber,
+        NoLimit,
+        NoDayLimit,
+        LineLimit,
+        NoMoneyNoLimit
     }
 
     public enum CallNotificationType
@@ -134,6 +144,32 @@ namespace WebTelNET.PBX.Services
     {
         public string caller_id { get; set; }
         public string called_did { get; set; }
+    }
+
+    public class IncomingCallEndRequestModel : IncomingCallStartRequestModel
+    {
+        public string Internal { get; set; }
+        public int duration { get; set; }
+        public string disposition { get; set; }
+        public string status_code { get; set; }
+        public int is_recorded { get; set; }
+        public string call_id_with_rec { get; set; }
+    }
+
+    public class OutgoingCallStartRequestModel : CallRequestModel
+    {
+        public string Internal { get; set; }
+        public string destination { get; set; }
+    }
+
+    public class OutgoingCallEndRequestModel : OutgoingCallStartRequestModel
+    {
+        public string caller_id { get; set; }
+        public int duration { get; set; }
+        public string disposition { get; set; }
+        public string status_code { get; set; }
+        public int is_recorded { get; set; }
+        public string call_id_with_rec { get; set; }
     }
 
     #endregion
@@ -420,6 +456,27 @@ namespace WebTelNET.PBX.Services
                 return callNotificationType;
             }
             throw new InvalidCastException($"The string '{notificationType}' cannot be parsed to CallNotificationType enum");
+        }
+
+        /// <summary>
+        /// Parse disposition type string into CallDispositionType
+        /// </summary>
+        /// <param name="dispositionType"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="InvalidCastException"></exception>
+        public static CallDispositionType ParseDispositionType(string dispositionType)
+        {
+            if (string.IsNullOrEmpty(dispositionType)) throw new Exception("String musn't be null or empty");
+            var dispositionTypeString = dispositionType.Replace(" ", string.Empty);
+
+            CallDispositionType callDispositionType;
+            var succeeded = Enum.TryParse(dispositionTypeString, true, out callDispositionType);
+            if (succeeded)
+            {
+                return callDispositionType;
+            }
+            throw new InvalidCastException($"The string '{dispositionType}' cannot be parsed to CallDispositionType enum");
         }
 
         /// <summary>

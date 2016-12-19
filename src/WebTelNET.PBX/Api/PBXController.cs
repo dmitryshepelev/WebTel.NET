@@ -1,9 +1,12 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using Remotion.Linq.Clauses;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Models;
 using WebTelNET.PBX.Libs;
@@ -154,7 +157,9 @@ namespace WebTelNET.PBX.Api
         public async Task<IActionResult> Statistics([FromBody] StatisticsModel model)
         {
             var response = new ApiResponseModel();
-            //var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
+
+            var calls = _callRepository.GetByAccountId(zadarmaAccount.Id).Where(x => x.NotificationTypeId == (int) CallNotificationType.NotifyEnd);
 
             //var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
             //var resultPbx = await service.GetPBXStatisticsAsync();
@@ -172,7 +177,8 @@ namespace WebTelNET.PBX.Api
             //    return Ok(response);
             //}
             response.Message = "Not implemented yet..";
-            return BadRequest(response);
+            response.Data.Add("calls", calls);
+            return Ok(response);
         }
 
         [Route("notify/{id?}")]
@@ -194,7 +200,8 @@ namespace WebTelNET.PBX.Api
 
             var call = _pbxManager.ProcessCallNotification(model, zadarmaAccount.Id);
 
-            response.Data.Add("model", _mapper.Map<IncomingCallViewModel>(call));
+//            response.Data.Add("model", _mapper.Map<IncomingCallViewModel>(call));
+            response.Data.Add("model", call);
             response.Data.Add("account_id", id);
             return Ok(response);
         }

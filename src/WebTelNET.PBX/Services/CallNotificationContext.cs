@@ -82,7 +82,30 @@ namespace WebTelNET.PBX.Services
 
         public override Call Process(JObject model, Guid zadarmaAccountId)
         {
-            throw new NotImplementedException();
+            var requestModel = model.ToObject<IncomingCallEndRequestModel>();
+
+            var mapped = Mapper.Map<Call>(requestModel);
+
+            var incomingCall =
+                CallRepository.GetSingle(
+                    x =>
+                        x.PBXCallId.Equals(mapped.PBXCallId) &&
+                        x.NotificationTypeId == (int) CallNotificationType.NotifyStart);
+
+            if (incomingCall == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            incomingCall.NotificationTypeId = mapped.NotificationTypeId;
+            incomingCall.Internal = mapped.Internal;
+            incomingCall.Duration = mapped.Duration;
+            incomingCall.DispositionTypeId = mapped.DispositionTypeId;
+            incomingCall.StatusCode = mapped.StatusCode;
+            incomingCall.IsRecorded = mapped.IsRecorded;
+            incomingCall.CallIdWithRecord = mapped.CallIdWithRecord;
+
+            return CallRepository.Update(incomingCall);
         }
     }
 
@@ -98,7 +121,10 @@ namespace WebTelNET.PBX.Services
 
         public override Call Process(JObject model, Guid zadarmaAccountId)
         {
-            throw new NotImplementedException();
+            var requestModel = model.ToObject<OutgoingCallStartRequestModel>();
+
+            var mapped = Mapper.Map<Call>(requestModel);
+            return CallRepository.Create(mapped);
         }
     }
 
@@ -114,7 +140,38 @@ namespace WebTelNET.PBX.Services
 
         public override Call Process(JObject model, Guid zadarmaAccountId)
         {
-            throw new NotImplementedException();
+            var requestModel = model.ToObject<OutgoingCallEndRequestModel>();
+
+            var mapped = Mapper.Map<Call>(requestModel);
+
+            var outgoingCall =
+                CallRepository.GetSingle(
+                    x =>
+                        x.PBXCallId.Equals(mapped.PBXCallId) &&
+                        x.NotificationTypeId == (int) CallNotificationType.NotifyOutStart);
+
+            if (outgoingCall == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            outgoingCall.NotificationTypeId = mapped.NotificationTypeId;
+            outgoingCall.Internal = mapped.Internal;
+            outgoingCall.Duration = mapped.Duration;
+            outgoingCall.DispositionTypeId = mapped.DispositionTypeId;
+            outgoingCall.StatusCode = mapped.StatusCode;
+            outgoingCall.IsRecorded = mapped.IsRecorded;
+            outgoingCall.CallIdWithRecord = mapped.CallIdWithRecord;
+
+            var caller =
+                CallerRepository.GetOrCreate(new Caller
+                {
+                    Number = requestModel.caller_id,
+                    ZadarmaAccountId = zadarmaAccountId
+                });
+            mapped.CallerId = caller.Id;
+
+            return CallRepository.Update(outgoingCall);
         }
     }
 
