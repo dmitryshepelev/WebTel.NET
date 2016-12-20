@@ -25,9 +25,11 @@ namespace WebTelNET.PBX.Models.Models
         NotificationType NotificationType { get; set; }
         DateTime CallStart { get; set; }
         string PBXCallId { get; set; }
-        Guid CallerId { get; set; }
-        Caller Caller { get; set; }
-        string Destination { get; set; }
+        Guid? CallerId { get; set; }
+        PhoneNumber Caller { get; set; }
+
+        Guid? DestinationId { get; set; }
+        PhoneNumber Destination { get; set; }
     }
 
     public class Call : ICallNotification, ICallInternal, ICallEnded
@@ -43,10 +45,10 @@ namespace WebTelNET.PBX.Models.Models
         public DateTime CallStart { get; set; }
         [Required]
         public string PBXCallId { get; set; }
-        public Guid CallerId { get; set; }
-        public Caller Caller { get; set; }
-        [Required]
-        public string Destination { get; set; }
+        public Guid? CallerId { get; set; }
+        public PhoneNumber Caller { get; set; }
+        public Guid? DestinationId { get; set; }
+        public PhoneNumber Destination { get; set; }
 
         public string Internal { get; set; }
 

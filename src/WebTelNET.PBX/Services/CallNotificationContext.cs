@@ -9,17 +9,17 @@ namespace WebTelNET.PBX.Services
     public abstract class CallNotificationStrategy
     {
         protected readonly IMapper Mapper;
-        protected readonly ICallerRepository CallerRepository;
+        protected readonly IPhoneNumberRepository PhoneNumberRepository;
         protected readonly ICallRepository CallRepository;
 
         protected CallNotificationStrategy(
             IMapper mapper,
-            ICallerRepository callerRepository,
+            IPhoneNumberRepository phoneNumberRepository,
             ICallRepository callRepository
         )
         {
             Mapper = mapper;
-            CallerRepository = callerRepository;
+            PhoneNumberRepository = phoneNumberRepository;
             CallRepository = callRepository;
         }
 
@@ -30,9 +30,9 @@ namespace WebTelNET.PBX.Services
     {
         public IncomingCallStartNotificationStrategy(
             IMapper mapper,
-            ICallerRepository callerRepository,
+            IPhoneNumberRepository phoneNumberRepository,
             ICallRepository callRepository
-        ) : base(mapper, callerRepository, callRepository)
+        ) : base(mapper, phoneNumberRepository, callRepository)
         {
 
         }
@@ -40,15 +40,23 @@ namespace WebTelNET.PBX.Services
         public override Call Process(JObject model, Guid zadarmaAccountId)
         {
             var requestModel = model.ToObject<IncomingCallStartRequestModel>();
-            var caller =
-                CallerRepository.GetOrCreate(new Caller
+            var callerPhoneNumber =
+                PhoneNumberRepository.GetOrCreate(new PhoneNumber
                 {
                     Number = requestModel.caller_id,
                     ZadarmaAccountId = zadarmaAccountId
                 });
 
+            var destinationPhoneNumber =
+                PhoneNumberRepository.GetOrCreate(new PhoneNumber
+                {
+                    Number = requestModel.called_did,
+                    ZadarmaAccountId = zadarmaAccountId
+                });
+
             var mapped = Mapper.Map<Call>(requestModel);
-            mapped.CallerId = caller.Id;
+            mapped.CallerId = callerPhoneNumber.Id;
+            mapped.DestinationId = destinationPhoneNumber.Id;
 
             return CallRepository.Create(mapped);
         }
@@ -58,9 +66,9 @@ namespace WebTelNET.PBX.Services
     {
         public InternalCallNotificationStrategy(
             IMapper mapper,
-            ICallerRepository callerRepository,
+            IPhoneNumberRepository phoneNumberRepository,
             ICallRepository callRepository
-        ) : base(mapper, callerRepository, callRepository)
+        ) : base(mapper, phoneNumberRepository, callRepository)
         {
         }
 
@@ -74,9 +82,9 @@ namespace WebTelNET.PBX.Services
     {
         public IncomingCallEndNotificationStrategy(
             IMapper mapper,
-            ICallerRepository callerRepository,
+            IPhoneNumberRepository phoneNumberRepository,
             ICallRepository callRepository
-        ) : base(mapper, callerRepository, callRepository)
+        ) : base(mapper, phoneNumberRepository, callRepository)
         {
         }
 
@@ -94,7 +102,7 @@ namespace WebTelNET.PBX.Services
 
             if (incomingCall == null)
             {
-                throw new NullReferenceException();
+                throw new NullReferenceException("Call doesn't exist.");
             }
 
             incomingCall.NotificationTypeId = mapped.NotificationTypeId;
@@ -113,9 +121,9 @@ namespace WebTelNET.PBX.Services
     {
         public OutgoingCallStartNotificationStrategy(
             IMapper mapper,
-            ICallerRepository callerRepository,
+            IPhoneNumberRepository phoneNumberRepository,
             ICallRepository callRepository
-        ) : base(mapper, callerRepository, callRepository)
+        ) : base(mapper, phoneNumberRepository, callRepository)
         {
         }
 
@@ -132,9 +140,9 @@ namespace WebTelNET.PBX.Services
     {
         public OutgoingCallEndNotificationStrategy(
             IMapper mapper,
-            ICallerRepository callerRepository,
+            IPhoneNumberRepository phoneNumberRepository,
             ICallRepository callRepository
-        ) : base(mapper, callerRepository, callRepository)
+        ) : base(mapper, phoneNumberRepository, callRepository)
         {
         }
 
@@ -163,13 +171,21 @@ namespace WebTelNET.PBX.Services
             outgoingCall.IsRecorded = mapped.IsRecorded;
             outgoingCall.CallIdWithRecord = mapped.CallIdWithRecord;
 
-            var caller =
-                CallerRepository.GetOrCreate(new Caller
+            var callerPhoneNumber =
+                PhoneNumberRepository.GetOrCreate(new PhoneNumber
                 {
                     Number = requestModel.caller_id,
                     ZadarmaAccountId = zadarmaAccountId
                 });
-            mapped.CallerId = caller.Id;
+
+            var destinationPhoneNumber =
+                PhoneNumberRepository.GetOrCreate(new PhoneNumber
+                {
+                    Number = requestModel.destination,
+                    ZadarmaAccountId = zadarmaAccountId
+                });
+            outgoingCall.CallerId = callerPhoneNumber.Id;
+            outgoingCall.DestinationId = destinationPhoneNumber.Id;
 
             return CallRepository.Update(outgoingCall);
         }

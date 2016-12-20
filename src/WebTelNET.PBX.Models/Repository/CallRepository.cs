@@ -19,7 +19,7 @@ namespace WebTelNET.PBX.Models.Repository
 
         public IQueryable<Call> GetByAccountId(Guid id)
         {
-            return GetAll(x => x.Caller.ZadarmaAccountId == id);
+            return GetAll(x => x.Caller != null && x.Caller.ZadarmaAccountId == id);
         }
     }
 }

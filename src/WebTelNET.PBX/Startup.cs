@@ -81,7 +81,7 @@ namespace WebTelNET.PBX
             services.AddScoped<IDispositionTypeRepository, DispositionTypeRepository>();
             services.AddScoped<INotificationTypeRepository, NotificationTypeRepository>();
             services.AddScoped<ICallRepository, CallRepository>();
-            services.AddScoped<ICallerRepository, CallerRepository>();
+            services.AddScoped<IPhoneNumberRepository, PhoneNumberRepository>();
             services.AddScoped<IPBXManager, ZadarmaManager>();
 
             services.AddSingleton<IMapper>(x => _mapperConfiguration.CreateMapper());

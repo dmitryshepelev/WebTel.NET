@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebTelNET.PBX.Models.Models
 {
-    public class Caller
+    public class PhoneNumber
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,6 +18,7 @@ namespace WebTelNET.PBX.Models.Models
         public Guid ZadarmaAccountId { get; set; }
         public ZadarmaAccount ZadarmaAccount { get; set; }
 
-        public ICollection<Call> Calls { get; set; }
+        public ICollection<Call> Callers { get; set; }
+        public ICollection<Call> Destinations { get; set; }
     }
 }

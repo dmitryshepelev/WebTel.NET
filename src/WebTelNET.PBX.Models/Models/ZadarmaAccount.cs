@@ -19,6 +19,6 @@ namespace WebTelNET.PBX.Models.Models
         [Required]
         public string UserId { get; set; }
 
-        public ICollection<Caller> Callers { get; set; }
+        public ICollection<PhoneNumber> PhoneNumbers { get; set; }
     }
 }

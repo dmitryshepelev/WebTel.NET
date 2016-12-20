@@ -26,7 +26,7 @@ namespace WebTelNET.PBX.Api
         private readonly IZadarmaAccountRepository _zadarmaAccountRepository;
         private readonly IPBXManager _pbxManager;
         private readonly ICallRepository _callRepository;
-        private readonly ICallerRepository _callerRepository;
+        private readonly IPhoneNumberRepository _phoneNumberRepository;
         private readonly IMapper _mapper;
 
         private readonly string _currentUserId;
@@ -37,7 +37,7 @@ namespace WebTelNET.PBX.Api
             IPBXManager pbxManager,
             ICallRepository callRepository,
             IMapper mapper,
-            ICallerRepository callerRepository
+            IPhoneNumberRepository phoneNumberRepository
         )
         {
             _zadarmaAccountRepository = zadarmaAccountRepository;
@@ -45,7 +45,7 @@ namespace WebTelNET.PBX.Api
             _pbxManager = pbxManager;
             _callRepository = callRepository;
             _mapper = mapper;
-            _callerRepository = callerRepository;
+            _phoneNumberRepository = phoneNumberRepository;
 
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
