@@ -43,12 +43,8 @@ export class StatisticsFormComponent implements OnInit, AfterViewInit {
     }
 
     onSubmit() {
-        Promise.all([this._pbxService.getPBXStatistics(this.model.start, this.model.end), this._pbxService.getOverallStatistics(this.model.start, this.model.end)])
-            .then(response => {
-                var result = new ResponseModel();
-                result.data = response;
-                this.onFormSubmitSuccess.emit(result);
-            })
+        this._pbxService.getStatistics(this.model.start, this.model.end)
+            .then(response => this.onFormSubmitSuccess.emit(response))
             .catch(error => console.log(error));
     }
 }

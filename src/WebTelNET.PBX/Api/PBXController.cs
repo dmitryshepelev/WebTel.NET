@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
-using Remotion.Linq.Clauses;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Models;
 using WebTelNET.PBX.Libs;
 using WebTelNET.PBX.Models;
-using WebTelNET.PBX.Models.Models;
 using WebTelNET.PBX.Models.Repository;
 using WebTelNET.PBX.Services;
 
@@ -28,6 +28,8 @@ namespace WebTelNET.PBX.Api
         private readonly ICallRepository _callRepository;
         private readonly IPhoneNumberRepository _phoneNumberRepository;
         private readonly IMapper _mapper;
+        private readonly INotificationTypeRepository _notificationTypeRepository;
+        private readonly IDispositionTypeRepository _dispositionTypeRepository;
 
         private readonly string _currentUserId;
 
@@ -37,8 +39,9 @@ namespace WebTelNET.PBX.Api
             IPBXManager pbxManager,
             ICallRepository callRepository,
             IMapper mapper,
-            IPhoneNumberRepository phoneNumberRepository
-        )
+            IPhoneNumberRepository phoneNumberRepository,
+            INotificationTypeRepository notificationTypeRepository,
+            IDispositionTypeRepository dispositionTypeRepository)
         {
             _zadarmaAccountRepository = zadarmaAccountRepository;
             _httpContextAccessor = httpContextAccessor;
@@ -46,6 +49,8 @@ namespace WebTelNET.PBX.Api
             _callRepository = callRepository;
             _mapper = mapper;
             _phoneNumberRepository = phoneNumberRepository;
+            _notificationTypeRepository = notificationTypeRepository;
+            _dispositionTypeRepository = dispositionTypeRepository;
 
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
@@ -159,32 +164,28 @@ namespace WebTelNET.PBX.Api
             var response = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
 
-            var calls = _callRepository.GetByAccountId(zadarmaAccount.Id).Where(x => x.NotificationTypeId == (int) CallNotificationType.NotifyEnd);
+            var calls = _callRepository.GetAll(
+                x => (x.NotificationTypeId == (int) CallNotificationType.NotifyEnd || x.NotificationTypeId == (int) CallNotificationType.NotifyOutEnd) &&
+                (x.Caller != null && x.Caller.ZadarmaAccountId == zadarmaAccount.Id)
+            )
+                .Include(x => x.Caller)
+                .Include(x => x.Destination)
+                .OrderByDescending(x => x.CallStart);
 
-            //var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
-            //var resultPbx = await service.GetPBXStatisticsAsync();
-            //var resultOverall = await service.GetOverallStatisticsAsync();
+            var callsViewModel = new List<CallViewModel>();
+            foreach (var call in calls)
+            {
+                callsViewModel.Add(_mapper.Map<CallViewModel>(call));
+            }
 
-            //if (resultPbx.Status == ZadarmaResponseStatus.Success && resultOverall.Status == ZadarmaResponseStatus.Success)
-            //{
-            //    var pbxModel = (PBXStatisticsResponseModel) resultPbx;
-            //    var overallModel = (OverallStatisticsResponseModel)resultOverall;
-
-            //    var pbxModelGrouped = new GroupedPBXStatistics(pbxModel.Stats);
-            //    var definedPBXStatisticsRecords = _pbxManager.DefinePBXStatisticsRecords(pbxModelGrouped);
-
-            //    response.Data.Add("defined", definedPBXStatisticsRecords);
-            //    return Ok(response);
-            //}
-            response.Message = "Not implemented yet..";
-            response.Data.Add("calls", calls);
+            response.Data.Add(nameof(calls), callsViewModel);
             return Ok(response);
         }
 
         [Route("notify/{id?}")]
         [HttpPost]
         [Produces(typeof(string[]))]
-        public async Task<IActionResult> Notify(string id, [FromBody] JObject model)
+        public IActionResult Notify(string id, [FromBody] JObject model)
         {
             var response = new ApiResponseModel();
 
@@ -200,7 +201,6 @@ namespace WebTelNET.PBX.Api
 
             var call = _pbxManager.ProcessCallNotification(model, zadarmaAccount.Id);
 
-//            response.Data.Add("model", _mapper.Map<IncomingCallViewModel>(call));
             response.Data.Add("model", call);
             response.Data.Add("account_id", id);
             return Ok(response);

@@ -12,6 +12,7 @@ import { AlertComponent } from "@commonclient/controls";
 import { PBXAppComponent }  from './pbx-app.component';
 import { StatisticsPageComponent } from './statistics/statistics-page.component';
 import { StatisticsFormComponent } from './statistics/statistics-form.component';
+import { CallCardComponent } from "./statistics/call-card.component";
 import { CallCostPageComponent } from './call-cost/call-cost-page.component';
 import { CallbackPageComponent } from "./callback/callback-page.component";
 import { CallbackFormComponent } from "./callback/callback-form.component";
@@ -41,6 +42,7 @@ import { PriceInfoComponent } from "./shared/components/price-info.component";
         PBXAppComponent,
         StatisticsPageComponent,
         StatisticsFormComponent,
+        CallCardComponent,
         CallCostPageComponent,
         CallbackFormComponent,
         CallbackPageComponent,

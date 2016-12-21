@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PBXService } from "../shared/services/pbx.service";
 import { StatisticsFormComponent } from "./statistics-form.component";
 import { ResponseModel } from "@commonclient/services";
+import { CallModel } from "../shared/models";
 
 import * as moment from "moment";
 
@@ -12,6 +13,9 @@ import * as moment from "moment";
 export class StatisticsPageComponent implements OnInit, AfterViewInit {
     pbxStatistics: any;
     overallStatistics: any;
+
+    calls: Array<CallModel>;
+//    dispositionTypes:
 
     shownFilters = false;
     startDate = new Date();
@@ -31,8 +35,10 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit {
         this.startDate = this.statisticsFormComponent.model.start;
         this.endDate = this.statisticsFormComponent.model.end;
 
-        this.pbxStatistics = result.data[0].data.Stats;
-        this.overallStatistics = result.data[1].data.Stats;
+        console.log(result);
+        this.calls = result.data.calls;
+//        this.pbxStatistics = result.data[0].data.Stats;
+//        this.overallStatistics = result.data[1].data.Stats;
     }
 
     ngOnInit() {
@@ -42,6 +48,12 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+//        Promise.all([this._pbxService.getCallTypes(), this._pbxService.getDispositionTypes()])
+//            .then(response => {
+//                console.log(response);
+//            })
+//            .catch(error => console.log(error));
+
         this.statisticsFormComponent.onSubmit();
     }
 }

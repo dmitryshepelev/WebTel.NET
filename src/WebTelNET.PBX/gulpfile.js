@@ -5,6 +5,9 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 
 var gulp = require('gulp');
 var gulpFileCopy = require('gulp-file-copy');
+var gulpScss = require('gulp-scss');
+var gulpCssmin = require('gulp-cssmin');
+var gulpRename = require('gulp-rename');
 
 
 gulp.task('default', function () {
@@ -24,4 +27,21 @@ gulp.task('framework-services-build', function () {
     var sourcePath = '../WebTelNET.CommonClient/services';
 
 
-})
+});
+
+var root = 'wwwroot/styles/';
+
+gulp.task('compile-scss', function() {
+    gulp.src(root + 'styles.scss')
+        .pipe(gulpScss())
+        .pipe(gulp.dest(root));
+});
+
+gulp.task('min-css', function() {
+    gulp.src(root + 'styles.css')
+        .pipe(gulpCssmin())
+        .pipe(gulpRename({suffix: '.min'}))
+        .pipe(gulp.dest(root));
+});
+
+gulp.task('compile-and-min-scss', ['compile-scss', 'min-css']);

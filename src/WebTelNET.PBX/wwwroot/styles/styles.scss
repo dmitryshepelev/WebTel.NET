@@ -9,3 +9,23 @@
         }
     }
 }
+
+call-card {
+    & .card-block {
+        padding: 0.8rem !important;
+
+        & .card-title {
+            margin-bottom: 0;
+        }
+
+        & .card-text {
+            margin-left: 1.2rem;
+
+            & i {
+                &.fa {
+                    margin-left: 0.2rem;
+                }
+            }
+        }
+    }
+}

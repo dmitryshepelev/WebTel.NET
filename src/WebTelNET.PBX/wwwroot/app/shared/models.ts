@@ -16,3 +16,38 @@ export class StatisticsParamsModel {
     public start: Date;
     public end: Date;
 }
+
+export class CallModel {
+    constructor() {}
+
+    public callType: number;
+    public callStart: Date;
+    public pbxcallId: string;
+    public caller: string;
+    public destination: string;
+    public internal: string;
+    public duration: number;
+    public dispositionType: number;
+    public statusCode: number;
+    public isRecorded: boolean;
+    public callIdWithRecoed: string;
+}
+
+export enum CallDispositoinType {
+    Answered = 1,
+    Busy,
+    Cancel,
+    NoAnswer,
+    Failed,
+    NoMoney,
+    UnallocatedNumber,
+    NoLimit,
+    NoDayLimit,
+    LineLimit,
+    NoMoneyNoLimit
+}
+
+export enum CallType {
+    Incoming = 3,
+    Outgoing = 5
+}

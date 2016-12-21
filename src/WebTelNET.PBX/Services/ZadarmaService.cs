@@ -81,14 +81,6 @@ namespace WebTelNET.PBX.Services
         V1
     }
 
-    // TODO: Deprecate
-    public struct CallType
-    {
-        public static string Incoming => "incoming";
-        public static string Outgoing => "outgoing";
-        public static string Internal => "internal";
-    }
-
     #region Abstractions
 
     /// <summary>
@@ -468,7 +460,7 @@ namespace WebTelNET.PBX.Services
         public static CallDispositionType ParseDispositionType(string dispositionType)
         {
             if (string.IsNullOrEmpty(dispositionType)) throw new Exception("String musn't be null or empty");
-            var dispositionTypeString = dispositionType.Replace(" ", string.Empty);
+            var dispositionTypeString = dispositionType.Replace(" ", string.Empty).Replace(",", string.Empty);
 
             CallDispositionType callDispositionType;
             var succeeded = Enum.TryParse(dispositionTypeString, true, out callDispositionType);

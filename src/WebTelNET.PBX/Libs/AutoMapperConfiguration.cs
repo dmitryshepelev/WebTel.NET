@@ -9,15 +9,13 @@ namespace WebTelNET.PBX.Libs
     {
         protected override void Configure()
         {
+            #region Maps_for_request_models
+
             CreateMap<IncomingCallStartRequestModel, Call>()
                 .ForMember(m => m.NotificationTypeId,
                     o => o.MapFrom(s => (int) ZadarmaService.ParseNotificationType(s.Event)))
                 .ForMember(m => m.CallStart, o => o.MapFrom(s => s.call_start))
                 .ForMember(m => m.PBXCallId, o => o.MapFrom(s => s.pbx_call_id));
-
-//            CreateMap<Call, IncomingCallViewModel>()
-//                .ForMember(m => m.NotificationType, o => o.MapFrom(s => s.NotificationTypeId))
-//                .ForMember(m => m.CallerId, o => o.MapFrom(s => s.PhoneNumber != null ? s.PhoneNumber.Number : null ));
 
             CreateMap<IncomingCallEndRequestModel, Call>()
                 .ForMember(m => m.NotificationTypeId,
@@ -51,6 +49,20 @@ namespace WebTelNET.PBX.Libs
                 .ForMember(m => m.StatusCode, o => o.MapFrom(s => s.status_code))
                 .ForMember(m => m.IsRecorded, o => o.MapFrom(s => s.is_recorded))
                 .ForMember(m => m.CallIdWithRecord, o => o.MapFrom(s => s.call_id_with_rec));
+
+            #endregion
+
+            #region Maps_for_view_models
+
+            CreateMap<Call, CallViewModel>()
+                .ForMember(m => m.CallType, o => o.MapFrom(s => s.NotificationTypeId))
+                .ForMember(m => m.Caller, o => o.MapFrom(s => s.Caller != null ? s.Caller.Number : null))
+                .ForMember(m => m.Destination, o => o.MapFrom(s => s.Destination != null ? s.Destination.Number : null))
+                .ForMember(m => m.Duration, o => o.MapFrom(s => s.Duration))
+                .ForMember(m => m.DispositionType, o => o.MapFrom(s => s.DispositionTypeId))
+                .ForMember(m => m.IsRecorded, o => o.MapFrom(s => s.IsRecorded));
+
+            #endregion
         }
     }
 }
