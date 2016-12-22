@@ -10,6 +10,12 @@
     }
 }
 
+balance-card {
+    & .card-block {
+        padding: 0.8rem !important;
+    }
+}
+
 call-card {
     & .card-block {
         padding: 0.8rem !important;

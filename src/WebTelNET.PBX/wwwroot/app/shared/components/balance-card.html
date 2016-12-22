@@ -1,0 +1,12 @@
+<div class="card card-inverse text-xs-center"
+     [class.card-outline-success]="status == cardStatus.Save"
+     [class.card-outline-warning]="status == cardStatus.Warning"
+     [class.card-outline-danger]="status == cardStatus.Danger"
+     [class.card-outline-secondary]="status == cardStatus.IsLoading">
+    <div class="card-block">
+        <div class="card-text">
+            <span><i *ngIf="status == cardStatus.IsLoading" class="fa fa-circle-o-notch fa-spin fa-fw input-loader"></i></span>
+            <span *ngIf="status != cardStatus.IsLoading">{{ model.balance | number:'1.2-2' }}</span>
+        </div>
+    </div>
+</div>

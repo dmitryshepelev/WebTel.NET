@@ -5,4 +5,6 @@ import { Component } from '@angular/core';
     selector: 'pbx-app-root',
     templateUrl: 'pbx-app.html'
 })
-export class PBXAppComponent { }
+export class PBXAppComponent {
+    constructor() {}
+}

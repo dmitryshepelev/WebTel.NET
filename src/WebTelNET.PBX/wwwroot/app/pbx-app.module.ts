@@ -19,6 +19,7 @@ import { CallbackFormComponent } from "./callback/callback-form.component";
 import { routing, appRoutingProviders } from './pbx-app.routing';
 import { PBXService } from './shared/services/pbx.service';
 import { PriceInfoComponent } from "./shared/components/price-info.component";
+import { BalanceCardComponent } from "./shared/components/balance-card.component";
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { PriceInfoComponent } from "./shared/components/price-info.component";
         CallbackFormComponent,
         CallbackPageComponent,
         AlertComponent,
-        PriceInfoComponent
+        PriceInfoComponent,
+        BalanceCardComponent
     ],
     bootstrap: [PBXAppComponent]
 })

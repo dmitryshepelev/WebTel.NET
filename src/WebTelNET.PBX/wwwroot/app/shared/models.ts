@@ -51,3 +51,8 @@ export enum CallType {
     Incoming = 3,
     Outgoing = 5
 }
+
+export class BalanceModel {
+    public balance: number;
+    public currency: string;
+}

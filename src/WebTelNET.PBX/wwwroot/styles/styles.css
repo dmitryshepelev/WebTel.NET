@@ -4,6 +4,9 @@ input.form-control + .input-loader {
   top: 12px;
   transition: all ease-in-out 1s; }
 
+balance-card .card-block {
+  padding: 0.8rem !important; }
+
 call-card .card-block {
   padding: 0.8rem !important; }
   call-card .card-block .card-title {

@@ -65,7 +65,7 @@ namespace WebTelNET.PBX.Api
             var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
             
             model.Number = model.Number.Trim();
-            var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
+            IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
             var result = await service.GetPriceInfoAsync(model.Number);
 
             if (result.Status == ZadarmaResponseStatus.Success)
@@ -91,7 +91,7 @@ namespace WebTelNET.PBX.Api
             model.From = model.From.Trim();
             model.To = model.To.Trim();
 
-            var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
+            IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
             var result = await service.RequestCallbackAsync(model.From, model.To, model.IsPredicted);
 
             if (result.Status == ZadarmaResponseStatus.Success)
@@ -116,7 +116,7 @@ namespace WebTelNET.PBX.Api
             var response  = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
 
-            var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
+            IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
             var result = await service.GetPBXStatisticsAsync(model.Start, model.End);
 
             if (result.Status == ZadarmaResponseStatus.Success)
@@ -139,7 +139,7 @@ namespace WebTelNET.PBX.Api
             var response = new ApiResponseModel();
             var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
 
-            var service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
+            IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
             var result = await service.GetOverallStatisticsAsync(model.Start, model.End);
 
             if (result.Status == ZadarmaResponseStatus.Success)
@@ -204,6 +204,31 @@ namespace WebTelNET.PBX.Api
             response.Data.Add("model", call);
             response.Data.Add("account_id", id);
             return Ok(response);
+        }
+
+        [Route("balance")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public async Task<IActionResult> GetBalance()
+        {
+            var response = new ApiResponseModel();
+
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
+
+            IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
+            var result = await service.GetBalanceAsync();
+
+            if (result.Status == ZadarmaResponseStatus.Success)
+            {
+                var balanceModel = (BalanceResponseModel) result;
+                response.Data.Add(nameof(balanceModel.Balance), balanceModel);
+                return Ok(response);
+            }
+
+            var errorModel = (ErrorResponseModel)result;
+            response.Message = errorModel.Message;
+            return BadRequest(errorModel);
         }
     }
 }
