@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { TranslateService } from "ng2-translate";
+
 
 @Component({
     moduleId: module.id,
@@ -6,5 +8,9 @@ import { Component } from '@angular/core';
     templateUrl: 'pbx-app.html'
 })
 export class PBXAppComponent {
-    constructor() {}
+
+    constructor(private _translateService: TranslateService) {
+        this._translateService.setDefaultLang("ru");
+        this._translateService.use("ru");
+    }
 }

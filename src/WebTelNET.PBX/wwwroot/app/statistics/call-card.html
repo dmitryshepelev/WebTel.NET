@@ -10,7 +10,7 @@
         </div>
         <div class="card-text">
             <small class="text-muted">{{ call.callStart | date: "dd/MM/yy HH:mm:ss" }}
-                <span class="tag" [class.tag-success]="call.dispositionType == dispositionType.Answered" [class.tag-danger]="call.dispositionType != dispositionType.Answered">{{ dispositionType[call.dispositionType] }}</span>
+                <span class="tag" [class.tag-success]="call.dispositionType == dispositionType.Answered" [class.tag-danger]="call.dispositionType != dispositionType.Answered">{{ dispositionType[call.dispositionType] | translate }}</span>
             </small>
             <small>
                 <span>

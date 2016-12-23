@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http } from '@angular/http';
 import { TextMaskModule } from "angular2-text-mask";
 import { DatepickerModule } from "ng2-bootstrap/ng2-bootstrap";
 import { SidebarModule } from "ng2-sidebar";
+import { TranslateModule, TranslateLoader, TranslateStaticLoader } from "ng2-translate";
 
 import { ServicesModule, StorageService } from "@commonclient/services";
 import { AlertComponent } from "@commonclient/controls";
@@ -32,7 +33,8 @@ import { BalanceCardComponent } from "./shared/components/balance-card.component
         ServicesModule,
         TextMaskModule,
         DatepickerModule,
-        SidebarModule
+        SidebarModule,
+        TranslateModule.forRoot()
     ],
     providers: [
         appRoutingProviders,

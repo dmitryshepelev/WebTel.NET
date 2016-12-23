@@ -223,6 +223,15 @@ namespace WebTelNET.PBX.Services
         public DateTime Time { get; set; }
     }
 
+    /// <summary>
+    /// response model for /pbx/record/request/ api method
+    /// </summary>
+    public class CallRecordLinkResponseModel : ZadarmaResponseModel
+    {
+        public IList<string> Links { get; set; }
+        public DateTime Lifetime_till { get; set; }
+    }
+
     #endregion
 
     #region Response items
@@ -300,6 +309,13 @@ namespace WebTelNET.PBX.Services
         /// <param name="isPredicted">If the param is true, system will call "to" number first and then connect "from" on success</param>
         /// <returns></returns>
         Task<ZadarmaResponseModel> RequestCallbackAsync(string from, string to, bool isPredicted = true);
+
+        /// <summary>
+        /// Gets the call record file link
+        /// </summary>
+        /// <param name="pbxCallId"></param>
+        /// <returns></returns>
+        Task<ZadarmaResponseModel> GetCallRecordLinkAsync(string pbxCallId);
 
         /// <summary>
         /// Force the service to use api version
@@ -561,6 +577,19 @@ namespace WebTelNET.PBX.Services
             var parameters = new Dictionary<string, string> { {nameof(from), from}, {nameof(to), to} };
             var response = await ExecuteRequestAsync(HttpMethod.Get, "request/callback", parameters);
             return await ResolveRequestContentAsync<RequestCallbackResponseModel>(response.Content, response.IsSuccessStatusCode);
+        }
+
+        /// <summary>
+        /// Gets the call record file link
+        /// </summary>
+        /// <param name="pbxCallId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<ZadarmaResponseModel> GetCallRecordLinkAsync(string pbx_call_id)
+        {
+            var parameters = new Dictionary<string, string> {{ nameof(pbx_call_id), pbx_call_id }};
+            var response = await ExecuteRequestAsync(HttpMethod.Get, "pbx/record/request", parameters);
+            return await ResolveRequestContentAsync<CallRecordLinkResponseModel>(response.Content, response.IsSuccessStatusCode);
         }
 
         /// <summary>

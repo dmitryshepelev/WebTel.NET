@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Component, OnInit, Input } from "@angular/core";
 import { PBXService } from "../services/pbx.service";
 import { BalanceModel } from "../models";
 
@@ -11,14 +11,13 @@ enum CardStatus {
     Danger,
 }
 
-
 @Component({
     moduleId: module.id,
     selector: "balance-card",
     templateUrl: "balance-card.html"
 })
 export class BalanceCardComponent implements OnInit {
-    model: BalanceModel;
+    model: BalanceModel = new BalanceModel();
     status: number;
     cardStatus = CardStatus;
 
