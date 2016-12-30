@@ -16,7 +16,12 @@ export class ResponseModel {
     type: ResponseType;
 }
 
-export abstract class ServiceBase {
+export interface IServiceExecutable {
+    beforeExecitung(url: string, body: any, options?: RequestOptionsArgs): void;
+    afterExecuting(response: any): any;
+}
+
+export abstract class ServiceBase implements IServiceExecutable {
 
     constructor(protected http: Http) { }
 
@@ -51,10 +56,20 @@ export abstract class ServiceBase {
         return Promise.resolve(responseModel);
     }
 
+    beforeExecitung(url: string, body: any, options?: RequestOptionsArgs): void {
+
+    }
+
+    afterExecuting(response: any): any {
+        return response;
+    }
+
     post(url: string, body: any, options?: RequestOptionsArgs): Promise<ResponseModel> {
+        this.beforeExecitung(url, body, options);
         return this.http.post(url, body, options)
             .toPromise()
             .then(this.handleSuccess)
-            .catch(this.handleError);
+            .catch(this.handleError)
+            .then(this.afterExecuting);
     }
 }

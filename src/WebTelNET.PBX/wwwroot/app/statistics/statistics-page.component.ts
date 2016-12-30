@@ -35,7 +35,6 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit {
         this.startDate = this.statisticsFormComponent.model.start;
         this.endDate = this.statisticsFormComponent.model.end;
 
-        console.log(result);
         this.calls = result.data.calls;
 //        this.pbxStatistics = result.data[0].data.Stats;
 //        this.overallStatistics = result.data[1].data.Stats;

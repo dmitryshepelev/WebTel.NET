@@ -22,7 +22,7 @@ export class CallModel {
 
     public callType: number;
     public callStart: Date;
-    public pbxcallId: string;
+    public pbxCallId: string;
     public caller: string;
     public destination: string;
     public internal: string;
@@ -30,7 +30,7 @@ export class CallModel {
     public dispositionType: number;
     public statusCode: number;
     public isRecorded: boolean;
-    public callIdWithRecoed: string;
+    public callIdWithRecord: string;
 }
 
 export enum CallDispositoinType {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using WebTelNET.PBX.Services;
 using Xunit;
 
@@ -310,6 +311,142 @@ namespace WebTelNET.PBX.Tests.Services
             var model = (PBXStatisticsResponseModel) result;
             Assert.Equal(DateTime.Now.AddDays(-2).Day, model.End.Day);
             Assert.Equal(DateTime.Now.Day, model.End.Day);
+        }
+
+        #endregion
+
+        #region GetCallRecordLinkAsync
+
+        private string GetPBXCallId(IZadarmaService service)
+        {
+            var statResult = service.GetPBXStatisticsAsync().Result;
+            var stat = statResult as PBXStatisticsResponseModel;
+
+            if (stat == null) { throw new NullReferenceException("Stat is null"); }
+
+            return stat.Stats.First().pbx_call_id;
+        }
+
+        [Fact]
+        public void GetCallRecordLinkAsync_Success()
+        {
+            IZadarmaService service = new ZadarmaService(_userKey, _secretKey);
+
+            var pbxCallId = GetPBXCallId(service);
+            var result = service.GetCallRecordLinkAsync(pbxCallId).Result;
+
+            Assert.IsType<CallRecordLinkResponseModel>(result);
+        }
+
+        [Fact]
+        public void GetcallRecordLinkAsync_Failure_InvalidPbxCallId()
+        {
+            IZadarmaService service = new ZadarmaService(_userKey, _secretKey);
+
+            var result = service.GetCallRecordLinkAsync("invalid_pbx_call_id").Result;
+
+            Assert.IsType<ErrorResponseModel>(result);
+        }
+
+        #endregion
+
+        #region RequestCallbackAsync
+
+        // No chance to test
+
+        #endregion
+
+        #region ParseNotificationType
+
+        [Fact]
+        public void ParseNotificationType_Success()
+        {
+            var type = ZadarmaService.ParseNotificationType("NOTIFY_START");
+            Assert.Equal(CallNotificationType.NotifyStart, type);
+        }
+
+        [Fact]
+        public void ParseNotificationType_Success_LowerCaseString()
+        {
+            var type = ZadarmaService.ParseNotificationType("notify_end");
+            Assert.Equal(CallNotificationType.NotifyEnd, type);
+        }
+
+        [Fact]
+        public void ParseNotificationType_Success_CamelCaseString()
+        {
+            var type = ZadarmaService.ParseNotificationType("notifyInternal");
+            Assert.Equal(CallNotificationType.NotifyInternal, type);
+        }
+
+        [Fact]
+        public void ParseNotificationType_Success_PascalCaseString()
+        {
+            var type = ZadarmaService.ParseNotificationType("NotifyOutStart");
+            Assert.Equal(CallNotificationType.NotifyOutStart, type);
+        }
+
+        [Fact]
+        public void ParseNotificationType_Success_UpperCaseString()
+        {
+            var type = ZadarmaService.ParseNotificationType("NOTIFYOUTEND");
+            Assert.Equal(CallNotificationType.NotifyOutEnd, type);
+        }
+
+        [Fact]
+        public void ParseNotificationType_Failure_EmptyArgument()
+        {
+            Assert.Throws<Exception>(() => ZadarmaService.ParseNotificationType(""));
+        }
+
+        [Fact]
+        public void ParseNotificationType_Failure_InvalidCast()
+        {
+            Assert.Throws<InvalidCastException>(() => ZadarmaService.ParseNotificationType("some_string"));
+        }
+
+        #endregion
+
+        #region ParseDispositionType
+
+        [Fact]
+        public void ParseDispositionType_Success_SimpleString()
+        {
+            var type = ZadarmaService.ParseDispositionType("answered");
+            Assert.Equal(CallDispositionType.Answered, type);
+        }
+
+        [Fact]
+        public void ParseDispositionType_Success_StringWithSpace()
+        {
+            var type = ZadarmaService.ParseDispositionType("no answer");
+            Assert.Equal(CallDispositionType.NoAnswer, type);
+        }
+
+        [Fact]
+        public void ParseDispositionType_Success_StringWithSeveralSpaces()
+        {
+            var type = ZadarmaService.ParseDispositionType("no day limit");
+            Assert.Equal(CallDispositionType.NoDayLimit, type);
+        }
+
+        [Fact]
+        public void ParseDispositionType_Success_StringWithComa()
+        {
+            var type = ZadarmaService.ParseDispositionType("no money, no limit");
+            Assert.Equal(CallDispositionType.NoMoneyNoLimit, type);
+        }
+
+        [Fact]
+        public void ParseDispositionType_Failure_EmptyArgument()
+        {
+            Assert.Throws<Exception>(() => ZadarmaService.ParseNotificationType(""));
+        }
+
+        [Fact]
+        public void ParseDispositionType_Failure_InvalidCast()
+        {
+            Assert.Throws<InvalidCastException>(() => ZadarmaService.ParseNotificationType("some_string"));
         }
 
         #endregion

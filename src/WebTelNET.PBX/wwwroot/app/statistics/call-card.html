@@ -1,23 +1,36 @@
 <div class="card">
     <div class="card-block">
-        <div class="card-title">
-            <span>
-                <i class="fa" [class.fa-arrow-down]="call.callType == callType.Incoming" [class.fa-arrow-up]="call.callType == callType.Outgoing" aria-hidden="true"></i> {{ call.caller }} - {{ call.destination }}
-            </span>
-            <span class="pull-xs-right">
-
-            </span>
-        </div>
-        <div class="card-text">
-            <small class="text-muted">{{ call.callStart | date: "dd/MM/yy HH:mm:ss" }}
-                <span class="tag" [class.tag-success]="call.dispositionType == dispositionType.Answered" [class.tag-danger]="call.dispositionType != dispositionType.Answered">{{ dispositionType[call.dispositionType] | translate }}</span>
-            </small>
-            <small>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card-title">
+                    <span>
+                        <i class="fa" [class.fa-arrow-down]="call.callType == callType.Incoming" [class.fa-arrow-up]="call.callType == callType.Outgoing" aria-hidden="true"></i> {{ call.caller }} - {{ call.destination }}
+                    </span>
+                </div>
+                <div class="card-text">
+                    <small class="text-muted">{{ call.callStart | date: "dd/MM/yy HH:mm:ss" }}
+                        <span class="tag" [class.tag-success]="call.dispositionType == dispositionType.Answered" [class.tag-danger]="call.dispositionType != dispositionType.Answered">{{ dispositionType[call.dispositionType] | translate }}</span>
+                    </small>
+                    <small>
                 <span>
                     <i class="fa fa-music" *ngIf="call.isRecorded" aria-hidden="true"></i>
                     <i class="fa fa-clock-o" aria-hidden="true"></i> {{ call.duration }} сек
                 </span>
-            </small>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <span *ngIf="call.isRecorded" class="pull-xs-right">
+                    <div class="card-title">
+                        <button class="btn btn-outline-primary btn-sm" (click)="getRecordLink()">
+                            <i class="fa fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="card-text">
+
+                    </div>
+                </span>
+            </div>
         </div>
     </div>
 </div>

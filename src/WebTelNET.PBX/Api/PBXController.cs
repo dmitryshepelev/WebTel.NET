@@ -213,7 +213,6 @@ namespace WebTelNET.PBX.Api
         public async Task<IActionResult> GetBalance()
         {
             var response = new ApiResponseModel();
-
             var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
 
             IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
@@ -223,6 +222,34 @@ namespace WebTelNET.PBX.Api
             {
                 var balanceModel = (BalanceResponseModel) result;
                 response.Data.Add(nameof(balanceModel.Balance), balanceModel);
+                return Ok(response);
+            }
+
+            var errorModel = (ErrorResponseModel)result;
+            response.Message = errorModel.Message;
+            return BadRequest(errorModel);
+        }
+
+        [Route("callrecord")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public async Task<IActionResult> GetCallRecord([FromBody] CallRecordRequestModel model)
+        {
+            var response = new ApiResponseModel();
+            if (string.IsNullOrEmpty(model.PbxCallId))
+            {
+                return BadRequest(response);
+            }
+
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
+            IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
+
+            var result = await service.GetCallRecordLinkAsync(model.PbxCallId);
+            if (result.Status == ZadarmaResponseStatus.Success)
+            {
+                var responseModel = (CallRecordLinkResponseModel) result;
+                response.Data.Add(nameof(responseModel.Links), responseModel.Links);
                 return Ok(response);
             }
 

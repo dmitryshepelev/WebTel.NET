@@ -1,6 +1,6 @@
 ﻿import { Component, Input, OnInit } from "@angular/core";
 import { CallModel, CallDispositoinType, CallType } from "../shared/models";
-
+import { PBXService } from "../shared/services/pbx.service";
 
 
 @Component({
@@ -16,8 +16,13 @@ export class CallCardComponent implements OnInit {
     @Input()
     call: CallModel;
 
-    constructor() {
+    constructor(private _pbxService: PBXService) {
+    }
 
+    getRecordLink() {
+        this._pbxService.getCallRecordLink(this.call.pbxCallId)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
     }
 
     ngOnInit(): void {}

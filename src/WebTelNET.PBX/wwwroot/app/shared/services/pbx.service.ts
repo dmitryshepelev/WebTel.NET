@@ -35,4 +35,14 @@ export class PBXService extends ServiceBase {
     getStatistics(start: Date, end: Date): Promise<any> {
         return this.post(this.baseUrl + "/statistics/", {});
     }
+
+    getCallRecordLink(pbxcallid: string): Promise<any> {
+        return this.post(this.baseUrl + "/callrecord/", { PbxCallId: pbxcallid });
+    }
+
+    afterExecuting(response: any): any {
+        console.log("Request completed: -> ", response);
+        return response;
+    }
+
 }
