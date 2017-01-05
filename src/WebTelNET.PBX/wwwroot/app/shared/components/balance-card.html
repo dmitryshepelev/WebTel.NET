@@ -5,8 +5,11 @@
      [class.card-outline-secondary]="status == cardStatus.IsLoading || status == cardStatus.Error">
     <div class="card-block">
         <div class="card-text">
-            <span><i *ngIf="status == cardStatus.IsLoading" class="fa fa-circle-o-notch fa-spin fa-fw input-loader"></i></span>
-            <span *ngIf="status != cardStatus.IsLoading">{{ model.balance | number:'1.2-2' }}</span>
+            <span *ngIf="!model.balance" ><i class="fa fa-circle-o-notch fa-spin fa-fw input-loader"></i></span>
+            <span *ngIf="model.balance">
+                <span>{{ model.balance | number:'1.2-2' }}</span>
+                <span [buttonSpinner]="status == cardStatus.IsLoading" iconClass="fa-refresh" class="btn btn-refresh" (click)="update()"><i class="fa fa-refresh"></i></span>
+            </span>
         </div>
     </div>
 </div>

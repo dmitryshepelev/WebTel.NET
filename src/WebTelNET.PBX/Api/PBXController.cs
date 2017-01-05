@@ -166,18 +166,15 @@ namespace WebTelNET.PBX.Api
 
             var calls = _callRepository.GetAll(
                 x => (x.NotificationTypeId == (int) CallNotificationType.NotifyEnd || x.NotificationTypeId == (int) CallNotificationType.NotifyOutEnd) &&
-                (x.Caller != null && x.Caller.ZadarmaAccountId == zadarmaAccount.Id)
+                (x.Caller != null && x.Caller.ZadarmaAccountId == zadarmaAccount.Id) &&
+                (x.CallStart >= ZadarmaService.GetBoundDateTime(model.Start, BoundDateTimeKind.Start) && x.CallStart <= ZadarmaService.GetBoundDateTime(model.End, BoundDateTimeKind.End))
             )
                 .Include(x => x.Caller)
                 .Include(x => x.Destination)
                 .OrderByDescending(x => x.CallStart);
 
-            var callsViewModel = new List<CallViewModel>();
-            foreach (var call in calls)
-            {
-                callsViewModel.Add(_mapper.Map<CallViewModel>(call));
-            }
-
+            var callsViewModel = calls.Select(call => _mapper.Map<CallViewModel>(call)).ToList();
+            throw new NullReferenceException();
             response.Data.Add(nameof(calls), callsViewModel);
             return Ok(response);
         }

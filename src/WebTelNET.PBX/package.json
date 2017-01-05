@@ -19,6 +19,7 @@
     "@commonclient/components": "file:../WebTelNET.CommonClient/components/",
     "@commonclient/controls": "file:../WebTelNET.CommonClient/controls/",
     "@commonclient/services": "file:../WebTelNET.CommonClient/services/",
+    "@commonclient/directives": "file:../WebTelNET.CommonClient/directives/",
     "angular2-text-mask": "2.1.0",
     "bootstrap": "4.0.0-alpha.4",
     "core-js": "^2.4.1",

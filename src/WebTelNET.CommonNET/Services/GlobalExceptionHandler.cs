@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using WebTelNET.CommonNET.Libs;
 using WebTelNET.CommonNET.Libs.Exceptions;
 using WebTelNET.CommonNET.Models;
@@ -64,7 +65,9 @@ namespace WebTelNET.CommonNET.Services
             var response = context.HttpContext.Response;
             response.StatusCode = (int)status;
             response.ContentType = "application/json";
-            var jsonString = JsonConvert.SerializeObject(responseModel);
+
+            var serializeSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            var jsonString = JsonConvert.SerializeObject(responseModel, Formatting.Indented, serializeSettings);
             response.WriteAsync(jsonString);
         }
     }

@@ -22,7 +22,7 @@
             <div class="col-md-6">
                 <span *ngIf="call.isRecorded" class="pull-xs-right">
                     <div class="card-title">
-                        <button class="btn btn-outline-primary btn-sm" (click)="getRecordLink()">
+                        <button class="btn btn-outline-primary btn-sm" [buttonSpinner]="isRecordLoading" (click)="getRecordLink()">
                             <i class="fa fa-play"></i>
                         </button>
                     </div>

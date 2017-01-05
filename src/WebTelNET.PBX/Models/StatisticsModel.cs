@@ -7,8 +7,8 @@ namespace WebTelNET.PBX.Models
 {
     public class StatisticsModel
     {
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime? Start { get; set; }
+        public DateTime? End { get; set; }
     }
 
     public class PBXStatisticsModel : StatisticsModel

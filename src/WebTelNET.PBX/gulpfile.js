@@ -23,11 +23,11 @@ gulp.task('bootstrap-build',
             .pipe(gulp.dest(bootstrapSrc));
     });
 
-gulp.task('framework-services-build', function () {
-    var sourcePath = '../WebTelNET.CommonClient/services';
-
-
-});
+//gulp.task('framework-services-build', function () {
+//    var sourcePath = '../WebTelNET.CommonClient/services';
+//
+//
+//});
 
 var root = 'wwwroot/styles/';
 

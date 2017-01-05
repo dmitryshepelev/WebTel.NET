@@ -12,8 +12,8 @@ export class StorageService {
         return this.storage[key];
     }
 
-    setItem(key: string, value: any): void {
-        if (this.getItem(key)) {
+    setItem(key: string, value: any, overwrite: boolean = false): void {
+        if (!overwrite && this.getItem(key)) {
             throw new Error(`The key ${key} is already used.`);
         }
         this.storage[key] = value;

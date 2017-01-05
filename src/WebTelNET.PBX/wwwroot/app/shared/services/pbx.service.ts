@@ -33,7 +33,7 @@ export class PBXService extends ServiceBase {
     }
 
     getStatistics(start: Date, end: Date): Promise<any> {
-        return this.post(this.baseUrl + "/statistics/", {});
+        return this.post(this.baseUrl + "/statistics/", { start: start, end: end });
     }
 
     getCallRecordLink(pbxcallid: string): Promise<any> {

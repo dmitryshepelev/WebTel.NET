@@ -1,16 +1,20 @@
 ﻿<ng2-sidebar [(open)]="shownFilters" [position]="'top'" [closeOnClickOutside]="false" [autoFocus]="false">
     <div class="container-fluid">
-        <statistics-form [startDate]="startDate" [endDate]="endDate" (onFormSubmitSuccess)="onFiltersFormSubmitSuccess($event)"></statistics-form>
+        <statistics-form [startDate]="model.startDate" [endDate]="model.endDate" (onFormSubmitSuccess)="onFiltersFormSubmitSuccess($event)" (onFormSubmitFailure)="onFiltersFormSubmitFailure($event)"></statistics-form>
     </div>
     <a closeSidebar>Closes the sidebar</a>
 </ng2-sidebar>
 
-<div>
-    
-
+<div class="container-fluid">
+    <div>
+        <alert></alert>
+    </div>
 </div>
+
 <button type="button" class="btn btn-link" (click)="toggleFilterPanel()"><i class="fa fa-filter"></i></button>
-<span>Данные c {{ startDate | date: "dd/MM/y" }} по {{ endDate | date: "dd/MM/y" }}</span>
-<div *ngFor="let call of calls">
+<span>Данные c {{ model.startDate | date: "dd/MM/y" }} по {{ model.endDate | date: "dd/MM/y" }}</span>
+
+<div *ngFor="let call of model.calls">
     <call-card [call]="call"></call-card>
 </div>
+

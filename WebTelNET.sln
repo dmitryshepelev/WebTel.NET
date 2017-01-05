@@ -76,6 +76,19 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebTelNET.PBX.Models", "src
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebTelNET.Auth.Models", "src\WebTelNET.Auth.Models\WebTelNET.Auth.Models.xproj", "{8E6C1708-F90E-45D0-9B13-FDAC918BBBFE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "directives", "directives", "{288EB405-F449-4CAD-934C-7830FA903321}"
+	ProjectSection(SolutionItems) = preProject
+		src\WebTelNET.CommonClient\directives\index.ts = src\WebTelNET.CommonClient\directives\index.ts
+		src\WebTelNET.CommonClient\directives\package.json = src\WebTelNET.CommonClient\directives\package.json
+		src\WebTelNET.CommonClient\directives\tsconfig.json = src\WebTelNET.CommonClient\directives\tsconfig.json
+		src\WebTelNET.CommonClient\directives\typings.json = src\WebTelNET.CommonClient\directives\typings.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5E65598A-4EBD-4F9A-9E11-D52C87ECA9D8}"
+	ProjectSection(SolutionItems) = preProject
+		src\WebTelNET.CommonClient\directives\src\button-spinner.directive.ts = src\WebTelNET.CommonClient\directives\src\button-spinner.directive.ts
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,5 +148,7 @@ Global
 		{EC0FAA84-9D2A-4995-B82C-09D9AE6CE2CF} = {C2ED9B51-CA2C-41A9-9690-83564C7CDCDA}
 		{4C9AFE05-5ECA-49AF-9755-B8E1240B9F7B} = {7200B5EC-BD79-4C0F-BA39-F2A45B36AC17}
 		{8E6C1708-F90E-45D0-9B13-FDAC918BBBFE} = {7200B5EC-BD79-4C0F-BA39-F2A45B36AC17}
+		{288EB405-F449-4CAD-934C-7830FA903321} = {2246309F-FCFD-470B-A3CB-5E1454211868}
+		{5E65598A-4EBD-4F9A-9E11-D52C87ECA9D8} = {288EB405-F449-4CAD-934C-7830FA903321}
 	EndGlobalSection
 EndGlobal

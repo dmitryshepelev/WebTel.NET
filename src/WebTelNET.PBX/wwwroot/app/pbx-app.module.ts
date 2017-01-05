@@ -9,6 +9,7 @@ import { TranslateModule, TranslateLoader, TranslateStaticLoader } from "ng2-tra
 
 import { ServicesModule, StorageService } from "@commonclient/services";
 import { AlertComponent } from "@commonclient/controls";
+import { ButtonSpinnerDirective } from "@commonclient/directives";
 
 import { PBXAppComponent }  from './pbx-app.component';
 import { StatisticsPageComponent } from './statistics/statistics-page.component';
@@ -21,7 +22,7 @@ import { routing, appRoutingProviders } from './pbx-app.routing';
 import { PBXService } from './shared/services/pbx.service';
 import { PriceInfoComponent } from "./shared/components/price-info.component";
 import { BalanceCardComponent } from "./shared/components/balance-card.component";
-
+import { ButtonSpinnerDirective } from "./shared/directives/button-spinner.directive";
 
 @NgModule({
     imports: [
@@ -51,7 +52,9 @@ import { BalanceCardComponent } from "./shared/components/balance-card.component
         CallbackPageComponent,
         AlertComponent,
         PriceInfoComponent,
-        BalanceCardComponent
+        BalanceCardComponent,
+
+        ButtonSpinnerDirective
     ],
     bootstrap: [PBXAppComponent]
 })

@@ -1,58 +1,80 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { PBXService } from "../shared/services/pbx.service";
 import { StatisticsFormComponent } from "./statistics-form.component";
-import { ResponseModel } from "@commonclient/services";
+import { ResponseModel, StorageService } from "@commonclient/services";
+import { AlertComponent, AlertType } from "@commonclient/controls";
 import { CallModel } from "../shared/models";
 
 import * as moment from "moment";
+
+
+class StatisticsModel {
+    public calls: Array<CallModel>;
+    public startDate: Date;
+    public endDate: Date;
+
+    constructor() {
+        this.startDate = new Date();
+        this.endDate = new Date();
+    }
+
+    setData(startDate: Date, endDate: Date, calls: Array<CallModel>) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.calls = calls;
+    }
+}
 
 @Component({
     moduleId: module.id,
     templateUrl: "statistics-page.html"
 })
-export class StatisticsPageComponent implements OnInit, AfterViewInit {
-    pbxStatistics: any;
-    overallStatistics: any;
+export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy {
+    private _itemName = "statisticsModel";
 
-    calls: Array<CallModel>;
-//    dispositionTypes:
-
+    model: StatisticsModel;
     shownFilters = false;
-    startDate = new Date();
-    endDate = new Date();
-    durationString: string;
 
     @ViewChild(StatisticsFormComponent)
     statisticsFormComponent: StatisticsFormComponent;
 
-    constructor(private _pbxService: PBXService) { }
+    @ViewChild(AlertComponent)
+    alertComponent: AlertComponent;
+
+    constructor(private _pbxService: PBXService, private _storageService: StorageService) {
+        this.model = new StatisticsModel();
+    }
 
     toggleFilterPanel() {
         this.shownFilters = !this.shownFilters;
     }
 
     onFiltersFormSubmitSuccess(result: ResponseModel) {
-        this.startDate = this.statisticsFormComponent.model.start;
-        this.endDate = this.statisticsFormComponent.model.end;
-
-        this.calls = result.data.calls;
-//        this.pbxStatistics = result.data[0].data.Stats;
-//        this.overallStatistics = result.data[1].data.Stats;
+        this.model.setData(this.statisticsFormComponent.model.start, this.statisticsFormComponent.model.end, result.data.calls);
+        this.shownFilters = false;
     }
 
-    ngOnInit() {
-    //    this._pbxService.getStatistics()
-    //        .then(response => console.log(response))
-    //        .catch(error => console.log(error));
+    onFiltersFormSubmitFailure(error: ResponseModel) {
+        console.log(error);
+        this.alertComponent.message = error.message;
+        this.alertComponent.type = AlertType.Error;
+        this.alertComponent.show();
+        this.shownFilters = false;
     }
+
+    ngOnInit() {}
 
     ngAfterViewInit(): void {
-//        Promise.all([this._pbxService.getCallTypes(), this._pbxService.getDispositionTypes()])
-//            .then(response => {
-//                console.log(response);
-//            })
-//            .catch(error => console.log(error));
+        var cached = this._storageService.getItem(this._itemName);
+        if (!cached) {
+            this.statisticsFormComponent.onSubmit();
+        } else {
+            var model = <StatisticsModel>cached;
+            this.model.setData(model.startDate, model.endDate, model.calls);
+        }
+    }
 
-        this.statisticsFormComponent.onSubmit();
+    ngOnDestroy(): void {
+        this._storageService.setItem(this._itemName, this.model, true);
     }
 }

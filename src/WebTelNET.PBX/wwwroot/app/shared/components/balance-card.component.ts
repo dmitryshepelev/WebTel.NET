@@ -26,6 +26,11 @@ export class BalanceCardComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.update();
+    }
+
+    update() {
+        this.status = CardStatus.IsLoading;
         this._pbxService.getBalance()
             .then(response => {
                 this.model = <BalanceModel>response.data.Balance;
