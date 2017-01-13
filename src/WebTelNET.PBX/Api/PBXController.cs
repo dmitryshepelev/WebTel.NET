@@ -31,7 +31,6 @@ namespace WebTelNET.PBX.Api
         private readonly IMapper _mapper;
         private readonly ICloudStorageService _cloudStorageService;
 
-
         private readonly string _currentUserId;
 
         public PBXController(
@@ -56,11 +55,6 @@ namespace WebTelNET.PBX.Api
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             _cloudStorageService.Token = "AQAAAAATq7AwAAP1FZ8RjjqceEpqs-s2rIJVosM";
-
-            if (!string.IsNullOrEmpty(_currentUserId))
-            {
-                var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
-            }
         }
 
         [Route("priceinfo")]

@@ -56,3 +56,20 @@ export class BalanceModel {
     public balance: number;
     public currency: string;
 }
+
+export class StatisticsModel {
+    public calls: Array<CallModel>;
+    public startDate: Date;
+    public endDate: Date;
+
+    constructor() {
+        this.startDate = new Date();
+        this.endDate = new Date();
+    }
+
+    setData(startDate: Date, endDate: Date, calls: Array<CallModel>) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.calls = calls;
+    }
+}

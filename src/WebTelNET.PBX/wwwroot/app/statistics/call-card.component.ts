@@ -19,6 +19,8 @@ export class CallCardComponent implements OnInit {
 
     @Output()
     onGetRecordFailure = new EventEmitter<ResponseModel>();
+    @Output()
+    onGetRecordSuccess = new EventEmitter<ResponseModel>();
 
     constructor(private _pbxService: PBXService) {
     }
@@ -26,7 +28,7 @@ export class CallCardComponent implements OnInit {
     getRecordLink() {
         this.isRecordLoading = true;
         this._pbxService.getCallRecordLink(this.call.pbxCallId)
-            .then(response => console.log(response))
+            .then(response => this.onGetRecordSuccess.emit(response))
             .catch(error => this.onGetRecordFailure.emit(error))
             .then(() => this.isRecordLoading = false);
     }

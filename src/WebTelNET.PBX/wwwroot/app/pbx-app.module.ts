@@ -20,6 +20,7 @@ import { CallbackPageComponent } from "./callback/callback-page.component";
 import { CallbackFormComponent } from "./callback/callback-form.component";
 import { routing, appRoutingProviders } from './pbx-app.routing';
 import { PBXService } from './shared/services/pbx.service';
+import { PlayerComponent } from "./shared/components/player.component";
 import { PriceInfoComponent } from "./shared/components/price-info.component";
 import { BalanceCardComponent } from "./shared/components/balance-card.component";
 import { ButtonSpinnerDirective } from "./shared/directives/button-spinner.directive";
@@ -51,6 +52,7 @@ import { ButtonSpinnerDirective } from "./shared/directives/button-spinner.direc
         CallbackFormComponent,
         CallbackPageComponent,
         AlertComponent,
+        PlayerComponent,
         PriceInfoComponent,
         BalanceCardComponent,
 

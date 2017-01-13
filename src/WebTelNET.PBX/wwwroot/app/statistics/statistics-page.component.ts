@@ -3,27 +3,10 @@ import { PBXService } from "../shared/services/pbx.service";
 import { StatisticsFormComponent } from "./statistics-form.component";
 import { ResponseModel, StorageService } from "@commonclient/services";
 import { AlertComponent, AlertType } from "@commonclient/controls";
-import { CallModel } from "../shared/models";
+import { CallModel, StatisticsModel } from "../shared/models";
 
 import * as moment from "moment";
 
-
-class StatisticsModel {
-    public calls: Array<CallModel>;
-    public startDate: Date;
-    public endDate: Date;
-
-    constructor() {
-        this.startDate = new Date();
-        this.endDate = new Date();
-    }
-
-    setData(startDate: Date, endDate: Date, calls: Array<CallModel>) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.calls = calls;
-    }
-}
 
 @Component({
     moduleId: module.id,
@@ -34,6 +17,7 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
 
     model: StatisticsModel;
     shownFilters = false;
+    callRecordHref: string;
 
     @ViewChild(StatisticsFormComponent)
     statisticsFormComponent: StatisticsFormComponent;
@@ -55,18 +39,16 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     onFiltersFormSubmitFailure(error: ResponseModel) {
-        console.log(error);
-        this.alertComponent.message = error.message;
-        this.alertComponent.type = AlertType.Error;
-        this.alertComponent.show();
+        this.showErrorAlert(error);
         this.shownFilters = false;
     }
 
+    onGetCallRecordSuccess(result: ResponseModel) {
+        this.callRecordHref = result.data.Href;
+    }
+
     onGetCallRecordFailure(error: ResponseModel) {
-        console.log(error);
-        this.alertComponent.message = error.message;
-        this.alertComponent.type = AlertType.Error;
-        this.alertComponent.show();
+        this.showErrorAlert(error);
     }
 
     ngOnInit() {}
@@ -83,5 +65,11 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
 
     ngOnDestroy(): void {
         this._storageService.setItem(this._itemName, this.model, true);
+    }
+
+    private showErrorAlert(model: ResponseModel) {
+        this.alertComponent.message = model.message;
+        this.alertComponent.type = AlertType.Error;
+        this.alertComponent.show();
     }
 }

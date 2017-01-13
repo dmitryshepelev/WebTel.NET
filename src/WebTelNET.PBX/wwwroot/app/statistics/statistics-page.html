@@ -11,10 +11,21 @@
     </div>
 </div>
 
-<button type="button" class="btn btn-link" (click)="toggleFilterPanel()"><i class="fa fa-filter"></i></button>
-<span>Данные c {{ model.startDate | date: "dd/MM/y" }} по {{ model.endDate | date: "dd/MM/y" }}</span>
+<div class="row">
+    <div class="col-md-6">
+        <button type="button" class="btn btn-link" (click)="toggleFilterPanel()"><i class="fa fa-filter"></i></button>
+        <span>Данные c {{ model.startDate | date: "dd/MM/y" }} по {{ model.endDate | date: "dd/MM/y" }}</span>
+    </div>
+    <div class="col-md-6">
+        <span class="pull-xs-right">
+            <player [href]="callRecordHref"></player>
+        </span>
+    </div>
+</div>
+
+
 
 <div *ngFor="let call of model.calls">
-    <call-card [call]="call" (onGetRecordFailure)="onGetCallRecordFailure($event)"></call-card>
+    <call-card [call]="call" (onGetRecordFailure)="onGetCallRecordFailure($event)" (onGetRecordSuccess)="onGetCallRecordSuccess($event)"></call-card>
 </div>
 

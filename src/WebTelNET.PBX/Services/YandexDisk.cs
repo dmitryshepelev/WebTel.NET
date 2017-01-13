@@ -55,6 +55,16 @@ namespace WebTelNET.PBX.Services
             Token = token;
         }
 
+        private async Task<CloudStorageServiceResponse> _ResolveResponseContentAsync<T>(HttpContent content,
+            bool isSuccessStatusCode) where T : CloudStorageServiceResponse
+        {
+            if (isSuccessStatusCode)
+            {
+                return await ResolveResponseContentAsync<T>(content);
+            }
+            return await ResolveResponseContentAsync<ErrorResponse>(content);
+        }
+
         protected override async Task<HttpResponseMessage> ExecuteRequestAsync(HttpRequestMessage request)
         {
             if (string.IsNullOrEmpty(Token)) throw new NullReferenceException("Token must be set");
@@ -72,12 +82,7 @@ namespace WebTelNET.PBX.Services
                 { "disable_redirects", disableRedirects.ToString() }
             };
             var response = await PostAsync($"{apiUrl}?{GetQueryString(parameters)}", null);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return await ResolveResponseContentAsync<FileUploadResponse>(response.Content);
-            }
-            return await ResolveResponseContentAsync<ErrorResponse>(response.Content);
+            return await _ResolveResponseContentAsync<FileUploadResponse>(response.Content, response.IsSuccessStatusCode);
         }
 
         public async Task<CloudStorageServiceResponse> DownloadByPathAsync(string path)
@@ -88,12 +93,7 @@ namespace WebTelNET.PBX.Services
                 { nameof(path), path }
             };
             var response = await GetAsync($"{apiUrl}?{GetQueryString(parameters)}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                return await ResolveResponseContentAsync<FileDownloadResponse>(response.Content);
-            }
-            return await ResolveResponseContentAsync<ErrorResponse>(response.Content);
+            return await _ResolveResponseContentAsync<FileDownloadResponse>(response.Content, response.IsSuccessStatusCode);
         }
     }
 }
