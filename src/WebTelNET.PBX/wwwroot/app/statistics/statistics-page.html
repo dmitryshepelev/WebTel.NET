@@ -15,6 +15,6 @@
 <span>Данные c {{ model.startDate | date: "dd/MM/y" }} по {{ model.endDate | date: "dd/MM/y" }}</span>
 
 <div *ngFor="let call of model.calls">
-    <call-card [call]="call"></call-card>
+    <call-card [call]="call" (onGetRecordFailure)="onGetCallRecordFailure($event)"></call-card>
 </div>
 

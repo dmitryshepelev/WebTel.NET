@@ -10,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Models;
+using WebTelNET.CommonNET.Services;
 using WebTelNET.PBX.Libs;
 using WebTelNET.PBX.Models;
 using WebTelNET.PBX.Models.Repository;
+using WebTelNET.PBX.Resources;
 using WebTelNET.PBX.Services;
 
 namespace WebTelNET.PBX.Api
@@ -26,10 +28,9 @@ namespace WebTelNET.PBX.Api
         private readonly IZadarmaAccountRepository _zadarmaAccountRepository;
         private readonly IPBXManager _pbxManager;
         private readonly ICallRepository _callRepository;
-        private readonly IPhoneNumberRepository _phoneNumberRepository;
         private readonly IMapper _mapper;
-        private readonly INotificationTypeRepository _notificationTypeRepository;
-        private readonly IDispositionTypeRepository _dispositionTypeRepository;
+        private readonly ICloudStorageService _cloudStorageService;
+
 
         private readonly string _currentUserId;
 
@@ -41,18 +42,25 @@ namespace WebTelNET.PBX.Api
             IMapper mapper,
             IPhoneNumberRepository phoneNumberRepository,
             INotificationTypeRepository notificationTypeRepository,
-            IDispositionTypeRepository dispositionTypeRepository)
+            IDispositionTypeRepository dispositionTypeRepository,
+            ICloudStorageService cloudStorageService
+        )
         {
             _zadarmaAccountRepository = zadarmaAccountRepository;
             _httpContextAccessor = httpContextAccessor;
             _pbxManager = pbxManager;
             _callRepository = callRepository;
             _mapper = mapper;
-            _phoneNumberRepository = phoneNumberRepository;
-            _notificationTypeRepository = notificationTypeRepository;
-            _dispositionTypeRepository = dispositionTypeRepository;
+            _cloudStorageService = cloudStorageService;
 
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            _cloudStorageService.Token = "AQAAAAATq7AwAAP1FZ8RjjqceEpqs-s2rIJVosM";
+
+            if (!string.IsNullOrEmpty(_currentUserId))
+            {
+                var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
+            }
         }
 
         [Route("priceinfo")]
@@ -174,7 +182,7 @@ namespace WebTelNET.PBX.Api
                 .OrderByDescending(x => x.CallStart);
 
             var callsViewModel = calls.Select(call => _mapper.Map<CallViewModel>(call)).ToList();
-            throw new NullReferenceException();
+
             response.Data.Add(nameof(calls), callsViewModel);
             return Ok(response);
         }
@@ -182,7 +190,7 @@ namespace WebTelNET.PBX.Api
         [Route("notify/{id?}")]
         [HttpPost]
         [Produces(typeof(string[]))]
-        public IActionResult Notify(string id, [FromBody] JObject model)
+        public async Task<IActionResult> Notify(string id, [FromBody] JObject model)
         {
             var response = new ApiResponseModel();
 
@@ -197,6 +205,19 @@ namespace WebTelNET.PBX.Api
             }
 
             var call = _pbxManager.ProcessCallNotification(model, zadarmaAccount.Id);
+
+            if (call.IsRecorded == true)
+            {
+                IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
+                var result = await service.GetCallRecordLinkAsync(call.PBXCallId);
+                if (result.Status == ZadarmaResponseStatus.Success)
+                {
+                    var responseModel = (CallRecordLinkResponseModel) result;
+
+                    var uploadResult = await _cloudStorageService.UploadByUrlAsync(responseModel.Links.First(), "app:/" + call.PBXCallId + ".mp3");
+                    response.Data.Add(nameof(uploadResult), uploadResult);
+                }
+            }
 
             response.Data.Add("model", call);
             response.Data.Add("account_id", id);
@@ -233,26 +254,33 @@ namespace WebTelNET.PBX.Api
         [Produces(typeof(string[]))]
         public async Task<IActionResult> GetCallRecord([FromBody] CallRecordRequestModel model)
         {
+            const string _fieldName = "Href";
+
             var response = new ApiResponseModel();
             if (string.IsNullOrEmpty(model.PbxCallId))
             {
                 return BadRequest(response);
             }
 
-            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
-            IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
-
-            var result = await service.GetCallRecordLinkAsync(model.PbxCallId);
-            if (result.Status == ZadarmaResponseStatus.Success)
+            var result = await _cloudStorageService.DownloadByPathAsync("app:/" + model.PbxCallId + ".mp3") as FileDownloadResponse;
+            if (result != null)
             {
-                var responseModel = (CallRecordLinkResponseModel) result;
-                response.Data.Add(nameof(responseModel.Links), responseModel.Links);
+                response.Data.Add(_fieldName, result.Href);
                 return Ok(response);
             }
 
-            var errorModel = (ErrorResponseModel)result;
-            response.Message = errorModel.Message;
-            return BadRequest(errorModel);
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
+            IZadarmaService service = new ZadarmaService(zadarmaAccount.UserKey, zadarmaAccount.SecretKey);
+            var serviceResult = await service.GetCallRecordLinkAsync(model.PbxCallId);
+            if (serviceResult.Status == ZadarmaResponseStatus.Success)
+            {
+                var responseModel = (CallRecordLinkResponseModel) serviceResult;
+                response.Data.Add(_fieldName, responseModel.Links.First());
+                return Ok(response);
+            }
+
+            response.Message = PBXResource.FileNotFound;
+            return BadRequest(response);
         }
     }
 }

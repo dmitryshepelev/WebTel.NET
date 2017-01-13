@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using WebTelNET.CommonNET.Services;
 
 namespace WebTelNET.PBX.Services
 {
@@ -374,12 +375,6 @@ namespace WebTelNET.PBX.Services
             return $"/{ApiVersion}/{apiMethod}";
         }
 
-        private string GetQueryString(IDictionary<string, string> parameters)
-        {
-            IOrderedEnumerable<KeyValuePair<string, string>> sorted = parameters.OrderBy(x => x.Key);
-            return string.Join("&", sorted.Select(x => $"{x.Key}={WebUtility.UrlEncode(x.Value)}"));
-        }
-
         /// <summary>
         /// Creates a ZadarmaResponseModel of type T
         /// </summary>
@@ -443,6 +438,12 @@ namespace WebTelNET.PBX.Services
 
                 return await client.SendAsync(request);
             }
+        }
+
+        public string GetQueryString(IDictionary<string, string> parameters)
+        {
+            IOrderedEnumerable<KeyValuePair<string, string>> sorted = parameters.OrderBy(x => x.Key);
+            return string.Join("&", sorted.Select(x => $"{x.Key}={WebUtility.UrlEncode(x.Value)}"));
         }
 
         /// <summary>

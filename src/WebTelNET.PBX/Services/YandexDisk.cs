@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using WebTelNET.CommonNET.Libs;
+using WebTelNET.CommonNET.Services;
+
+namespace WebTelNET.PBX.Services
+{
+    public class ErrorResponse : CloudStorageServiceResponse
+    {
+        public string Message { get; set; }
+        public string Description { get; set; }
+        public string Error { get; set; }
+    }
+
+    public abstract class FileOperationResponse : CloudStorageServiceResponse
+    {
+        public string Href { get; set; }
+        public HttpMethod Method { get; set; }
+        public bool Templated { get; set; }
+
+        protected FileOperationResponse(string href, string method, bool templated)
+        {
+            Href = href;
+            Method = new HttpMethod(method);
+            Templated = templated;
+        }
+    }
+    
+    public class FileUploadResponse : FileOperationResponse
+    {
+        public FileUploadResponse(string href, string method, bool templated) : base(href, method, templated)
+        {
+        }
+    }
+
+    public class FileDownloadResponse : FileOperationResponse
+    {
+        public FileDownloadResponse(string href, string method, bool templated) : base(href, method, templated)
+        {
+        }
+    }
+
+    public class YandexDisk : HttpService, ICloudStorageService
+    {
+        public string Token { get; set; }
+
+        public YandexDisk() : base("https://cloud-api.yandex.net/v1/")
+        {
+        }
+
+        public YandexDisk(string token) : this()
+        {
+            Token = token;
+        }
+
+        protected override async Task<HttpResponseMessage> ExecuteRequestAsync(HttpRequestMessage request)
+        {
+            if (string.IsNullOrEmpty(Token)) throw new NullReferenceException("Token must be set");
+            request.Headers.TryAddWithoutValidation("Authorization", "OAuth " + Token);
+            return await base.ExecuteRequestAsync(request);
+        }
+
+        public async Task<CloudStorageServiceResponse> UploadByUrlAsync(string url, string path, bool disableRedirects = true)
+        {
+            const string apiUrl = "disk/resources/upload";
+            var parameters = new Dictionary<string, string>
+            {
+                { nameof(url), url },
+                { nameof(path), path },
+                { "disable_redirects", disableRedirects.ToString() }
+            };
+            var response = await PostAsync($"{apiUrl}?{GetQueryString(parameters)}", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await ResolveResponseContentAsync<FileUploadResponse>(response.Content);
+            }
+            return await ResolveResponseContentAsync<ErrorResponse>(response.Content);
+        }
+
+        public async Task<CloudStorageServiceResponse> DownloadByPathAsync(string path)
+        {
+            const string apiUrl = "disk/resources/download";
+            var parameters = new Dictionary<string, string>
+            {
+                { nameof(path), path }
+            };
+            var response = await GetAsync($"{apiUrl}?{GetQueryString(parameters)}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await ResolveResponseContentAsync<FileDownloadResponse>(response.Content);
+            }
+            return await ResolveResponseContentAsync<ErrorResponse>(response.Content);
+        }
+    }
+}

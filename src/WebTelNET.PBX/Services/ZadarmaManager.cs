@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Newtonsoft.Json.Linq;
+using WebTelNET.CommonNET.Services;
 using WebTelNET.PBX.Models.Models;
 using WebTelNET.PBX.Models.Repository;
 

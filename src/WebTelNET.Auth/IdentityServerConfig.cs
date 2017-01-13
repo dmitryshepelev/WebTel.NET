@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 
@@ -20,7 +21,15 @@ namespace WebTelNET.Auth
                 new Scope
                 {
                     Name = "api",
-                    Description = "API"
+                    DisplayName = "API",
+                    Description = "api",
+                    Type = ScopeType.Resource,
+                    IncludeAllClaimsForUser = true,
+                    Claims = new List<ScopeClaim>
+                    {
+                        new ScopeClaim(ClaimTypes.Name),
+                        new ScopeClaim(ClaimTypes.Role)
+                    }
                 }
             };
         }

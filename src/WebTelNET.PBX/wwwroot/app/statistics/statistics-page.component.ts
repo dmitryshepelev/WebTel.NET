@@ -62,6 +62,13 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
         this.shownFilters = false;
     }
 
+    onGetCallRecordFailure(error: ResponseModel) {
+        console.log(error);
+        this.alertComponent.message = error.message;
+        this.alertComponent.type = AlertType.Error;
+        this.alertComponent.show();
+    }
+
     ngOnInit() {}
 
     ngAfterViewInit(): void {
