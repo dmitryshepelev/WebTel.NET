@@ -1,6 +1,6 @@
 {
   "name": "@commonclient/controls",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "scripts": {
     "lint": "tslint src/**/*.ts",
     "test": "tsc && karma start",

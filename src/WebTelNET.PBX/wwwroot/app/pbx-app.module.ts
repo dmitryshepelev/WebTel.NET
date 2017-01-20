@@ -8,7 +8,7 @@ import { SidebarModule } from "ng2-sidebar";
 import { TranslateModule, TranslateLoader, TranslateStaticLoader } from "ng2-translate";
 
 import { ServicesModule, StorageService } from "@commonclient/services";
-import { AlertComponent } from "@commonclient/controls";
+import { AlertComponent, PlayerComponent } from "@commonclient/controls";
 import { ButtonSpinnerDirective } from "@commonclient/directives";
 
 import { PBXAppComponent }  from './pbx-app.component';
@@ -18,9 +18,10 @@ import { CallCardComponent } from "./statistics/call-card.component";
 import { CallCostPageComponent } from './call-cost/call-cost-page.component';
 import { CallbackPageComponent } from "./callback/callback-page.component";
 import { CallbackFormComponent } from "./callback/callback-form.component";
+import { GetScriptPageComponent } from "./getscript/get-script-page.component";
+import { GetScriptFormComponent } from "./getscript/get-script-form.component";
 import { routing, appRoutingProviders } from './pbx-app.routing';
 import { PBXService } from './shared/services/pbx.service';
-import { PlayerComponent } from "./shared/components/player.component";
 import { PriceInfoComponent } from "./shared/components/price-info.component";
 import { BalanceCardComponent } from "./shared/components/balance-card.component";
 import { ButtonSpinnerDirective } from "./shared/directives/button-spinner.directive";
@@ -55,6 +56,8 @@ import { ButtonSpinnerDirective } from "./shared/directives/button-spinner.direc
         PlayerComponent,
         PriceInfoComponent,
         BalanceCardComponent,
+        GetScriptPageComponent,
+        GetScriptFormComponent,
 
         ButtonSpinnerDirective
     ],

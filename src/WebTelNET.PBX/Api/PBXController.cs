@@ -30,6 +30,7 @@ namespace WebTelNET.PBX.Api
         private readonly ICallRepository _callRepository;
         private readonly IMapper _mapper;
         private readonly ICloudStorageService _cloudStorageService;
+        private readonly IWidgetRepository _widgetRepository;
 
         private readonly string _currentUserId;
 
@@ -42,7 +43,8 @@ namespace WebTelNET.PBX.Api
             IPhoneNumberRepository phoneNumberRepository,
             INotificationTypeRepository notificationTypeRepository,
             IDispositionTypeRepository dispositionTypeRepository,
-            ICloudStorageService cloudStorageService
+            ICloudStorageService cloudStorageService,
+            IWidgetRepository widgetRepository
         )
         {
             _zadarmaAccountRepository = zadarmaAccountRepository;
@@ -51,6 +53,7 @@ namespace WebTelNET.PBX.Api
             _callRepository = callRepository;
             _mapper = mapper;
             _cloudStorageService = cloudStorageService;
+            _widgetRepository = widgetRepository;
 
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -275,6 +278,20 @@ namespace WebTelNET.PBX.Api
 
             response.Message = PBXResource.FileNotFound;
             return BadRequest(response);
+        }
+
+        [Route("widgetid")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public async Task<IActionResult> GetWidgetId()
+        {
+            var response = new ApiResponseModel();
+
+            var widget = _widgetRepository.GetOrCreate(_currentUserId);
+
+            response.Data.Add("WidgetId", widget.Id);
+            return Ok(response);
         }
     }
 }

@@ -74,6 +74,5 @@ export class CallbackFormComponent extends SubmitingComponent {
     submit() {
         const model = new CallbackModel(this.form.controls[this._fromControlName].value, this.form.controls[this._toControlName].value);
         this.startSubmiting();
-
     }
 }

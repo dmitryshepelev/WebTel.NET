@@ -40,8 +40,12 @@ export class PBXService extends ServiceBase {
         return this.post(this.baseUrl + "/callrecord/", { PbxCallId: pbxcallid });
     }
 
+    getWidgetId(): Promise<any> {
+        return this.post(this.baseUrl + "/widgetid/", {});
+    }
+
     afterExecuting(response: any): any {
-        console.log("Request completed: -> ", response);
+        console.info("Request completed: -> ", response);
         return response;
     }
 

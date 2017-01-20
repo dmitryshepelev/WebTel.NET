@@ -1,11 +1,17 @@
-﻿import { Component, Input, OnChanges, SimpleChange } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChange, OnDestroy } from "@angular/core";
 
 @Component({
-    moduleId: module.id,
     selector: "player",
-    templateUrl: "player.html"
+    template: `
+        <div>
+            <button class="btn btn-primary btn-sm" *ngIf="!isPlaying" [disabled]="!isReady" (click)="play()"><i class="fa fa-play"></i></button>
+            <button class="btn btn-outline-primary btn-sm" *ngIf="isPlaying" [disabled]="!isReady" (click)="pause()"><i class="fa fa-pause"></i></button>
+            <button class="btn btn-primary btn-sm" [disabled]="!isReady" (click)="stop()"><i class="fa fa-stop"></i></button>
+            <button class="btn btn-link btn-sm" [disabled]="!isReady" (click)="mute()"><i class="fa" [class.fa-volume-up]="!isMuted" [class.fa-volume-off]="isMuted"></i></button>
+        </div>
+    `
 })
-export class PlayerComponent implements OnChanges {
+export class PlayerComponent implements OnChanges, OnDestroy {
     private _player: any;
 
     isPlaying: boolean = false;
@@ -14,6 +20,8 @@ export class PlayerComponent implements OnChanges {
 
     @Input()
     href: string;
+    @Input()
+    autoPlay: boolean = false;
 
     constructor() {
         this._player = new Audio();
@@ -28,6 +36,10 @@ export class PlayerComponent implements OnChanges {
             this._player.src = hrefChange.currentValue;
             this.play();
         }
+    }
+
+    ngOnDestroy(): void {
+        this.stop();
     }
 
     play() {

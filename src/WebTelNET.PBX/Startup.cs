@@ -84,6 +84,7 @@ namespace WebTelNET.PBX
             services.AddScoped<IPhoneNumberRepository, PhoneNumberRepository>();
             services.AddScoped<IPBXManager, ZadarmaManager>();
             services.AddScoped<ICloudStorageService, YandexDisk>();
+            services.AddScoped<IWidgetRepository, WidgetRepository>();
 
             services.AddSingleton<IMapper>(x => _mapperConfiguration.CreateMapper());
         }

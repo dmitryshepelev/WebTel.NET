@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <label for="counterNumber" class="col-form-label">Номер счетчика</label>
+                    <input type="text" id="counterNumber" formControlName="counterNumber" name="counterNumber" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <button type="submit" [disabled]="submiting" class="btn btn-primary" [buttonSpinner]="submiting">Получить скрипт</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

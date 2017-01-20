@@ -70,6 +70,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EC0FAA84-9D2A-4995-B82C-09D9AE6CE2CF}"
 	ProjectSection(SolutionItems) = preProject
 		src\WebTelNET.CommonClient\controls\src\alert.component.ts = src\WebTelNET.CommonClient\controls\src\alert.component.ts
+		src\WebTelNET.CommonClient\controls\src\player.component.ts = src\WebTelNET.CommonClient\controls\src\player.component.ts
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebTelNET.PBX.Models", "src\WebTelNET.PBX.Models\WebTelNET.PBX.Models.xproj", "{4C9AFE05-5ECA-49AF-9755-B8E1240B9F7B}"
