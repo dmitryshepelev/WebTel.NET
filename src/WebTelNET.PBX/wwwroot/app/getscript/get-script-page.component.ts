@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit, OnDestroy } from "@angular/core";
 import { PBXService } from "../shared/services/pbx.service";
-import { StorageService } from "@commonclient/services";
+import { StorageService, ResponseModel } from "@commonclient/services";
 
 
 @Component({
@@ -11,6 +11,7 @@ export class GetScriptPageComponent implements OnInit, OnDestroy {
     private _keyName = "widgetId";
 
     widgetId: string = '';
+    counterNumber: string = '';
 
     constructor(private _pbxService: PBXService, private _storageServcie: StorageService) {}
 
@@ -27,5 +28,9 @@ export class GetScriptPageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this._storageServcie.setItem("widgetId", this.widgetId, true);
+    }
+
+    onCounterNumberInputSuccess(response: ResponseModel) {
+        this.counterNumber = response.data.CounterNumber;
     }
 }

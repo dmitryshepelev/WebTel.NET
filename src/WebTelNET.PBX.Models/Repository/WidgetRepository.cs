@@ -11,7 +11,7 @@ namespace WebTelNET.PBX.Models.Repository
 
     public class WidgetRepository : RepositoryBase<Widget>, IWidgetRepository
     {
-        public WidgetRepository(DbContext context) : base(context)
+        public WidgetRepository(PBXDbContext context) : base(context)
         {
         }
 

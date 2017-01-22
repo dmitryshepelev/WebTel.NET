@@ -32,6 +32,9 @@ namespace WebTelNET.PBX.Models
                 .Property(x => x.CallerId).IsRequired(false);
             modelBuilder.Entity<Call>()
                 .Property(x => x.DestinationId).IsRequired(false);
+
+            modelBuilder.Entity<Widget>()
+                .HasIndex(x => x.UserId).IsUnique();
         }
 
         public DbSet<ZadarmaAccount> ZadarmaAccounts { get; set; }
@@ -40,5 +43,6 @@ namespace WebTelNET.PBX.Models
         public DbSet<NotificationType> NotificationTypes { get; set; }
         public DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public DbSet<Call> Calls { get; set; }
+        public DbSet<Widget> Widgets { get;set; }
     }
 }
