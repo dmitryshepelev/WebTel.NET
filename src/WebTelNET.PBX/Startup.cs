@@ -51,10 +51,6 @@ namespace WebTelNET.PBX
                 .AddEntityFrameworkStores<PBXDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IZadarmaAccountRepository, ZadarmaAccountRepository>();
-            services.AddScoped<IPBXManager, ZadarmaManager>();
-
             services.AddMvc(config =>
             {
                 config.Filters.Add(typeof(GlobalExceptionHandler));
@@ -80,12 +76,14 @@ namespace WebTelNET.PBX
             services.AddScoped<IMailCreator, PBXMailCreator>();
             services.AddScoped<IDispositionTypeRepository, DispositionTypeRepository>();
             services.AddScoped<INotificationTypeRepository, NotificationTypeRepository>();
+            services.AddScoped<IZadarmaAccountRepository, ZadarmaAccountRepository>();
             services.AddScoped<ICallRepository, CallRepository>();
             services.AddScoped<IPhoneNumberRepository, PhoneNumberRepository>();
             services.AddScoped<IPBXManager, ZadarmaManager>();
             services.AddScoped<ICloudStorageService, YandexDisk>();
             services.AddScoped<IWidgetRepository, WidgetRepository>();
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IMapper>(x => _mapperConfiguration.CreateMapper());
         }
 

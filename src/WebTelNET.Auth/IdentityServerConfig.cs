@@ -62,6 +62,31 @@ namespace WebTelNET.Auth
                         StandardScopes.OfflineAccess.Name,
                         "api"
                     }
+                },
+
+                new Client
+                {
+                    ClientId = "office",
+                    ClientName = "Office",
+                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+
+                    RequireConsent = false,
+
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    RedirectUris = { "http://localhost:5002/signin-oidc", "http://localhost:5002" },
+                    PostLogoutRedirectUris = { "http://localhost:5002" },
+
+                    AllowedScopes =
+                    {
+                        StandardScopes.OpenId.Name,
+                        StandardScopes.Profile.Name,
+                        StandardScopes.OfflineAccess.Name,
+                        "api"
+                    }
                 }
             };
         }
