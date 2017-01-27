@@ -12,9 +12,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using WebTelNET.CommonNET.Libs.Filters;
+using WebTelNET.CommonNET.Services;
+using WebTelNET.Office.Filters;
 using WebTelNET.Office.Models;
 using WebTelNET.Office.Models.Libs;
 using WebTelNET.Office.Models.Repository;
+using WebTelNET.Office.Services;
 
 namespace WebTelNET.Office
 {
@@ -42,10 +46,19 @@ namespace WebTelNET.Office
                 .AddDefaultTokenProviders();
 
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(config =>
+            {
+                config.Filters.Add(typeof(GlobalExceptionHandler));
+            });
 
+            services.AddScoped<ApiAuthorizeAttribute>();
+            services.AddScoped<EnsureUserOfficeCreatedAttribute>();
+
+            services.AddScoped<IMailManager, MailManager>();
+            services.AddScoped<IMailCreator, OfficeMailCreator>();
             services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();
             services.AddScoped<IServiceStatusRepository, ServiceStatusRepository>();
+            services.AddScoped<IUserOfficeRepository, UserOfficeRepository>();
 
             services.Configure<AppSettings>(settings =>
             {

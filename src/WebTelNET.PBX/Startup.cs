@@ -72,6 +72,7 @@ namespace WebTelNET.PBX
 
             services.AddScoped<ApiAuthorizeAttribute>();
             services.AddScoped<ClassConsoleLogActionOneFilter>();
+
             services.AddScoped<IMailManager, MailManager>();
             services.AddScoped<IMailCreator, PBXMailCreator>();
             services.AddScoped<IDispositionTypeRepository, DispositionTypeRepository>();

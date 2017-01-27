@@ -9,6 +9,11 @@ using WebTelNET.CommonNET.Services;
 
 namespace WebTelNET.PBX.Services
 {
+    public interface IPBXMailCreator : IMailCreator
+    {
+
+    }
+
     public class PBXMailCreator : MailCreator, IPBXMailCreator
     {
         public PBXMailCreator(IHostingEnvironment hostingEnvironment) : base(hostingEnvironment)
