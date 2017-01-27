@@ -244,6 +244,7 @@ src/**/.vscode/
 
 src/WebTelNET.Auth.Models/Migrations/
 src/WebTelNET.PBX.Models/Migrations/
+src/WebTelNET.Office.Models/Migrations/
 
 src/**/.gulp-scss-cache/
 
