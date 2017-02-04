@@ -30,6 +30,11 @@ namespace WebTelNET.Office.Models
                 .HasIndex(x => x.Name)
                 .IsUnique();
 
+            modelBuilder.Entity<ServiceType>()
+                .HasOne(x => x.ServiceProvider)
+                .WithOne(x => x.ServiceType)
+                .HasForeignKey<ServiceProvider>(x => x.ServiceTypeId);
+
             modelBuilder.Entity<ServiceStatus>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
@@ -48,7 +53,12 @@ namespace WebTelNET.Office.Models
         public DbSet<ServiceStatus> ServiceStatuses { get; set; }
         public DbSet<ServiceProvider> ServiceProviders { get; set; }
 
-        public void EnsureSeedData(IServiceStatusRepository serviceStatusRepository, IServiceTypeRepository serviceTypeRepository, IServiceSettings serviceSettings)
+        public void EnsureSeedData(
+            IServiceStatusRepository serviceStatusRepository,
+            IServiceTypeRepository serviceTypeRepository,
+            IServiceProviderRepository serviceProviderRepository,
+            IServiceSettings serviceSettings
+        )
         {
             PropertyInfo[] properties;
 
@@ -79,6 +89,41 @@ namespace WebTelNET.Office.Models
                 if (serviceStatusRepository.GetSingle(x => x.Name.Equals(typedValue)) == null)
                 {
                     serviceStatusRepository.Create(new ServiceStatus { Name = typedValue });
+                }
+            }
+
+            properties = serviceSettings.ServiceProviderTypeSettings.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var value = serviceSettings.ServiceProviderTypeSettings.GetType()
+                    .GetProperty(property.Name)
+                    .GetValue(serviceSettings.ServiceProviderTypeSettings);
+
+                var typedValue = (ServiceProviderSettings) value;
+
+                var serviceProvider = serviceProviderRepository.GetSingle(x => x.Name.Equals(typedValue.Name));
+                if (serviceProvider == null)
+                {
+                    var serviceType = serviceTypeRepository.GetSingle(x => x.Name.Equals(property.Name));
+                    if (serviceType == null)
+                    {
+                        continue;
+                    }
+
+                    serviceProviderRepository.Create(new ServiceProvider
+                    {
+                        Name = typedValue.Name,
+                        Description = typedValue.Description,
+                        WebSite = typedValue.WebSite,
+                        ServiceTypeId = serviceType.Id
+                    });
+                }
+                else
+                {
+                    serviceProvider.Name = typedValue.Name;
+                    serviceProvider.Description = typedValue.Description;
+                    serviceProvider.WebSite = typedValue.WebSite;
+                    serviceProviderRepository.Update(serviceProvider);
                 }
             }
         }

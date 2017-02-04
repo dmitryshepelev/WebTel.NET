@@ -10,5 +10,7 @@ namespace WebTelNET.Office.Models.Models
 
         [Required]
         public string Name { get; set; }
+
+        public ServiceProvider ServiceProvider { get; set; }
     }
 }

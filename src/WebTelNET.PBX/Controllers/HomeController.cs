@@ -1,14 +1,32 @@
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebTelNET.PBX.Services;
 
 namespace WebTelNET.PBX.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        [Authorize]
-        public IActionResult Index()
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        private readonly string _currentUserId;
+
+        public HomeController(
+            IHttpContextAccessor httpContextAccessor
+        )
         {
+            _httpContextAccessor = httpContextAccessor;
+
+            _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var service = new OfficeService();
+            service.GetServiceInfoAsync(_currentUserId, "PBX");
             return View();
         }
     }

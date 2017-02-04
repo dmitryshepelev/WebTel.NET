@@ -59,6 +59,9 @@ namespace WebTelNET.Office
             services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();
             services.AddScoped<IServiceStatusRepository, ServiceStatusRepository>();
             services.AddScoped<IUserOfficeRepository, UserOfficeRepository>();
+            services.AddScoped<IUserServcieRepository, UserServiceRepository>();
+            services.AddScoped<IServiceProviderRepository, ServiceProviderRepository>();
+            services.AddScoped<IUserOfficeManager, UserOfficeManager>();
 
             services.Configure<AppSettings>(settings =>
             {
@@ -75,6 +78,17 @@ namespace WebTelNET.Office
                     Available = Configuration[$"{appSettings}:{serviceStatusNames}:Available"],
                     Activated = Configuration[$"{appSettings}:{serviceStatusNames}:Activated"],
                     Unavailable = Configuration[$"{appSettings}:{serviceStatusNames}:Unavailable"],
+                };
+
+                var serviceProviderTypeSettings = nameof(ServiceProviderTypeSettings);
+                settings.ServiceProviderTypeSettings = new ServiceProviderTypeSettings
+                {
+                    PBX = new ServiceProviderSettings
+                    {
+                        Name = Configuration[$"{appSettings}:{serviceProviderTypeSettings}:PBX:Name"],
+                        Description = Configuration[$"{appSettings}:{serviceProviderTypeSettings}:PBX:Description"],
+                        WebSite = Configuration[$"{appSettings}:{serviceProviderTypeSettings}:PBX:WebSite"],
+                    }
                 };
             });
         }
@@ -128,9 +142,11 @@ namespace WebTelNET.Office
 
                     var serviceTypeRepository = app.ApplicationServices.GetService<IServiceTypeRepository>();
                     var serviceStatusRepository = app.ApplicationServices.GetService<IServiceStatusRepository>();
+                    var serviceProviderRepository = app.ApplicationServices.GetService<IServiceProviderRepository>();
                     var appSettings = app.ApplicationServices.GetService<IOptions<AppSettings>>();
 
-                    serviceScope.ServiceProvider.GetService<OfficeDbContext>().EnsureSeedData(serviceStatusRepository, serviceTypeRepository, appSettings.Value);
+                    serviceScope.ServiceProvider.GetService<OfficeDbContext>()
+                        .EnsureSeedData(serviceStatusRepository, serviceTypeRepository, serviceProviderRepository, appSettings.Value);
                 }
             }
             catch (Exception e)

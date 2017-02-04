@@ -7,5 +7,6 @@ namespace WebTelNET.Office
     {
         public ServiceTypeNames ServiceTypeNames { get; set; }
         public ServiceStatusNames ServiceStatusNames { get; set; }
+        public ServiceProviderTypeSettings ServiceProviderTypeSettings { get; set; }
     }
 }

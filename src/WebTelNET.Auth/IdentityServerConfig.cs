@@ -79,6 +79,7 @@ namespace WebTelNET.Auth
 
                     RedirectUris = { "http://localhost:5002/signin-oidc", "http://localhost:5002" },
                     PostLogoutRedirectUris = { "http://localhost:5002" },
+                    AllowedCorsOrigins = { "http://localhost:5002", "http://localhost:5001" },
 
                     AllowedScopes =
                     {

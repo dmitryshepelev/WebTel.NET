@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace WebTelNET.CommonNET.Libs
 {
@@ -91,6 +92,12 @@ namespace WebTelNET.CommonNET.Libs
         public virtual async Task<HttpResponseMessage> PostAsync(string url, object data)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, url);
+
+            if (data != null)
+            {
+                throw new NotImplementedException();
+            }
+
             return await ExecuteRequestAsync(request);
         }
 
