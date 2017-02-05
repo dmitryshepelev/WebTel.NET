@@ -25,8 +25,8 @@ namespace WebTelNET.PBX.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var service = new OfficeService();
-            service.GetServiceInfoAsync(_currentUserId, "PBX");
+            //var service = new OfficeService();
+            //service.GetServiceInfoAsync(_currentUserId, "PBX");
             return View();
         }
     }

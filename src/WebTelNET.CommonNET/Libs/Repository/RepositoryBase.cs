@@ -26,10 +26,20 @@ namespace WebTelNET.CommonNET.Libs.Repository
             return Context.Set<T>().FirstOrDefault(predicate);
         }
 
+        public virtual T GetSingleWithNavigationProperties(Expression<Func<T, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null)
         {
             IQueryable<T> query = Context.Set<T>();
             return predicate != null ? Context.Set<T>().Where(predicate) : query;
+        }
+
+        public virtual IQueryable<T> GetAllWithNavigationProperties(Expression<Func<T, bool>> predicate = null)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual T Update(T entity)

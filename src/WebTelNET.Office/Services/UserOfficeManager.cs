@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
 using WebTelNET.Office.Models.Models;
 using WebTelNET.Office.Models.Repository;
@@ -8,6 +11,9 @@ namespace WebTelNET.Office.Services
     public interface IUserOfficeManager
     {
         void AddServiceToUserOffice(UserOffice userOffice, string serviceTypeName);
+        UserService GetUserService(UserOffice userOffice, string serviceTypeName);
+        IQueryable<UserService> GetUserServices(UserOffice userOffice,
+            Expression<Func<UserService, bool>> expression = null);
     }
 
     public class UserOfficeManager : IUserOfficeManager
@@ -47,6 +53,18 @@ namespace WebTelNET.Office.Services
                 }
             }
 
+        }
+
+        public UserService GetUserService(UserOffice userOffice, string serviceTypeName)
+        {
+            return _userServiceRepository.GetSingleWithNavigationProperties(x => x.UserOfficeId.Equals(userOffice.Id) &&
+                                                  x.ServiceProvider.ServiceType.Name.Equals(serviceTypeName));
+        }
+
+        public IQueryable<UserService> GetUserServices(UserOffice userOffice, Expression<Func<UserService, bool>> expression = null)
+        {
+            var services = _userServiceRepository.GetAllWithNavigationProperties(x => x.UserOfficeId.Equals(userOffice.Id));
+            return expression == null ? services : services.Where(expression);
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Options;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Services;
 using WebTelNET.Office.Filters;
+using WebTelNET.Office.Libs;
 using WebTelNET.Office.Models;
 using WebTelNET.Office.Models.Libs;
 using WebTelNET.Office.Models.Repository;
@@ -24,6 +26,8 @@ namespace WebTelNET.Office
 {
     public class Startup
     {
+        private readonly MapperConfiguration _mapperConfiguration;
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -32,6 +36,11 @@ namespace WebTelNET.Office
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            _mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.AddProfile(new AutoMapperConfiguration());
+            });
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -62,6 +71,7 @@ namespace WebTelNET.Office
             services.AddScoped<IUserServcieRepository, UserServiceRepository>();
             services.AddScoped<IServiceProviderRepository, ServiceProviderRepository>();
             services.AddScoped<IUserOfficeManager, UserOfficeManager>();
+            services.AddSingleton<IMapper>(x => _mapperConfiguration.CreateMapper());
 
             services.Configure<AppSettings>(settings =>
             {

@@ -10,7 +10,11 @@ namespace WebTelNET.CommonNET.Libs.Repository
 
         T GetSingle(Expression<Func<T, bool>> predicate);
 
+        T GetSingleWithNavigationProperties(Expression<Func<T, bool>> predicate);
+
         IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null);
+
+        IQueryable<T> GetAllWithNavigationProperties(Expression<Func<T, bool>> predicate = null);
 
         T Update(T entity);
 
