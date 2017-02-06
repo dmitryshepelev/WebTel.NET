@@ -1,3 +1,4 @@
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -25,8 +26,16 @@ namespace WebTelNET.PBX.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //var service = new OfficeService();
-            //service.GetServiceInfoAsync(_currentUserId, "PBX");
+            var service = new OfficeService();
+            try
+            {
+                var model = await service.GetServiceInfoAsync(_currentUserId, "PBX");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+//                throw;
+            }
             return View();
         }
     }

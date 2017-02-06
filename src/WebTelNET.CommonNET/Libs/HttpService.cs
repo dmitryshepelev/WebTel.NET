@@ -29,7 +29,6 @@ namespace WebTelNET.CommonNET.Libs
     /// <summary>
     /// Abstarct class to provide HttpService
     /// </summary>
-    /// <typeparam name="T">ResponseMessage type</typeparam>
     public abstract class HttpService : ICrudExecutor, IQueryStringFormatter
     {
         public string BaseAddress { get; }
@@ -49,7 +48,18 @@ namespace WebTelNET.CommonNET.Libs
             where T : class
         {
             var data = await content.ReadAsStringAsync();
-            using (var sr = new StringReader(data))
+            return DeserializeString<T>(data);
+        }
+
+        /// <summary>
+        /// Deserialize string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        protected T DeserializeString<T>(string str) where T : class
+        {
+            using (var sr = new StringReader(str))
             {
                 var jtr = new JsonTextReader(sr);
                 var serializer = new JsonSerializer();
