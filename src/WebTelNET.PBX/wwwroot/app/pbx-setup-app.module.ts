@@ -1,0 +1,1 @@
+﻿$HEADER$module $MODULE$ {$END$}
