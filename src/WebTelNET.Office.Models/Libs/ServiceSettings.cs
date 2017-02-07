@@ -3,7 +3,7 @@
     public interface IServiceSettings
     {
         ServiceTypeNames ServiceTypeNames { get; set; }
-        ServiceStatusNames ServiceStatusNames { get; set; }
+        ServiceStatusesSettings ServiceStatusesSettings { get; set; }
         ServiceProviderTypeSettings ServiceProviderTypeSettings { get; set; }
     }
 
@@ -12,11 +12,17 @@
         public string PBXType { get; set; }
     }
 
-    public class ServiceStatusNames
+    public class ServiceStatusesSettings
     {
-        public string Available { get; set; }
-        public string Activated { get; set; }
-        public string Unavailable { get; set; }
+        public ServiceStatusSettings Available { get; set; }
+        public ServiceStatusSettings Activated { get; set; }
+        public ServiceStatusSettings Unavailable { get; set; }
+    }
+
+    public class ServiceStatusSettings
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 
     public class ServiceProviderTypeSettings

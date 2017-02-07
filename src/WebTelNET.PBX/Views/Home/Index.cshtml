@@ -1,4 +1,6 @@
-﻿<!doctype html>
+﻿@model bool
+
+<!doctype html>
 <html>
 <head>
     <title>WebTel.NET.PBX</title>
@@ -21,16 +23,35 @@
     <script src="node_modules/reflect-metadata/Reflect.js"></script>
     <script src="node_modules/systemjs/dist/system.src.js"></script>
     <script src="systemjs.config.js"></script>
-    <script>
-        System.import('app').catch(console.error.bind(console));
-    </script>
+    @if (Model)
+    {
+        <script>
+            System.import('app').catch(console.error.bind(console));
+        </script>
+    }
+    else
+    {
+        <script>
+            System.import('app-setup').catch(console.error.bind(console));
+        </script>
+    }
+
 </head>
 <body>
-    <pbx-app-root>
-        <div class="container-fluid m-y-3">
-            <h4 class="text-xs-center"><i class="fa fa-cog fa-spin fa-fw"></i> Загрузка...</h4>
-        </div>
-    </pbx-app-root>
-    
-    
+    @if (Model)
+    {
+        <pbx-app-root>
+            <div class="container-fluid m-y-3">
+                <h4 class="text-xs-center"><i class="fa fa-cog fa-spin fa-fw"></i> Загрузка...</h4>
+            </div>
+        </pbx-app-root>
+    }
+    else
+    {
+        <pbx-setup-app-root>
+            <div class="container-fluid m-y-3">
+                <h4 class="text-xs-center"><i class="fa fa-cog fa-spin fa-fw"></i> Загрузка...</h4>
+            </div>
+        </pbx-setup-app-root>
+    }
 </body>

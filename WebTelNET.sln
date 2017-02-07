@@ -94,6 +94,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebTelNET.Office", "src\Web
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebTelNET.Office.Models", "src\WebTelNET.Office.Models\WebTelNET.Office.Models.xproj", "{93EEC310-06C1-4C11-87A3-60BB8F5014EC}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebTelNET.Office.Libs", "src\WebTelNET.Office.Libs\WebTelNET.Office.Libs.xproj", "{BDF8B10C-2F35-4FE5-8712-D970E2B784D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +142,10 @@ Global
 		{93EEC310-06C1-4C11-87A3-60BB8F5014EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93EEC310-06C1-4C11-87A3-60BB8F5014EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93EEC310-06C1-4C11-87A3-60BB8F5014EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDF8B10C-2F35-4FE5-8712-D970E2B784D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDF8B10C-2F35-4FE5-8712-D970E2B784D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDF8B10C-2F35-4FE5-8712-D970E2B784D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDF8B10C-2F35-4FE5-8712-D970E2B784D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -165,5 +171,6 @@ Global
 		{5E65598A-4EBD-4F9A-9E11-D52C87ECA9D8} = {288EB405-F449-4CAD-934C-7830FA903321}
 		{3B04613B-7E65-4884-9B40-3581437FEA23} = {7200B5EC-BD79-4C0F-BA39-F2A45B36AC17}
 		{93EEC310-06C1-4C11-87A3-60BB8F5014EC} = {7200B5EC-BD79-4C0F-BA39-F2A45B36AC17}
+		{BDF8B10C-2F35-4FE5-8712-D970E2B784D6} = {7200B5EC-BD79-4C0F-BA39-F2A45B36AC17}
 	EndGlobalSection
 EndGlobal

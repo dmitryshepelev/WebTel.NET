@@ -82,12 +82,24 @@ namespace WebTelNET.Office
                     PBXType = Configuration[$"{appSettings}:{serviceTypeNames}:PBXType"]
                 };
 
-                var serviceStatusNames = nameof(ServiceStatusNames);
-                settings.ServiceStatusNames = new ServiceStatusNames
+                var serviceStatusesSettings = nameof(ServiceStatusesSettings);
+                settings.ServiceStatusesSettings = new ServiceStatusesSettings
                 {
-                    Available = Configuration[$"{appSettings}:{serviceStatusNames}:Available"],
-                    Activated = Configuration[$"{appSettings}:{serviceStatusNames}:Activated"],
-                    Unavailable = Configuration[$"{appSettings}:{serviceStatusNames}:Unavailable"],
+                    Available = new ServiceStatusSettings
+                    {
+                        Name = Configuration[$"{appSettings}:{serviceStatusesSettings}:Available:Name"],
+                        Description = Configuration[$"{appSettings}:{serviceStatusesSettings}:Available:Description"]
+                    },
+                    Activated = new ServiceStatusSettings
+                    {
+                        Name = Configuration[$"{appSettings}:{serviceStatusesSettings}:Activated:Name"],
+                        Description = Configuration[$"{appSettings}:{serviceStatusesSettings}:Activated:Description"]
+                    },
+                    Unavailable = new ServiceStatusSettings
+                    {
+                        Name = Configuration[$"{appSettings}:{serviceStatusesSettings}:Unavailable:Name"],
+                        Description = Configuration[$"{appSettings}:{serviceStatusesSettings}:Unavailable:Description"]
+                    },
                 };
 
                 var serviceProviderTypeSettings = nameof(ServiceProviderTypeSettings);

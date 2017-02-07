@@ -1,4 +1,11 @@
-﻿$HEADER$namespace $NAMESPACE$
+﻿using System;
+
+namespace WebTelNET.Office.Libs.Models
 {
-  public class $CLASS$ {$END$}
+    public class ServiceInfoResponseModel
+    {
+        public DateTime? ActivationDateTime { get; set; }
+        public int Status { get; set; }
+        public string ServiceType { get; set; }
+    }
 }

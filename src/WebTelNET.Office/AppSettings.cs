@@ -6,7 +6,7 @@ namespace WebTelNET.Office
     public class AppSettings : IServiceSettings
     {
         public ServiceTypeNames ServiceTypeNames { get; set; }
-        public ServiceStatusNames ServiceStatusNames { get; set; }
+        public ServiceStatusesSettings ServiceStatusesSettings { get; set; }
         public ServiceProviderTypeSettings ServiceProviderTypeSettings { get; set; }
     }
 }

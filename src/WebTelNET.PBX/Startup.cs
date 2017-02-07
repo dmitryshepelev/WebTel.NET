@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using WebTelNET.CommonNET.Libs;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Services;
+using WebTelNET.Office.Libs.Services;
 using WebTelNET.PBX.Libs;
 using WebTelNET.PBX.Models;
 using WebTelNET.PBX.Models.Repository;
@@ -81,8 +81,9 @@ namespace WebTelNET.PBX
             services.AddScoped<ICallRepository, CallRepository>();
             services.AddScoped<IPhoneNumberRepository, PhoneNumberRepository>();
             services.AddScoped<IPBXManager, ZadarmaManager>();
-            services.AddScoped<ICloudStorageService, YandexDisk>();
+            services.AddScoped<ICloudStorageService, YandexDiskClient>();
             services.AddScoped<IWidgetRepository, WidgetRepository>();
+            services.AddScoped<IOfficeClient, OfficeClient>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IMapper>(x => _mapperConfiguration.CreateMapper());

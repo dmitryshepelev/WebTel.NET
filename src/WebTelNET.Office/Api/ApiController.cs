@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Server.Kestrel.Internal.Networking;
 using WebTelNET.CommonNET.Models;
-using WebTelNET.Office.Models;
+using WebTelNET.Office.Libs.Models;
 using WebTelNET.Office.Models.Repository;
 using WebTelNET.Office.Services;
 

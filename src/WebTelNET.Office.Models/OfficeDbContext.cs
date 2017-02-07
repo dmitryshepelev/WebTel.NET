@@ -77,18 +77,29 @@ namespace WebTelNET.Office.Models
                 }
             }
 
-            properties = serviceSettings.ServiceStatusNames.GetType().GetProperties();
+            properties = serviceSettings.ServiceStatusesSettings.GetType().GetProperties();
             foreach (var property in properties)
             {
-                var value = serviceSettings.ServiceStatusNames.GetType()
+                var value = serviceSettings.ServiceStatusesSettings.GetType()
                     .GetProperty(property.Name)
-                    .GetValue(serviceSettings.ServiceStatusNames);
+                    .GetValue(serviceSettings.ServiceStatusesSettings);
 
-                string typedValue = (string) value;
+                var typedValue = (ServiceStatusSettings) value;
 
-                if (serviceStatusRepository.GetSingle(x => x.Name.Equals(typedValue)) == null)
+                var serviceStatus = serviceStatusRepository.GetSingle(x => x.Name.Equals(typedValue.Name));
+                if (serviceStatus == null)
                 {
-                    serviceStatusRepository.Create(new ServiceStatus { Name = typedValue });
+                    serviceStatusRepository.Create(new ServiceStatus
+                    {
+                        Name = typedValue.Name,
+                        Description = typedValue.Description
+                    });
+                }
+                else
+                {
+                    serviceStatus.Name = typedValue.Name;
+                    serviceStatus.Description = typedValue.Description;
+                    serviceStatusRepository.Update(serviceStatus);
                 }
             }
 

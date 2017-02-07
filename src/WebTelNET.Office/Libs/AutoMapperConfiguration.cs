@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WebTelNET.Office.Models;
+using WebTelNET.Office.Libs.Models;
 using WebTelNET.Office.Models.Models;
 
 namespace WebTelNET.Office.Libs

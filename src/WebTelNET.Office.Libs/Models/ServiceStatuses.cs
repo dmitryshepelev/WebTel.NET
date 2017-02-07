@@ -1,4 +1,9 @@
-﻿$HEADER$namespace $NAMESPACE$
+﻿namespace WebTelNET.Office.Libs.Models
 {
-  public enum $ENUM$ {$END$}
+    public enum ServiceStatuses
+    {
+        Available = 1,
+        Activated,
+        Unavailable
+    }
 }
