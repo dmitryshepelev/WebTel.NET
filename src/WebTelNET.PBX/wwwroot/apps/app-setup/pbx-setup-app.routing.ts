@@ -1,7 +1,9 @@
 ﻿import { Routes, RouterModule } from '@angular/router';
+import { SetupPageComponent } from "./setup/setup-page.component";
+
 
 const appRoutes: Routes = [
-//    { path: '', redirectTo: "statistic", pathMatch: "full" },
+    { path: '', component: SetupPageComponent }
 ];
 
 export const appRoutingProviders: any[] = [

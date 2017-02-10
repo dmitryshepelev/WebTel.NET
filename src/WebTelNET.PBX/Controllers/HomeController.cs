@@ -55,7 +55,6 @@ namespace WebTelNET.PBX.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e);
-//                throw;
             }
             return View();
         }

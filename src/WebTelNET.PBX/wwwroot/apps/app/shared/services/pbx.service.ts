@@ -44,6 +44,10 @@ export class PBXService extends ServiceBase {
         return this.post(this.baseUrl + "/widgetid/", {});
     }
 
+    createAccount(userKey: string, secretKey: string) {
+        return this.post(this.baseUrl + "/pbxaccount/", { userKey: userKey, secretKey: secretKey });
+    }
+
     afterExecuting(response: any): any {
         console.info("Request completed: -> ", response);
         return response;

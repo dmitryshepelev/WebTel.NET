@@ -9,8 +9,9 @@ import { AlertComponent } from "@commonclient/controls";
 import { ButtonSpinnerDirective } from "@commonclient/directives";
 
 import { PBXSetupAppComponent }  from './pbx-setup-app.component';
+import { SetupPageComponent } from "./setup/setup-page.component";
 import { routing, appRoutingProviders } from './pbx-setup-app.routing';
-import { PBXService } from './shared/services/pbx.service';
+import { PBXService } from '../app/shared/services/pbx.service';
 import { PriceInfoComponent } from "./shared/components/price-info.component";
 import { BalanceCardComponent } from "./shared/components/balance-card.component";
 import { ButtonSpinnerDirective } from "./shared/directives/button-spinner.directive";
@@ -33,6 +34,7 @@ import { ButtonSpinnerDirective } from "./shared/directives/button-spinner.direc
     declarations: [
         PBXSetupAppComponent,
         AlertComponent,
+        SetupPageComponent,
 
         ButtonSpinnerDirective
     ],

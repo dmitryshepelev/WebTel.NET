@@ -13,6 +13,7 @@ using WebTelNET.CommonNET.Models;
 using WebTelNET.CommonNET.Services;
 using WebTelNET.PBX.Libs;
 using WebTelNET.PBX.Models;
+using WebTelNET.PBX.Models.Models;
 using WebTelNET.PBX.Models.Repository;
 using WebTelNET.PBX.Resources;
 using WebTelNET.PBX.Services;
@@ -58,6 +59,28 @@ namespace WebTelNET.PBX.Api
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             _cloudStorageService.Token = "AQAAAAATq7AwAAP1FZ8RjjqceEpqs-s2rIJVosM";
+        }
+
+        [Route("pbxaccount")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public IActionResult CreatePBXAccount([FromBody] PBXDataRequestModel model)
+        {
+            var response = new ApiResponseModel();
+
+            if (string.IsNullOrEmpty(model.UserKey) || string.IsNullOrEmpty(model.SecretKey))
+            {
+                return BadRequest(response);
+            }
+
+            var account = _zadarmaAccountRepository.Create(new ZadarmaAccount
+            {
+                UserKey = model.UserKey,
+                SecretKey = model.SecretKey,
+                UserId = _currentUserId
+            });
+            return Ok(response);
         }
 
         [Route("priceinfo")]
