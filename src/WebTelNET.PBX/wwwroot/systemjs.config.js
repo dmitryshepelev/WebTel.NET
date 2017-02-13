@@ -36,7 +36,7 @@
             'ng2-bootstrap/ng2-bootstrap': 'npm:ng2-bootstrap/bundles/ng2-bootstrap.umd.js',
             'moment': 'npm:moment/moment.js',
             'moment_ru': 'npm:moment/locale/ru.js',
-            'ng2-sidebar': 'npm:ng2-sidebar',
+            'ng-sidebar': 'npm:ng-sidebar',
             'ng2-translate': 'node_modules/ng2-translate/bundles/ng2-translate.umd.js'
         },
         // packages tells the System loader how to load when no filename and/or no extension
@@ -59,7 +59,7 @@
             mydaterangepicker: {
                 defaultExtension: 'js'
             },
-            'ng2-sidebar': {
+            'ng-sidebar': {
                 main: 'lib/index',
                 defaultExtension: 'js'
             },

@@ -1,30 +1,38 @@
 ﻿@import "./_custom.scss";
 
-#wrapper {
-    padding-left: 250px;
-    transition: all 0.4s ease 0s;
-}
+ng-sidebar-container {
+    &.on-top {
+        & .ng-sidebar {
+            z-index: 100000000;
+        }
 
-#sidebar-wrapper {
-    margin-left: -250px;
-    left: 250px;
-    width: 250px;
-    background: $gray-dark;
-    position: fixed;
-    height: 100%;
-    overflow-y: auto;
-    z-index: 1000;
-    transition: all 0.4s ease 0s;
-}
+        & .ng-sidebar__backdrop {
+            z-index: 99999999;
+        }
+    }
 
-#page-content-wrapper {
-    width: 100%;
+    &.sidepanel {
+        & .ng-sidebar {
+            &.ng-sidebar--dock {
+                background: $gray-dark !important;
+            }
+        }
+    }
 }
 
 .sidebar-nav {
-    position: absolute;
+    &.wide {
+        width: 250px;
+
+        & > li {
+            &.sidebar-brand {
+                padding: 0.5em 1.0em;
+            }
+        }
+    }
+
     top: 0;
-    width: 250px;
+    width: 50px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -36,6 +44,7 @@
         transition: all 0.2s ease 0s;
 
         &.sidebar-brand {
+            padding: 0.5em 0;
             background-color: initial;
 
             &:hover {
@@ -54,27 +63,6 @@
         &.is-active {
             background-color: $brand-primary;
             color: initial;
-        }
-    }
-}
-
-@media (max-width:992px) {
-    #sidebar-wrapper {
-        left: 0;
-    }
-    #wrapper.active {
-        position: relative;
-        left: 250px;
-    }
-    #wrapper {
-        padding-left: 0;
-    
-        &.active {
-            #sidebar-wrapper {
-                left: 250px;
-                width: 250px;
-                transition: all 0.4s ease 0s;
-            }
         }
     }
 }

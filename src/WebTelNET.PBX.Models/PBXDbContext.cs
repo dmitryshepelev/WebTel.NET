@@ -18,6 +18,9 @@ namespace WebTelNET.PBX.Models
 
             modelBuilder.Entity<ZadarmaAccount>()
                 .HasIndex(x => x.UserId).IsUnique();
+            modelBuilder.Entity<ZadarmaAccount>()
+                .Property(x => x.IsNotificationConfigured)
+                .HasDefaultValue(false);
 
             modelBuilder.Entity<PhoneNumber>()
                 .HasIndex(x => new { x.Number, x.ZadarmaAccountId }).IsUnique();

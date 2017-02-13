@@ -18,6 +18,8 @@ namespace WebTelNET.PBX.Models.Models
 
         [Required]
         public string UserId { get; set; }
+        [Required]
+        public bool IsNotificationConfigured { get; set; }
 
         public ICollection<PhoneNumber> PhoneNumbers { get; set; }
     }

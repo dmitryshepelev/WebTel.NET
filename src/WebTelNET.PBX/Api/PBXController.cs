@@ -65,21 +65,49 @@ namespace WebTelNET.PBX.Api
         [ServiceFilter(typeof(ApiAuthorizeAttribute))]
         [HttpPost]
         [Produces(typeof(string[]))]
-        public IActionResult CreatePBXAccount([FromBody] PBXDataRequestModel model)
+        public async Task<IActionResult> CreatePBXAccount([FromBody] PBXDataRequestModel model)
         {
             var response = new ApiResponseModel();
 
             if (string.IsNullOrEmpty(model.UserKey) || string.IsNullOrEmpty(model.SecretKey))
             {
+                response.Message = PBXResource.NotAllFieldsAreFilledIn;
                 return BadRequest(response);
             }
 
-            var account = _zadarmaAccountRepository.Create(new ZadarmaAccount
+            IZadarmaService service = new ZadarmaService(model.UserKey, model.SecretKey);
+            var result = await service.GetBalanceAsync();
+            if (result.Status == ZadarmaResponseStatus.Success)
             {
-                UserKey = model.UserKey,
-                SecretKey = model.SecretKey,
-                UserId = _currentUserId
-            });
+                var account = _zadarmaAccountRepository.Create(new ZadarmaAccount
+                {
+                    UserKey = model.UserKey,
+                    SecretKey = model.SecretKey,
+                    UserId = _currentUserId
+                });
+                return Created(HttpContext.Request.Path, response);
+            }
+
+            response.Message = PBXResource.CheckZadarmaKeys;
+            return BadRequest(response);
+        }
+
+        [Route("getnotificationconfiginfo")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
+        [HttpPost]
+        [Produces(typeof(string))]
+        public IActionResult GetNotificationConfigInfo()
+        {
+            var response = new ApiResponseModel();
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
+
+            var model = new NotificationConfigInfo
+            {
+                IsConfigured = zadarmaAccount.IsNotificationConfigured,
+                Link = String.Format("http://localhost:5001/api/notify/{0}", zadarmaAccount.Id.ToString())
+            };
+
+            response.Data.Add(nameof(NotificationConfigInfo), model);
             return Ok(response);
         }
 

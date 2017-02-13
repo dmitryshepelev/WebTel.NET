@@ -67,5 +67,23 @@ namespace WebTelNET.PBX.Resources {
                 return ResourceManager.GetString("FileNotFound", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///    Looks up a localized string similar to Не все поля заполнены..
+        /// </summary>
+        public static string NotAllFieldsAreFilledIn {
+            get {
+                return ResourceManager.GetString("NotAllFieldsAreFilledIn", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///    Looks up a localized string similar to Не удалось подключить Zadarma. Проверьте введенные данные..
+        /// </summary>
+        public static string CheckZadarmaKeys {
+            get {
+                return ResourceManager.GetString("CheckZadarmaKeys", resourceCulture);
+            }
+        }
     }
 }

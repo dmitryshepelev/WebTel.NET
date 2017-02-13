@@ -1,4 +1,6 @@
-﻿input {
+﻿@import "./_custom.scss";
+
+input {
     &.form-control {
         & + .input-loader {
             position: absolute;
@@ -11,6 +13,30 @@
 }
 
 balance-card {
+    & .card-compact {
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        margin: 1em auto;
+        cursor: pointer;
+
+        &.secondary {
+            background-color: $btn-secondary-border;
+        }
+
+        &.warning {
+            background-color: $brand-warning;
+        }
+
+        &.danger {
+            background-color: $brand-danger;
+        }
+
+        &.success {
+            background-color: $brand-success;
+        }
+    }
+
     & .card-block {
         padding: 0.8rem !important;
     }

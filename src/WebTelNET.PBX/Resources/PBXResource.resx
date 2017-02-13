@@ -120,4 +120,10 @@
   <data name="FileNotFound" xml:space="preserve">
     <value>Запрашиваемый файл не найден.</value>
   </data>
+  <data name="NotAllFieldsAreFilledIn" xml:space="preserve">
+    <value>Не все поля заполнены.</value>
+  </data>
+  <data name="CheckZadarmaKeys" xml:space="preserve">
+    <value>Не удалось подключить Zadarma. Проверьте введенные данные.</value>
+  </data>
 </root>

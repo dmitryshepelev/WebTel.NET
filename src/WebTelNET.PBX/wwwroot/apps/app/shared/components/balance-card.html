@@ -1,4 +1,4 @@
-<div class="card card-inverse text-xs-center"
+<div *ngIf="!compactMode" class="card card-inverse text-xs-center"
      [class.card-outline-success]="status == cardStatus.Save"
      [class.card-outline-warning]="status == cardStatus.Warning"
      [class.card-outline-danger]="status == cardStatus.Danger"
@@ -11,5 +11,14 @@
                 <span [buttonSpinner]="status == cardStatus.IsLoading" iconClass="fa-refresh" class="btn btn-refresh" (click)="update()"><i class="fa fa-refresh"></i></span>
             </span>
         </div>
+    </div>
+</div>
+
+<div *ngIf="compactMode" style="margin-top: 40px; padding: 7px 0 8px 0">
+    <div class="card-compact" (click)="update()"
+        [class.success]="status == cardStatus.Save"
+        [class.warning]="status == cardStatus.Warning"
+        [class.danger]="status == cardStatus.Danger"
+        [class.secondary]="status == cardStatus.IsLoading || status == cardStatus.Error">
     </div>
 </div>

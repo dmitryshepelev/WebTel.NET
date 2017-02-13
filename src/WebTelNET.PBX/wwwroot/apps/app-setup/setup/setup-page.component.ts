@@ -1,9 +1,11 @@
-﻿import { Component, Inject, Output, EventEmitter } from "@angular/core";
+﻿import { Component, Inject, Output, EventEmitter, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { PBXService } from "../../app/shared/services/pbx.service";
 
 import { ISubmitable, SubmitingComponent } from "@commonclient/components";
+import { AlertComponent, AlertType } from "@commonclient/controls";
+import { ResponseModel } from "@commonclient/services";
 
 @Component({
     moduleId: module.id,
@@ -14,6 +16,9 @@ export class SetupPageComponent extends SubmitingComponent implements ISubmitabl
     onSubmitingStart = new EventEmitter<any>();
     @Output()
     onSubmitingEnd = new EventEmitter<any>();
+
+    @ViewChild(AlertComponent)
+    alertComponent: AlertComponent;
 
     form: FormGroup;
 
@@ -32,7 +37,13 @@ export class SetupPageComponent extends SubmitingComponent implements ISubmitabl
         this.startSubmiting();
         this._pbxService.createAccount(this.form.controls["userKey"].value, this.form.controls["secretKey"].value)
             .then(response => { location.reload(true); })
-            .catch(error => console.log(error))
+            .catch((error: ResponseModel) => {
+                if (error.message) {
+                    this.alertComponent.message = error.message;
+                    this.alertComponent.type = AlertType.Error;
+                    this.alertComponent.show();
+                }
+            })
             .then(() => this.endSubmiting());
     }
 

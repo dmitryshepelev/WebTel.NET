@@ -9,8 +9,12 @@ import { TranslateService } from "ng2-translate";
 })
 export class PBXAppComponent {
 
+    shownSidePanel: boolean;
+
     constructor(private _translateService: TranslateService) {
         this._translateService.setDefaultLang("ru");
         this._translateService.use("ru");
+
+        this.shownSidePanel = false;
     }
 }

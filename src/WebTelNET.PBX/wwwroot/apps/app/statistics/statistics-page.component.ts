@@ -8,6 +8,12 @@ import { CallModel, StatisticsModel } from "../shared/models";
 import * as moment from "moment";
 
 
+class NotificationConfigInfo {
+    isConfigured: boolean;
+    link: string;
+}
+
+
 @Component({
     moduleId: module.id,
     templateUrl: "statistics-page.html"
@@ -17,6 +23,8 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
 
     model: StatisticsModel;
     shownFilters = false;
+    shownNotificationConfig = false;
+    notificationConfigInfo: NotificationConfigInfo;
     callRecordHref: string;
 
     @ViewChild(StatisticsFormComponent)
@@ -27,6 +35,7 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
 
     constructor(private _pbxService: PBXService, private _storageService: StorageService) {
         this.model = new StatisticsModel();
+        this.notificationConfigInfo = new NotificationConfigInfo();
     }
 
     toggleFilterPanel() {
@@ -51,7 +60,19 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
         this.showErrorAlert(error);
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this._pbxService.getNotificationConfigInfo()
+            .then((response: ResponseModel) => {
+                var model = response.data.NotificationConfigInfo as NotificationConfigInfo;
+
+                if (!model.isConfigured) {
+                    this.notificationConfigInfo = model;
+
+                    setTimeout(() => { this.shownNotificationConfig = true; }, 2000);
+                }
+            })
+            .catch(error => { console.log(error);});
+    }
 
     ngAfterViewInit(): void {
         var cached = this._storageService.getItem(this._itemName);

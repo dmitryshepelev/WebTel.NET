@@ -1,9 +1,29 @@
-﻿<ng2-sidebar [(open)]="shownFilters" [position]="'top'" [closeOnClickOutside]="false" [autoFocus]="false">
-    <div class="container-fluid">
-        <statistics-form [startDate]="model.startDate" [endDate]="model.endDate" (onFormSubmitSuccess)="onFiltersFormSubmitSuccess($event)" (onFormSubmitFailure)="onFiltersFormSubmitFailure($event)"></statistics-form>
-    </div>
-    <a closeSidebar>Closes the sidebar</a>
-</ng2-sidebar>
+﻿<ng-sidebar-container>
+    <ng-sidebar #filtersSidebar [(opened)]="shownFilters" [showBackdrop]="true" [position]="'top'" [closeOnClickOutside]="false" [autoFocus]="false">
+        <div class="container-fluid">
+            <statistics-form [startDate]="model.startDate" [endDate]="model.endDate" (onFormSubmitSuccess)="onFiltersFormSubmitSuccess($event)" (onFormSubmitFailure)="onFiltersFormSubmitFailure($event)"></statistics-form>
+        </div>
+        <a (click)="filtersSidebar.close()">Closes the sidebar</a>
+    </ng-sidebar>
+</ng-sidebar-container>
+
+<ng-sidebar-container class="on-top">
+    <ng-sidebar #notificationConfigSidebar [mode]="'over'" [(opened)]="shownNotificationConfig" [position]="'bottom'" [showBackdrop]="true" [closeOnClickOutside]="false" [autoFocus]="false">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                    <label>{{ notificationConfigInfo.link }}</label>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" (click)="notificationConfigSidebar.close()">Я уже настроил</button>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-link" (click)="notificationConfigSidebar.close()">Не сейчас</button>
+                </div>
+            </div>
+        </div>
+    </ng-sidebar>
+</ng-sidebar-container>
 
 <div class="container-fluid">
     <div>
@@ -17,15 +37,14 @@
         <span>Данные c {{ model.startDate | date: "dd/MM/y" }} по {{ model.endDate | date: "dd/MM/y" }}</span>
     </div>
     <div class="col-md-6">
-        <span class="pull-xs-right">
-            <player [href]="callRecordHref"></player>
-        </span>
+    <span class="pull-xs-right">
+        <player [href]="callRecordHref"></player>
+    </span>
     </div>
 </div>
-
-
 
 <div *ngFor="let call of model.calls">
     <call-card [call]="call" (onGetRecordFailure)="onGetCallRecordFailure($event)" (onGetRecordSuccess)="onGetCallRecordSuccess($event)"></call-card>
 </div>
 
+<button type="button" class="btn btn-link" (click)="shownNotificationSetup = true"><i class="fa fa-filter"></i></button>

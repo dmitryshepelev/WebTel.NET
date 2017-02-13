@@ -4,6 +4,20 @@ input.form-control + .input-loader {
   top: 12px;
   transition: all ease-in-out 1s; }
 
+balance-card .card-compact {
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  margin: 1em auto;
+  cursor: pointer; }
+  balance-card .card-compact.secondary {
+    background-color: #ccc; }
+  balance-card .card-compact.warning {
+    background-color: #f0ad4e; }
+  balance-card .card-compact.danger {
+    background-color: #d9534f; }
+  balance-card .card-compact.success {
+    background-color: #5cb85c; }
 balance-card .card-block {
   padding: 0.8rem !important; }
 

@@ -48,6 +48,10 @@ export class PBXService extends ServiceBase {
         return this.post(this.baseUrl + "/pbxaccount/", { userKey: userKey, secretKey: secretKey });
     }
 
+    getNotificationConfigInfo() {
+        return this.post(this.baseUrl + "/getnotificationconfiginfo/", {});
+    }
+
     afterExecuting(response: any): any {
         console.info("Request completed: -> ", response);
         return response;

@@ -23,22 +23,16 @@ gulp.task('bootstrap-build',
             .pipe(gulp.dest(bootstrapSrc));
     });
 
-//gulp.task('framework-services-build', function () {
-//    var sourcePath = '../WebTelNET.CommonClient/services';
-//
-//
-//});
-
 var root = 'wwwroot/styles/';
 
 gulp.task('compile-scss', function() {
-    gulp.src(root + 'styles.scss')
+    gulp.src([root + 'styles.scss', root + 'sidepanel.scss'])
         .pipe(gulpScss())
         .pipe(gulp.dest(root));
 });
 
 gulp.task('min-css', function() {
-    gulp.src(root + 'styles.css')
+    gulp.src([root + 'styles.css', root + 'sidepanel.css'])
         .pipe(gulpCssmin())
         .pipe(gulpRename({suffix: '.min'}))
         .pipe(gulp.dest(root));
