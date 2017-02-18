@@ -1,0 +1,34 @@
+ng-sidebar-container.on-top .ng-sidebar {
+  z-index: 100000000; }
+ng-sidebar-container.on-top .ng-sidebar__backdrop {
+  z-index: 99999999; }
+ng-sidebar-container.sidepanel .ng-sidebar.ng-sidebar--dock {
+  background: #373a3c !important; }
+
+.sidebar-nav {
+  top: 0;
+  width: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  .sidebar-nav.wide {
+    width: 250px; }
+    .sidebar-nav.wide > li.sidebar-brand {
+      padding: 0.5em 1.0em; }
+  .sidebar-nav > li {
+    padding: 0.5em 1.0em;
+    cursor: pointer;
+    color: #f7f7f9;
+    transition: all 0.2s ease 0s; }
+    .sidebar-nav > li.sidebar-brand {
+      padding: 0.5em 0;
+      background-color: initial; }
+      .sidebar-nav > li.sidebar-brand:hover {
+        background-color: initial; }
+    .sidebar-nav > li:hover {
+      background-color: #55595c; }
+    .sidebar-nav > li > a {
+      text-decoration: none; }
+    .sidebar-nav > li.is-active {
+      background-color: #5cb85c;
+      color: initial; }

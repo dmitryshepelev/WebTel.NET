@@ -7,7 +7,7 @@
     </ng-sidebar>
 </ng-sidebar-container>
 
-<ng-sidebar-container class="on-top">
+<ng-sidebar-container class="on-top" *ngIf="notificationConfigInfo">
     <ng-sidebar #notificationConfigSidebar [mode]="'over'" [(opened)]="shownNotificationConfig" [position]="'bottom'" [showBackdrop]="true" [closeOnClickOutside]="false" [autoFocus]="false">
         <div class="container-fluid">
             <div class="row">
@@ -15,7 +15,7 @@
                     <label>{{ notificationConfigInfo.link }}</label>
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-primary" (click)="notificationConfigSidebar.close()">Я уже настроил</button>
+                    <button type="button" class="btn btn-primary" (click)="notificationConfigured()">Я уже настроил</button>
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-link" (click)="notificationConfigSidebar.close()">Не сейчас</button>
@@ -46,5 +46,3 @@
 <div *ngFor="let call of model.calls">
     <call-card [call]="call" (onGetRecordFailure)="onGetCallRecordFailure($event)" (onGetRecordSuccess)="onGetCallRecordSuccess($event)"></call-card>
 </div>
-
-<button type="button" class="btn btn-link" (click)="shownNotificationSetup = true"><i class="fa fa-filter"></i></button>

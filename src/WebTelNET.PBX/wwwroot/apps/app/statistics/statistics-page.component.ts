@@ -20,6 +20,7 @@ class NotificationConfigInfo {
 })
 export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _itemName = "statisticsModel";
+    private _notificationConfigItemName: "notificationConfig";
 
     model: StatisticsModel;
     shownFilters = false;
@@ -33,9 +34,11 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild(AlertComponent)
     alertComponent: AlertComponent;
 
-    constructor(private _pbxService: PBXService, private _storageService: StorageService) {
+    constructor(
+        private _pbxService: PBXService,
+        private _storageService: StorageService
+    ) {
         this.model = new StatisticsModel();
-        this.notificationConfigInfo = new NotificationConfigInfo();
     }
 
     toggleFilterPanel() {
@@ -61,17 +64,17 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     ngOnInit() {
-        this._pbxService.getNotificationConfigInfo()
-            .then((response: ResponseModel) => {
-                var model = response.data.NotificationConfigInfo as NotificationConfigInfo;
+        let cached = this._storageService.getItem(this._notificationConfigItemName);
+        if (cached) {
+            this.initNotificationConfig(cached as NotificationConfigInfo);
+        } else {
+            this._pbxService.getNotificationConfigInfo()
+                .then((response: ResponseModel) => {
+                    this.initNotificationConfig(response.data.NotificationConfigInfo as NotificationConfigInfo);
+                })
+                .catch(error => { console.log(error);});
+        }
 
-                if (!model.isConfigured) {
-                    this.notificationConfigInfo = model;
-
-                    setTimeout(() => { this.shownNotificationConfig = true; }, 2000);
-                }
-            })
-            .catch(error => { console.log(error);});
     }
 
     ngAfterViewInit(): void {
@@ -79,18 +82,36 @@ export class StatisticsPageComponent implements OnInit, AfterViewInit, OnDestroy
         if (!cached) {
             this.statisticsFormComponent.onSubmit();
         } else {
-            var model = <StatisticsModel>cached;
+            var model = cached as StatisticsModel;
             this.model.setData(model.startDate, model.endDate, model.calls);
         }
     }
 
     ngOnDestroy(): void {
         this._storageService.setItem(this._itemName, this.model, true);
+
+    }
+
+    notificationConfigured() {
+        this._pbxService.setNotificationConfiguration()
+            .then((response: ResponseModel) => {
+                this.shownNotificationConfig = false;
+            })
+            .catch(error => {});
     }
 
     private showErrorAlert(model: ResponseModel) {
         this.alertComponent.message = model.message;
         this.alertComponent.type = AlertType.Error;
         this.alertComponent.show();
+    }
+
+    private initNotificationConfig(config: NotificationConfigInfo) {
+        if (config.isConfigured) {
+            this._storageService.setItem(this._notificationConfigItemName, config, true);
+        } else {
+            this.notificationConfigInfo = config;
+            setTimeout(() => { this.shownNotificationConfig = true; }, 2000);
+        }
     }
 }

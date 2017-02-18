@@ -95,7 +95,7 @@ namespace WebTelNET.PBX.Api
         [Route("getnotificationconfiginfo")]
         [ServiceFilter(typeof(ApiAuthorizeAttribute))]
         [HttpPost]
-        [Produces(typeof(string))]
+        [Produces(typeof(string[]))]
         public IActionResult GetNotificationConfigInfo()
         {
             var response = new ApiResponseModel();
@@ -108,6 +108,21 @@ namespace WebTelNET.PBX.Api
             };
 
             response.Data.Add(nameof(NotificationConfigInfo), model);
+            return Ok(response);
+        }
+
+        [Route("setnotificationconfiguration")]
+        [ServiceFilter(typeof(ApiAuthorizeAttribute))]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public IActionResult SetNotificationConfig([FromBody] NotificationConfigModel config)
+        {
+            var response = new ApiResponseModel();
+            var zadarmaAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
+
+            zadarmaAccount.IsNotificationConfigured = config.IsConfigured;
+            _zadarmaAccountRepository.Update(zadarmaAccount);
+
             return Ok(response);
         }
 

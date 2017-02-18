@@ -1,0 +1,31 @@
+﻿datepicker datepicker-inner div {
+  background-color: transparent !important;
+  border: none !important; }
+  datepicker datepicker-inner div daypicker i.glyphicon, datepicker datepicker-inner div monthpicker i.glyphicon, datepicker datepicker-inner div yearpicker i.glyphicon {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; }
+    datepicker datepicker-inner div daypicker i.glyphicon.glyphicon-chevron-left:before, datepicker datepicker-inner div monthpicker i.glyphicon.glyphicon-chevron-left:before, datepicker datepicker-inner div yearpicker i.glyphicon.glyphicon-chevron-left:before {
+      content: "\f053"; }
+    datepicker datepicker-inner div daypicker i.glyphicon.glyphicon-chevron-right:before, datepicker datepicker-inner div monthpicker i.glyphicon.glyphicon-chevron-right:before, datepicker datepicker-inner div yearpicker i.glyphicon.glyphicon-chevron-right:before {
+      content: "\f054"; }
+  datepicker datepicker-inner div daypicker button, datepicker datepicker-inner div daypicker button.btn-secondary, datepicker datepicker-inner div monthpicker button, datepicker datepicker-inner div monthpicker button.btn-secondary, datepicker datepicker-inner div yearpicker button, datepicker datepicker-inner div yearpicker button.btn-secondary {
+    background-color: transparent;
+    border-color: transparent !important; }
+    datepicker datepicker-inner div daypicker button.disabled:hover, datepicker datepicker-inner div daypicker button.btn-secondary.disabled:hover, datepicker datepicker-inner div monthpicker button.disabled:hover, datepicker datepicker-inner div monthpicker button.btn-secondary.disabled:hover, datepicker datepicker-inner div yearpicker button.disabled:hover, datepicker datepicker-inner div yearpicker button.btn-secondary.disabled:hover {
+      background-color: transparent !important; }
+    datepicker datepicker-inner div daypicker button:hover, datepicker datepicker-inner div daypicker button.btn-secondary:hover, datepicker datepicker-inner div monthpicker button:hover, datepicker datepicker-inner div monthpicker button.btn-secondary:hover, datepicker datepicker-inner div yearpicker button:hover, datepicker datepicker-inner div yearpicker button.btn-secondary:hover {
+      background-color: #eceeef; }
+    datepicker datepicker-inner div daypicker button > span.text-info, datepicker datepicker-inner div daypicker button.btn-secondary > span.text-info, datepicker datepicker-inner div monthpicker button > span.text-info, datepicker datepicker-inner div monthpicker button.btn-secondary > span.text-info, datepicker datepicker-inner div yearpicker button > span.text-info, datepicker datepicker-inner div yearpicker button.btn-secondary > span.text-info {
+      color: #373a3c !important;
+      font-weight: bold; }
+    datepicker datepicker-inner div daypicker button.btn-info.active, datepicker datepicker-inner div daypicker button.btn-info.btn-default, datepicker datepicker-inner div daypicker button.btn-secondary.btn-info.active, datepicker datepicker-inner div daypicker button.btn-secondary.btn-info.btn-default, datepicker datepicker-inner div monthpicker button.btn-info.active, datepicker datepicker-inner div monthpicker button.btn-info.btn-default, datepicker datepicker-inner div monthpicker button.btn-secondary.btn-info.active, datepicker datepicker-inner div monthpicker button.btn-secondary.btn-info.btn-default, datepicker datepicker-inner div yearpicker button.btn-info.active, datepicker datepicker-inner div yearpicker button.btn-info.btn-default, datepicker datepicker-inner div yearpicker button.btn-secondary.btn-info.active, datepicker datepicker-inner div yearpicker button.btn-secondary.btn-info.btn-default {
+      background-color: #5cb85c !important;
+      border-color: #5cb85c !important; }
+      datepicker datepicker-inner div daypicker button.btn-info.active span, datepicker datepicker-inner div daypicker button.btn-info.btn-default span, datepicker datepicker-inner div daypicker button.btn-secondary.btn-info.active span, datepicker datepicker-inner div daypicker button.btn-secondary.btn-info.btn-default span, datepicker datepicker-inner div monthpicker button.btn-info.active span, datepicker datepicker-inner div monthpicker button.btn-info.btn-default span, datepicker datepicker-inner div monthpicker button.btn-secondary.btn-info.active span, datepicker datepicker-inner div monthpicker button.btn-secondary.btn-info.btn-default span, datepicker datepicker-inner div yearpicker button.btn-info.active span, datepicker datepicker-inner div yearpicker button.btn-info.btn-default span, datepicker datepicker-inner div yearpicker button.btn-secondary.btn-info.active span, datepicker datepicker-inner div yearpicker button.btn-secondary.btn-info.btn-default span {
+        color: white !important;
+        font-weight: bold; }
+

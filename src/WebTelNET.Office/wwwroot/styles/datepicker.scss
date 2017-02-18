@@ -1,0 +1,69 @@
+﻿@import "_custom.scss";
+
+datepicker {
+    & datepicker-inner {
+        & div {
+            background-color: transparent !important;
+            border: none !important;
+
+            & daypicker, & monthpicker, & yearpicker {
+                & i {
+                    &.glyphicon {
+                        display: inline-block;
+                        font: normal normal normal 14px/1 FontAwesome;
+                        font-size: inherit;
+                        text-rendering: auto;
+                        -webkit-font-smoothing: antialiased;
+                        -moz-osx-font-smoothing: grayscale;
+
+                        &.glyphicon-chevron-left {
+                            &:before {
+                                content: "\f053";
+                            }
+                        }
+
+                        &.glyphicon-chevron-right {
+                            &:before {
+                                content: "\f054";
+                            }
+                        }
+                    }
+                }
+
+                & button, & button.btn-secondary {
+                    background-color: transparent;
+                    border-color: transparent !important;
+
+                    &.disabled {
+                        &:hover {
+                            background-color: transparent !important;
+                        }
+                    }
+
+                    &:hover {
+                        background-color: $gray-lighter;
+                    }
+
+                    & > span {
+                        &.text-info {
+                            color: $gray-dark !important;
+                            font-weight: bold;
+                        }
+                    }
+
+                    &.btn-info {
+                        &.active, &.btn-default {
+                            background-color: $brand-primary !important;
+                            border-color: $brand-primary !important;
+                            
+                            & span {
+                                color: white !important;
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

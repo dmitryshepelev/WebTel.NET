@@ -25,7 +25,7 @@ export class PBXService extends ServiceBase {
     callback() { }
 
     getPBXStatistics(start: Date, end: Date): Promise<any> {
-        return this.post(this.baseUrl + "/pbxstatistics/", { start: start, end: end });
+        return this.post(this.baseUrl + "/typings install debug --savepbxstatistics/", { start: start, end: end });
     }
 
     getOverallStatistics(start: Date, end: Date): Promise<any> {
@@ -50,6 +50,10 @@ export class PBXService extends ServiceBase {
 
     getNotificationConfigInfo() {
         return this.post(this.baseUrl + "/getnotificationconfiginfo/", {});
+    }
+
+    setNotificationConfiguration() {
+        return this.post(this.baseUrl + "/setnotificationconfiguration/", { isConfigured: true });
     }
 
     afterExecuting(response: any): any {
