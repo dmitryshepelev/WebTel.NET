@@ -1,10 +1,10 @@
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent } from './home/home.component';
+import { ServicesPageComponent } from './services/services-page.component';
 import { AboutComponent } from './about/about.component';
 
 const appRoutes: Routes = [
-    { path: '', component: HomeComponent },
+    { path: '', component: ServicesPageComponent },
     { path: 'about', component: AboutComponent }
 ];
 

@@ -14,6 +14,9 @@ import { AboutComponent } from './about/about.component';
 import { routing, appRoutingProviders } from './office-app.routing';
 import { CharacterService } from './shared/character.service';
 
+import { OfficeService } from "./shared/services/office.service";
+import { ServicesPageComponent } from "./services/services-page.component";
+
 
 @NgModule({
     imports: [
@@ -27,13 +30,15 @@ import { CharacterService } from './shared/character.service';
     providers: [
         appRoutingProviders,
         StorageService,
-        CharacterService
+        CharacterService,
+        OfficeService
     ],
     declarations: [
         OfficeAppComponent,
         HomeComponent,
         AboutComponent,
         AlertComponent,
+        ServicesPageComponent,
 
         ButtonSpinnerDirective
     ],
