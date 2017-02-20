@@ -9,12 +9,11 @@ import { AlertComponent } from "@commonclient/controls";
 import { ButtonSpinnerDirective } from "@commonclient/directives";
 
 import { OfficeAppComponent }  from './office-app.component';
-import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { routing, appRoutingProviders } from './office-app.routing';
-import { CharacterService } from './shared/character.service';
 
 import { OfficeService } from "./shared/services/office.service";
+import { UserServiceControlComponent } from "./shared/components/user-service-control.component";
 import { ServicesPageComponent } from "./services/services-page.component";
 
 
@@ -30,15 +29,16 @@ import { ServicesPageComponent } from "./services/services-page.component";
     providers: [
         appRoutingProviders,
         StorageService,
-        CharacterService,
         OfficeService
     ],
     declarations: [
         OfficeAppComponent,
-        HomeComponent,
         AboutComponent,
         AlertComponent,
+
         ServicesPageComponent,
+
+        UserServiceControlComponent,
 
         ButtonSpinnerDirective
     ],

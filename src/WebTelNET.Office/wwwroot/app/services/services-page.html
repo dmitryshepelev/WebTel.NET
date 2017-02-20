@@ -1,12 +1,8 @@
 <div class="container-fluid">
     <div class="col-sm-10 col-md-10 col-lg-8 pull-xs-none">
         <div class="card-deck">
-            <div class="card" *ngFor="let service of services">
-                <div class="card-block">
-                    <h4 class="card-title">{{ service.provider.name }}</h4>
-                    <p class="card-text">{{ service.provider.description }}</p>
-                    <p class="card-text"><small class="text-muted">{{ service.provider.webSite }}</small></p>
-                </div>
+            <div *ngFor="let service of services">
+                <user-service-control [userService]="service"></user-service-control>
             </div>
         </div>
     </div>

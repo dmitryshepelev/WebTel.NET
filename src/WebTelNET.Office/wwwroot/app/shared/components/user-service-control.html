@@ -1,0 +1,16 @@
+<div class="card {{ serviceCardClass }}">
+    <div class="card-block ">
+        <h4 class="card-title">
+            {{ userService.provider.name }}
+            <div class="pull-xs-right">
+                <button type="button" class="btn btn-secondary btn-sm" (click)="activate()" *ngIf="userService.status == 1">Активировать</button>
+            </div>
+        </h4>
+        <p class="card-text">{{ userService.provider.description }}</p>
+        <p class="card-text">
+            <small class="text-muted">
+                <a href="http://{{ userService.provider.webSite }}" target="_blank">{{ userService.provider.webSite }}</a>
+            </small>
+        </p>
+    </div>
+</div>
