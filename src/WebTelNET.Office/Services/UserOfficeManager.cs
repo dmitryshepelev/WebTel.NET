@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.Extensions.Options;
+using WebTelNET.Office.Libs.Models;
+using WebTelNET.Office.Models.Libs;
 using WebTelNET.Office.Models.Models;
 using WebTelNET.Office.Models.Repository;
 
@@ -11,9 +14,13 @@ namespace WebTelNET.Office.Services
     public interface IUserOfficeManager
     {
         void AddServiceToUserOffice(UserOffice userOffice, string serviceTypeName);
+
         UserService GetUserService(UserOffice userOffice, string serviceTypeName);
+
         IQueryable<UserService> GetUserServices(UserOffice userOffice,
             Expression<Func<UserService, bool>> expression = null);
+
+        bool ActivateUserService(UserOffice userOffice, string serviceTypeName);
     }
 
     public class UserOfficeManager : IUserOfficeManager
@@ -22,18 +29,24 @@ namespace WebTelNET.Office.Services
         private readonly IServiceProviderRepository _serviceProviderRepository;
         private readonly IServiceTypeRepository _serviceTypeRepository;
         private readonly IUserServcieRepository _userServiceRepository;
+        private readonly IUserServiceDataRepository _userServiceDataRepository;
+        private readonly IOptions<AppSettings> _appSettings;
 
         public UserOfficeManager(
             IUserOfficeRepository userOfficeRepository,
             IServiceProviderRepository serviceProviderRepository,
             IServiceTypeRepository serviceTypeRepository,
-            IUserServcieRepository userServiceRepository
+            IUserServcieRepository userServiceRepository,
+            IOptions<AppSettings> appSettings,
+            IUserServiceDataRepository userServiceDataRepository
         )
         {
             _userOfficeRepository = userOfficeRepository;
             _serviceProviderRepository = serviceProviderRepository;
             _serviceTypeRepository = serviceTypeRepository;
             _userServiceRepository = userServiceRepository;
+            _appSettings = appSettings;
+            _userServiceDataRepository = userServiceDataRepository;
         }
 
         public void AddServiceToUserOffice(UserOffice userOffice, string serviceTypeName)
@@ -42,17 +55,41 @@ namespace WebTelNET.Office.Services
             if (serviceProvider != null)
             {
                 var service = _userServiceRepository.GetSingle(
-                    x => x.UserOfficeId.Equals(userOffice.Id) && x.ServiceProvider.Id.Equals(serviceProvider.Id));
-                if (service == null)
+                                  x => x.UserOfficeId.Equals(userOffice.Id) && x.ServiceProvider.Id.Equals(serviceProvider.Id)) ??
+                              _userServiceRepository.Create(new UserService
+                              {
+                                  ServiceProviderId = serviceProvider.Id,
+                                  UserOfficeId = userOffice.Id
+                              });
+
+                var serviceProviderSettings = (ServiceProviderSettings)_appSettings.Value.ServiceProviderTypeSettings.GetType()
+                    .GetProperty(serviceTypeName)
+                    .GetValue(_appSettings.Value.ServiceProviderTypeSettings);
+
+                if (serviceProviderSettings.UserData != null)
                 {
-                    _userServiceRepository.Create(new UserService
+                    foreach (var pair in serviceProviderSettings.UserData)
                     {
-                        ServiceProviderId = serviceProvider.Id,
-                        UserOfficeId = userOffice.Id
-                    });
+                        var userServiceData =
+                            _userServiceDataRepository.GetSingle(
+                                x => x.UserServiceId.Equals(service.Id) && x.Key.Equals(pair.Key));
+                        if (userServiceData == null)
+                        {
+                            _userServiceDataRepository.Create(new UserServiceData
+                            {
+                                Key = pair.Key,
+                                Value = string.IsNullOrEmpty(pair.Value) ? null : pair.Value,
+                                UserServiceId = service.Id
+                            });
+                        }
+                        else if (userServiceData.Value != pair.Value)
+                        {
+                            userServiceData.Value = pair.Value;
+                            _userServiceDataRepository.Update(userServiceData);
+                        }
+                    }
                 }
             }
-
         }
 
         public UserService GetUserService(UserOffice userOffice, string serviceTypeName)
@@ -65,6 +102,22 @@ namespace WebTelNET.Office.Services
         {
             var services = _userServiceRepository.GetAllWithNavigationProperties(x => x.UserOfficeId.Equals(userOffice.Id));
             return expression == null ? services : services.Where(expression);
+        }
+
+        public bool ActivateUserService(UserOffice userOffice, string serviceTypeName)
+        {
+            var service = GetUserService(userOffice, serviceTypeName);
+
+            if (service == null || service.ServiceStatusId != (int) ServiceStatuses.Available)
+            {
+                return false;
+            }
+
+            service.ActivationDateTime = DateTime.Now;
+            service.ServiceStatusId = (int) ServiceStatuses.Activated;
+            _userServiceRepository.Update(service);
+
+            return true;
         }
     }
 }

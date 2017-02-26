@@ -10,4 +10,5 @@ export class UserServiceInfo {
     status: number;
     serviceType: string;
     provider: ServiceProviderInfo;
+    requireData: boolean;
 }

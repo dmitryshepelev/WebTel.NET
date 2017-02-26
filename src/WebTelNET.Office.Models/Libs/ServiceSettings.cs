@@ -1,4 +1,6 @@
-﻿namespace WebTelNET.Office.Models.Libs
+﻿using System.Collections.Generic;
+
+namespace WebTelNET.Office.Models.Libs
 {
     public interface IServiceSettings
     {
@@ -10,6 +12,7 @@
     public class ServiceTypeNames
     {
         public string PBXType { get; set; }
+        public string CloudStorageType { get; set; }
     }
 
     public class ServiceStatusesSettings
@@ -28,6 +31,7 @@
     public class ServiceProviderTypeSettings
     {
         public ServiceProviderSettings PBX { get; set; }
+        public ServiceProviderSettings CloudStorage { get; set; }
     }
 
     public class ServiceProviderSettings
@@ -35,5 +39,6 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public string WebSite { get; set; }
+        public Dictionary<string, string> UserData { get; set; }
     }
 }

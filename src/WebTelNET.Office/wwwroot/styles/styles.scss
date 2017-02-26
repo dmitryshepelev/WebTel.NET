@@ -269,3 +269,9 @@ input {
 	text-decoration:none;
 	opacity:1
 }
+
+.card-columns {
+    .card {
+        display: inline-block;
+    }
+}

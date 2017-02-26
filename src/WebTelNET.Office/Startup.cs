@@ -70,48 +70,13 @@ namespace WebTelNET.Office
             services.AddScoped<IUserOfficeRepository, UserOfficeRepository>();
             services.AddScoped<IUserServcieRepository, UserServiceRepository>();
             services.AddScoped<IServiceProviderRepository, ServiceProviderRepository>();
+            services.AddScoped<IUserServiceDataRepository, UserServiceDataRepository>();
             services.AddScoped<IUserOfficeManager, UserOfficeManager>();
             services.AddSingleton<IMapper>(x => _mapperConfiguration.CreateMapper());
 
             services.Configure<AppSettings>(settings =>
             {
-                var appSettings = nameof(AppSettings);
-                var serviceTypeNames = nameof(ServiceTypeNames);
-                settings.ServiceTypeNames = new ServiceTypeNames
-                {
-                    PBXType = Configuration[$"{appSettings}:{serviceTypeNames}:PBXType"]
-                };
-
-                var serviceStatusesSettings = nameof(ServiceStatusesSettings);
-                settings.ServiceStatusesSettings = new ServiceStatusesSettings
-                {
-                    Available = new ServiceStatusSettings
-                    {
-                        Name = Configuration[$"{appSettings}:{serviceStatusesSettings}:Available:Name"],
-                        Description = Configuration[$"{appSettings}:{serviceStatusesSettings}:Available:Description"]
-                    },
-                    Activated = new ServiceStatusSettings
-                    {
-                        Name = Configuration[$"{appSettings}:{serviceStatusesSettings}:Activated:Name"],
-                        Description = Configuration[$"{appSettings}:{serviceStatusesSettings}:Activated:Description"]
-                    },
-                    Unavailable = new ServiceStatusSettings
-                    {
-                        Name = Configuration[$"{appSettings}:{serviceStatusesSettings}:Unavailable:Name"],
-                        Description = Configuration[$"{appSettings}:{serviceStatusesSettings}:Unavailable:Description"]
-                    },
-                };
-
-                var serviceProviderTypeSettings = nameof(ServiceProviderTypeSettings);
-                settings.ServiceProviderTypeSettings = new ServiceProviderTypeSettings
-                {
-                    PBX = new ServiceProviderSettings
-                    {
-                        Name = Configuration[$"{appSettings}:{serviceProviderTypeSettings}:PBX:Name"],
-                        Description = Configuration[$"{appSettings}:{serviceProviderTypeSettings}:PBX:Description"],
-                        WebSite = Configuration[$"{appSettings}:{serviceProviderTypeSettings}:PBX:WebSite"],
-                    }
-                };
+                Configuration.GetSection("AppSettings").Bind(settings);
             });
         }
 
@@ -168,7 +133,12 @@ namespace WebTelNET.Office
                     var appSettings = app.ApplicationServices.GetService<IOptions<AppSettings>>();
 
                     serviceScope.ServiceProvider.GetService<OfficeDbContext>()
-                        .EnsureSeedData(serviceStatusRepository, serviceTypeRepository, serviceProviderRepository, appSettings.Value);
+                        .EnsureSeedData(
+                            serviceStatusRepository,
+                            serviceTypeRepository,
+                            serviceProviderRepository,
+                            appSettings.Value
+                        );
                 }
             }
             catch (Exception e)

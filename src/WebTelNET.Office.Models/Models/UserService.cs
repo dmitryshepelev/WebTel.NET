@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -23,5 +24,7 @@ namespace WebTelNET.Office.Models.Models
         [Required]
         public Guid ServiceProviderId { get; set; }
         public ServiceProvider ServiceProvider { get; set; }
+
+        public ICollection<UserServiceData> UserServiceData { get; set; }
     }
 }

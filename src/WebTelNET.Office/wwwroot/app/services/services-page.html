@@ -1,9 +1,5 @@
-<div class="container-fluid">
-    <div class="col-sm-10 col-md-10 col-lg-8 pull-xs-none">
-        <div class="card-deck">
-            <div *ngFor="let service of services">
-                <user-service-control [userService]="service"></user-service-control>
-            </div>
-        </div>
+<div class="card-columns">
+    <div *ngFor="let service of services">
+        <user-service-control [userService]="service"></user-service-control>
     </div>
 </div>

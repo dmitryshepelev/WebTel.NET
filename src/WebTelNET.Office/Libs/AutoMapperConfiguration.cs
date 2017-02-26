@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using WebTelNET.Office.Libs.Models;
 using WebTelNET.Office.Models;
 using WebTelNET.Office.Models.Models;

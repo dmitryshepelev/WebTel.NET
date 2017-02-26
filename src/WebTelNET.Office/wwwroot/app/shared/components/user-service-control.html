@@ -2,9 +2,6 @@
     <div class="card-block ">
         <h4 class="card-title">
             {{ userService.provider.name }}
-            <div class="pull-xs-right">
-                <button type="button" class="btn btn-secondary btn-sm" (click)="activate()" *ngIf="userService.status == 1">Активировать</button>
-            </div>
         </h4>
         <p class="card-text">{{ userService.provider.description }}</p>
         <p class="card-text">
@@ -12,5 +9,11 @@
                 <a href="http://{{ userService.provider.webSite }}" target="_blank">{{ userService.provider.webSite }}</a>
             </small>
         </p>
+    </div>
+    <div class="card-footer">
+        <div *ngIf="userService.status == 1">
+            <button type="button" class="btn btn-secondary btn-sm" [buttonSpinner]="cardActionExecuting" (click)="activate()">Подключить</button>
+        </div>
+        <small class="text-muted" *ngIf="userService.status == 2">Подключена {{ userService.activationDateTime | date: "dd/MM/y" }}</small>
     </div>
 </div>

@@ -45,6 +45,13 @@ namespace WebTelNET.Office.Models
             modelBuilder.Entity<UserService>()
                 .Property(x => x.ServiceStatusId)
                 .HasDefaultValue(1);
+
+            modelBuilder.Entity<UserServiceData>()
+                .HasIndex(x => new {x.UserServiceId, x.Key})
+                .IsUnique();
+            modelBuilder.Entity<UserServiceData>()
+                .HasOne(x => x.UserService)
+                .WithMany(x => x.UserServiceData);
         }
 
         public DbSet<UserOffice> UserOffices { get; set; }
@@ -52,6 +59,7 @@ namespace WebTelNET.Office.Models
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<ServiceStatus> ServiceStatuses { get; set; }
         public DbSet<ServiceProvider> ServiceProviders { get; set; }
+        public DbSet<UserServiceData> UserServiceData { get; set; }
 
         public void EnsureSeedData(
             IServiceStatusRepository serviceStatusRepository,

@@ -1,4 +1,7 @@
-﻿import { Component, Input } from "@angular/core";
+﻿import { Component, Input, Inject } from "@angular/core";
+import { ResponseModel } from "@commonclient/services"
+
+import { OfficeService, IOfficeService } from "../services/office.service";
 
 import { UserServiceInfo } from "../models"
 
@@ -14,10 +17,16 @@ export class UserServiceControlComponent {
         "card-outline-success"
     ];
 
+    cardActionExecuting: boolean;
+
     @Input() userService: UserServiceInfo;
 
-    constructor() {
+    constructor(
+        @Inject(OfficeService) private _officeService: IOfficeService
+    ) {
         this.userService = new UserServiceInfo();
+
+        this.cardActionExecuting = false;
     }
 
     get serviceCardClass(): string {
@@ -25,6 +34,17 @@ export class UserServiceControlComponent {
     }
 
     activate() {
-
+        this.cardActionExecuting = true;
+        this._officeService.activateService(this.userService.serviceType)
+            .then((response: ResponseModel) => {
+                    this.userService.activationDateTime = new Date();
+                    this.userService.status = 2;
+                })
+            .catch(error => {
+                    console.log(error);
+                })
+            .then(() => {
+                    this.cardActionExecuting = false;
+                });
     }
 }

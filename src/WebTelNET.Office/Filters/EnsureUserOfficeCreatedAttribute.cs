@@ -32,12 +32,11 @@ namespace WebTelNET.Office.Filters
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (_userOfficeRepository.GetSingle(x => x.UserId.Equals(userId)) == null)
-            {
-                var userOffice = _userOfficeRepository.Create(new UserOffice {UserId = userId});
+            var userOffice = _userOfficeRepository.GetSingle(x => x.UserId.Equals(userId)) ?? _userOfficeRepository.Create(new UserOffice {UserId = userId});
 
-                _userOfficeManager.AddServiceToUserOffice(userOffice, _appSettings.Value.ServiceTypeNames.PBXType);
-            }
+            _userOfficeManager.AddServiceToUserOffice(userOffice, _appSettings.Value.ServiceTypeNames.PBXType);
+            _userOfficeManager.AddServiceToUserOffice(userOffice, _appSettings.Value.ServiceTypeNames.CloudStorageType);
+
             base.OnActionExecuting(context);
         }
     }
