@@ -17,3 +17,12 @@
         <small class="text-muted" *ngIf="userService.status == 2">Подключена {{ userService.activationDateTime | date: "dd/MM/y" }}</small>
     </div>
 </div>
+
+
+<ng-sidebar-container class="sidepanel" class="on-top">
+    <ng-sidebar [(opened)]="showDataForm" [animate]="false" [mode]="'over'" [position]="'top'" [showBackdrop]="true" [closeOnClickOutside]="false" [autoFocus]="false">
+        <cloud-storage-required-data-form *ngIf="userService.serviceType == 'CloudStorage'"></cloud-storage-required-data-form>
+    </ng-sidebar>
+
+
+</ng-sidebar-container>

@@ -9,7 +9,7 @@ namespace WebTelNET.Office.Models
 
     public class UserServiceResponseModel : ServiceInfoResponseModel
     {
-        public bool RequireData { get; set; }
+        public bool RequireActivationData { get; set; }
         public ServiceProviderResponseModel Provider { get; set; }
     }
 }

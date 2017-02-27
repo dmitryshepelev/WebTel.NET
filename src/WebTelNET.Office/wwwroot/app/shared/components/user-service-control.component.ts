@@ -3,7 +3,7 @@ import { ResponseModel } from "@commonclient/services"
 
 import { OfficeService, IOfficeService } from "../services/office.service";
 
-import { UserServiceInfo } from "../models"
+import { UserServiceInfo, UserServiceStatus } from "../models"
 
 
 @Component({
@@ -20,13 +20,30 @@ export class UserServiceControlComponent {
     cardActionExecuting: boolean;
 
     @Input() userService: UserServiceInfo;
+    showDataForm: boolean;
 
     constructor(
         @Inject(OfficeService) private _officeService: IOfficeService
     ) {
         this.userService = new UserServiceInfo();
+        this.showDataForm = false;
 
         this.cardActionExecuting = false;
+    }
+
+    private _activateService() {
+        this.cardActionExecuting = true;
+        this._officeService.activateService(this.userService.serviceType)
+            .then((response: ResponseModel) => {
+                this.userService.activationDateTime = new Date();
+                this.userService.status = UserServiceStatus.Activated;
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .then(() => {
+                this.cardActionExecuting = false;
+            });
     }
 
     get serviceCardClass(): string {
@@ -34,17 +51,11 @@ export class UserServiceControlComponent {
     }
 
     activate() {
-        this.cardActionExecuting = true;
-        this._officeService.activateService(this.userService.serviceType)
-            .then((response: ResponseModel) => {
-                    this.userService.activationDateTime = new Date();
-                    this.userService.status = 2;
-                })
-            .catch(error => {
-                    console.log(error);
-                })
-            .then(() => {
-                    this.cardActionExecuting = false;
-                });
+        if (this.userService.requireActivationData) {
+            this.showDataForm = true;
+        } else {
+            this._activateService();
+        }
     }
+
 }

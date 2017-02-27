@@ -60,7 +60,7 @@ namespace WebTelNET.Office.Api
             var response = new ApiResponseModel();
 
             var services = _userOfficeManager.GetUserServices(UserOffice,
-                x => !x.UserOfficeId.Equals(UserOffice.Id) || x.ServiceStatusId != (int) ServiceStatuses.Unavailable);
+                x => !x.UserOfficeId.Equals(UserOffice.Id) || x.ServiceStatusId != (int) ServiceStatuses.Unavailable).ToList();
 
             var mapped = new List<UserServiceResponseModel>();
             foreach (var service in services)
@@ -68,10 +68,8 @@ namespace WebTelNET.Office.Api
                 var mappedProvider = _mapper.Map<ServiceProviderResponseModel>(service.ServiceProvider);
                 var mappedService = _mapper.Map<UserServiceResponseModel>(service);
                 mappedService.Provider = mappedProvider;
-                Console.WriteLine(_userOfficeRepository.GetAll().ToList());
-//                mappedService.RequireData = service.UserServiceData == null
-//                    ? false
-//                    : (service.UserServiceData.Count > 0 ? true : false);
+                mappedService.RequireActivationData =
+                    _userServiceDataRepository.Any(x => x.UserServiceId.Equals(service.Id));
 
                 mapped.Add(mappedService);
             }

@@ -10,5 +10,11 @@ export class UserServiceInfo {
     status: number;
     serviceType: string;
     provider: ServiceProviderInfo;
-    requireData: boolean;
+    requireActivationData: boolean;
+}
+
+export enum UserServiceStatus {
+    Available = 1,
+    Activated,
+    Unavailable
 }

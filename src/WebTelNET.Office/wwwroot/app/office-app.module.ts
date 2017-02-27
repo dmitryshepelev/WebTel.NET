@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { SidebarModule } from "ng-sidebar";
 
@@ -14,6 +14,7 @@ import { routing, appRoutingProviders } from './office-app.routing';
 
 import { OfficeService } from "./shared/services/office.service";
 import { UserServiceControlComponent } from "./shared/components/user-service-control.component";
+import { CloudStorageRequiredDataForm } from "./shared/components/cloud-storage-required-data.form";
 import { ServicesPageComponent } from "./services/services-page.component";
 
 
@@ -21,6 +22,7 @@ import { ServicesPageComponent } from "./services/services-page.component";
     imports: [
         BrowserModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
         routing,
         SidebarModule,
@@ -39,6 +41,8 @@ import { ServicesPageComponent } from "./services/services-page.component";
         ServicesPageComponent,
 
         UserServiceControlComponent,
+
+        CloudStorageRequiredDataForm,
 
         ButtonSpinnerDirective
     ],
