@@ -6,7 +6,7 @@ import { ServiceBase, ResponseModel } from "@commonclient/services";
 
 export interface IOfficeService {
     getUserServices(): Promise<ResponseModel>;
-    activateService(serviceType: string): Promise<ResponseModel>;
+    activateService(serviceType: string, data?: Object): Promise<ResponseModel>;
 }
 
 
@@ -22,7 +22,7 @@ export class OfficeService extends ServiceBase implements IOfficeService {
         return this.post(this._baseUrl + "/getservices/", {});
     }
 
-    activateService(serviceType: string): Promise<ResponseModel> {
-        return this.post(this._baseUrl + "/activateservice/", { ServiceTypeName: serviceType });
+    activateService(serviceType: string, data?: Object): Promise<ResponseModel> {
+        return this.post(this._baseUrl + "/activateservice/", { ServiceTypeName: serviceType, ActivationData: data || {} });
     }
 }

@@ -17,6 +17,7 @@ namespace WebTelNET.Office.Api
         private readonly IServiceTypeRepository _serviceTypeRepository;
         private readonly IServiceStatusRepository _serviceStatusRepository;
         private readonly IUserServcieRepository _userServcieRepository;
+        private readonly IUserServiceDataRepository _userServcieDataRepository;
         private readonly IUserOfficeRepository _userOfficeRepository;
         private readonly IMapper _mapper;
 
@@ -31,7 +32,9 @@ namespace WebTelNET.Office.Api
             IServiceTypeRepository serviceTypeRepository,
             IUserOfficeRepository userOfficeRepository,
             IUserOfficeManager userOfficeManager,
-            IMapper mapper)
+            IMapper mapper,
+            IUserServiceDataRepository userServcieDataRepository
+        )
         {
             _httpContextAccessor = httpContextAccessor;
             _userServcieRepository = userServiceRepository;
@@ -40,6 +43,7 @@ namespace WebTelNET.Office.Api
             _userOfficeRepository = userOfficeRepository;
             _userOfficeManager = userOfficeManager;
             _mapper = mapper;
+            _userServcieDataRepository = userServcieDataRepository;
         }
 
         [Route("serviceinfo")]
@@ -72,6 +76,32 @@ namespace WebTelNET.Office.Api
             var service = _userOfficeManager.GetUserService(userOffice, serviceTypeName);
             response.Data.Add(nameof(service), _mapper.Map<ServiceInfoResponseModel>(service));
 
+            return Ok(response);
+        }
+
+        [Route("servicedata")]
+        [HttpGet]
+        [Produces(typeof(string[]))]
+        public IActionResult GetServiceData(string userId, string serviceTypeName, string dataKey)
+        {
+            var response = new ApiResponseModel();
+
+            var userOffice = _userOfficeRepository.GetSingle(x => x.UserId.Equals(userId));
+            if (userOffice == null)
+            {
+                return NotFound(response);
+            }
+
+            var service = _userOfficeManager.GetUserService(userOffice, serviceTypeName);
+            var data =
+                _userServcieDataRepository.GetSingle(x => x.UserServiceId.Equals(service.Id) && x.Key == dataKey);
+
+            if (data == null)
+            {
+                return NotFound(response);
+            }
+
+            response.Data.Add("Data", data.Value);
             return Ok(response);
         }
     }

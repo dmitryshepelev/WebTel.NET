@@ -31,12 +31,16 @@ export class UserServiceControlComponent {
         this.cardActionExecuting = false;
     }
 
+    private _updateService() {
+        this.userService.activationDateTime = new Date();
+        this.userService.status = UserServiceStatus.Activated;
+    }
+
     private _activateService() {
         this.cardActionExecuting = true;
         this._officeService.activateService(this.userService.serviceType)
             .then((response: ResponseModel) => {
-                this.userService.activationDateTime = new Date();
-                this.userService.status = UserServiceStatus.Activated;
+                this._updateService();
             })
             .catch(error => {
                 console.log(error);
@@ -56,6 +60,11 @@ export class UserServiceControlComponent {
         } else {
             this._activateService();
         }
+    }
+
+    onCloudStorageActivated(value: any) {
+        this.showDataForm = false;
+        this._updateService();
     }
 
 }

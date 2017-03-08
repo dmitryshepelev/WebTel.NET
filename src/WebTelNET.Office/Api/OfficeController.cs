@@ -85,8 +85,8 @@ namespace WebTelNET.Office.Api
         {
             var response = new ApiResponseModel();
 
-            bool isActivated = _userOfficeManager.ActivateUserService(UserOffice, model.ServiceTypeName);
-            if (isActivated)
+            ServiceActivationStatus status = _userOfficeManager.ActivateUserService(UserOffice, model.ServiceTypeName, model.ActivationData);
+            if (status == ServiceActivationStatus.ActivationSucceed)
             {
                 response.Message = "The service has been activated successfully";
                 return Ok(response);

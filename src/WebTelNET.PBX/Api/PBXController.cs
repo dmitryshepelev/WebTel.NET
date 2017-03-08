@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Models;
 using WebTelNET.CommonNET.Services;
+using WebTelNET.Office.Libs.Services;
 using WebTelNET.PBX.Libs;
 using WebTelNET.PBX.Models;
 using WebTelNET.PBX.Models.Models;
@@ -30,6 +31,7 @@ namespace WebTelNET.PBX.Api
         private readonly IPBXManager _pbxManager;
         private readonly ICallRepository _callRepository;
         private readonly IMapper _mapper;
+        private readonly IOfficeClient _officeClient;
         private readonly ICloudStorageService _cloudStorageService;
         private readonly IWidgetRepository _widgetRepository;
 
@@ -45,8 +47,8 @@ namespace WebTelNET.PBX.Api
             INotificationTypeRepository notificationTypeRepository,
             IDispositionTypeRepository dispositionTypeRepository,
             ICloudStorageService cloudStorageService,
-            IWidgetRepository widgetRepository
-        )
+            IWidgetRepository widgetRepository,
+            IOfficeClient officeClient)
         {
             _zadarmaAccountRepository = zadarmaAccountRepository;
             _httpContextAccessor = httpContextAccessor;
@@ -55,10 +57,11 @@ namespace WebTelNET.PBX.Api
             _mapper = mapper;
             _cloudStorageService = cloudStorageService;
             _widgetRepository = widgetRepository;
+            _officeClient = officeClient;
 
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            _cloudStorageService.Token = "AQAAAAATq7AwAAP1FZ8RjjqceEpqs-s2rIJVosM";
+//            _cloudStorageService.Token = "AQAAAAATq7AwAAP1FZ8RjjqceEpqs-s2rIJVosM";
         }
 
         [Route("pbxaccount")]
@@ -277,6 +280,9 @@ namespace WebTelNET.PBX.Api
                 {
                     var responseModel = (CallRecordLinkResponseModel) result;
 
+                    var serviceData = await _officeClient.GetServiceDataAsync(_currentUserId, "CloudStorage", "Token");
+                    _cloudStorageService.Token = serviceData.Data;
+
                     var uploadResult = await _cloudStorageService.UploadByUrlAsync(responseModel.Links.First(), "app:/" + call.PBXCallId + ".mp3");
                     response.Data.Add(nameof(uploadResult), uploadResult);
                 }
@@ -324,6 +330,9 @@ namespace WebTelNET.PBX.Api
             {
                 return BadRequest(response);
             }
+
+            var serviceData = await _officeClient.GetServiceDataAsync(_currentUserId, "CloudStorage", "Token");
+            _cloudStorageService.Token = serviceData.Data;
 
             var result = await _cloudStorageService.DownloadByPathAsync("app:/" + model.PbxCallId + ".mp3") as FileDownloadResponse;
             if (result != null)

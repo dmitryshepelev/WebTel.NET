@@ -6,4 +6,11 @@
         Activated,
         Unavailable
     }
+
+    public enum ServiceActivationStatus
+    {
+        ActivationSucceed,
+        UnableToActivate,
+        RequireAdditionData
+    }
 }

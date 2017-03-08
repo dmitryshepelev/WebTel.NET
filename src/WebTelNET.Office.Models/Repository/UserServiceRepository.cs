@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using WebTelNET.CommonNET.Libs.Repository;
+using WebTelNET.Office.Libs.Models;
 using WebTelNET.Office.Models.Models;
 
 namespace WebTelNET.Office.Models.Repository
 {
     public interface IUserServcieRepository : IRepository<UserService>
     {
+        ServiceActivationStatus Activate(UserService userService);
     }
     
     public class UserServiceRepository : RepositoryBase<UserService>, IUserServcieRepository
@@ -34,6 +37,18 @@ namespace WebTelNET.Office.Models.Repository
         {
             var query = GetWithNavigationProperties();
             return predicate != null ? query.Where(predicate) : query;
+        }
+
+        public ServiceActivationStatus Activate(UserService userService)
+        {
+            if (userService.ServiceStatusId == (int) ServiceStatuses.Available)
+            {
+                userService.ActivationDateTime = DateTime.Now;
+                userService.ServiceStatusId = (int) ServiceStatuses.Activated;
+                Update(userService);
+                return ServiceActivationStatus.ActivationSucceed;
+            }
+            return ServiceActivationStatus.UnableToActivate;
         }
     }
 }

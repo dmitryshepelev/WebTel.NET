@@ -1,5 +1,7 @@
 <div>
+    <input type="button" class="btn btn-warning" (click)="getToken()" value="Получить токен"  />
     <form [formGroup]="form">
-        <input type="text" formControlName="Token" placeholder="Токен"/>
+        <input type="text" formControlName="Token" class="form-control" placeholder="Токен"/>
+        <button type="button" class="btn btn-primary" [buttonSpinner]="actionExecuting" (click)="activate()">Активировать</button>
     </form>
 </div>

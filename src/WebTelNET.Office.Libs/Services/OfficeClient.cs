@@ -12,10 +12,13 @@ namespace WebTelNET.Office.Libs.Services
     public interface IOfficeClient
     {
         Task<ServiceInfoResponseModel> GetServiceInfoAsync(string userId, string serviceTypeName);
+        Task<ServiceDataResponseModel> GetServiceDataAsync(string userId, string serviceTypeName, string dataKey);
     }
 
     public class OfficeClient : HttpService, IOfficeClient
     {
+        private IOfficeClient _officeClientImplementation;
+
         public OfficeClient() : base("http://localhost:5002/api/")
         {
         }
@@ -37,6 +40,30 @@ namespace WebTelNET.Office.Libs.Services
             {
                 var responseModel = await ResolveResponseContentAsync<ApiResponseModel>(response.Content);
                 var model = ((JObject)responseModel.Data.FirstOrDefault().Value).ToObject<ServiceInfoResponseModel>();
+                return model;
+            }
+
+            throw new Exception(response.Content.ToString());
+        }
+
+        public async Task<ServiceDataResponseModel> GetServiceDataAsync(string userId, string serviceTypeName, string dataKey)
+        {
+            var url = "servicedata";
+            var parameters = new Dictionary<string, string>
+            {
+                { nameof(userId), userId },
+                { nameof(serviceTypeName), serviceTypeName },
+                { nameof(dataKey), dataKey }
+            };
+
+            url = $"{url}?{GetQueryString(parameters)}";
+
+            var response = await GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseModel = await ResolveResponseContentAsync<ApiResponseModel>(response.Content);
+                var model = ((JObject)responseModel.Data.FirstOrDefault().Value).ToObject<ServiceDataResponseModel>();
                 return model;
             }
 
