@@ -2,6 +2,7 @@
 import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from "@angular/forms";
 import { SubmitingComponent, ISubmitable } from "@commonclient/components";
 
+import { ResponseModel } from "@commonclient/services";
 import { CallbackModel } from "../shared/models";
 import { PBXService } from "../shared/services/pbx.service";
 import { PriceInfoModel } from "../shared/components/price-info.component";
@@ -28,6 +29,11 @@ export class CallbackFormComponent extends SubmitingComponent {
     toPriceInfo: PriceInfoModel;
     fromLoading = false;
     toLoading = false;
+
+    @Output()
+    onFormSubmitSuccess = new EventEmitter<ResponseModel>();
+    @Output()
+    onFormSubmitFailure = new EventEmitter<ResponseModel>();
 
     constructor(private pbxService: PBXService, @Inject(FormBuilder) builder: FormBuilder) {
         super();
@@ -74,5 +80,9 @@ export class CallbackFormComponent extends SubmitingComponent {
     submit() {
         const model = new CallbackModel(this.form.controls[this._fromControlName].value, this.form.controls[this._toControlName].value);
         this.startSubmiting();
+        this.pbxService.callback(model.from, model.to)
+            .then(response => this.onFormSubmitSuccess.emit(response))
+            .catch(error => this.onFormSubmitFailure.emit(error))
+            .then(() => { this.endSubmiting(); });
     }
 }

@@ -17,4 +17,8 @@ export class PBXAppComponent {
 
         this.shownSidePanel = false;
     }
+
+    goToOffice() {
+        window.location.href = "http://localhost:5002/";
+    }
 }

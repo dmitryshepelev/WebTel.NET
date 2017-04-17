@@ -253,6 +253,21 @@ namespace WebTelNET.PBX.Api
             return Ok(response);
         }
 
+
+        [Route("notify/{id?}")]
+        [HttpGet]
+        [Produces(typeof(string[]))]
+        public IActionResult Notify(string zd_echo)
+        {
+            Console.WriteLine(zd_echo);
+            if (string.IsNullOrEmpty(zd_echo))
+            {
+                return BadRequest();
+            }
+            return Ok(zd_echo);
+        }
+
+
         [Route("notify/{id?}")]
         [HttpPost]
         [Produces(typeof(string[]))]

@@ -22,10 +22,12 @@ export class PBXService extends ServiceBase {
         return this.post(this.baseUrl + "/priceinfo/", { number: number });
     }
 
-    callback() { }
+    callback(from: string, to: string) {
+        return this.post(this.baseUrl + "/callback/", { from: from, to: to });
+     }
 
     getPBXStatistics(start: Date, end: Date): Promise<any> {
-        return this.post(this.baseUrl + "/typings install debug --savepbxstatistics/", { start: start, end: end });
+        return this.post(this.baseUrl + "/pbxstatistics/", { start: start, end: end });
     }
 
     getOverallStatistics(start: Date, end: Date): Promise<any> {

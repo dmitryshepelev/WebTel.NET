@@ -5,6 +5,7 @@
             <li class="sidebar-brand text-xs-center m-b-2">
                 <img class="" src="../img/logo-new.png" width="40"/>
             </li>
+            <li (click)="goToOffice()" style="margin-bottom: 23px"><a>Офис</a></li>
             <div class="p-x-1">
                 <balance-card></balance-card>
             </div>
@@ -18,6 +19,7 @@
             <li class="sidebar-brand text-xs-center m-b-2">
                 <img class="" src="../img/logo-new.png" width="30"/>
             </li>
+            <li (click)="goToOffice()"><a><i class="fa fa-briefcase" aria-hidden="true"></i></a></li>
             <div class="p-x-1">
                 <balance-card [compactMode]="true"></balance-card>
             </div>
