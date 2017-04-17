@@ -106,7 +106,7 @@ namespace WebTelNET.PBX
                 AuthenticationScheme = "oidc",
                 SignInScheme = "Cookies",
 
-                Authority = "http://localhost:5000",
+                Authority = env.IsProduction() ? "http://auth.leadder.ru" : "http://localhost:5000",
                 RequireHttpsMetadata = false,
 
                 ClientId = "pbx",

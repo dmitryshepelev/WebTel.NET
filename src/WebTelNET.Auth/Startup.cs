@@ -45,10 +45,11 @@ namespace WebTelNET.Auth
                 .AddDefaultTokenProviders();
             services.AddMvc();
 
+            bool identityProductionMode = Convert.ToBoolean(Configuration[$"{nameof(AppSettings)}:IdentityProductionMode"]);
             services.AddIdentityServer()
                 .AddTemporarySigningCredential()
                 .AddInMemoryScopes(IdentityServerConfig.GetScopes())
-                .AddInMemoryClients(IdentityServerConfig.GetClients())
+                .AddInMemoryClients(IdentityServerConfig.GetClients(identityProductionMode))
                 .AddAspNetIdentity<IdentityUser>();
 
             services.Configure<IdentityOptions>(options =>

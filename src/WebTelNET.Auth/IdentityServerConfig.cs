@@ -35,8 +35,11 @@ namespace WebTelNET.Auth
         }
 
         // client want to access resources (aka scopes)
-        public static IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients(bool isProduction)
         {
+            var pbxHost = isProduction ? "http://pbx.leadder.ru" : "http://localhost:5001";
+            var officeHost = isProduction ? "http://office.leadder.ru" : "http://localhost:5002";
+
             return new List<Client>
             {
                 new Client
@@ -52,8 +55,8 @@ namespace WebTelNET.Auth
                         new Secret("secret".Sha256())
                     },
 
-                    RedirectUris = { "http://localhost:5001/signin-oidc", "http://localhost:5001" },
-                    PostLogoutRedirectUris = { "http://localhost:5001" },
+                    RedirectUris = { String.Format("{0}/signin-oidc", pbxHost), pbxHost },
+                    PostLogoutRedirectUris = { pbxHost },
 
                     AllowedScopes =
                     {
@@ -77,9 +80,9 @@ namespace WebTelNET.Auth
                         new Secret("secret".Sha256())
                     },
 
-                    RedirectUris = { "http://localhost:5002/signin-oidc", "http://localhost:5002" },
-                    PostLogoutRedirectUris = { "http://localhost:5002" },
-                    AllowedCorsOrigins = { "http://localhost:5002", "http://localhost:5001" },
+                    RedirectUris = { String.Format("{0}/signin-oidc", officeHost), officeHost },
+                    PostLogoutRedirectUris = { officeHost },
+                    AllowedCorsOrigins = { officeHost, pbxHost },
 
                     AllowedScopes =
                     {

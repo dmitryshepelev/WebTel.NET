@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,7 @@ namespace WebTelNET.PBX.Api
         private readonly IOfficeClient _officeClient;
         private readonly ICloudStorageService _cloudStorageService;
         private readonly IWidgetRepository _widgetRepository;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         private readonly string _currentUserId;
 
@@ -48,7 +50,9 @@ namespace WebTelNET.PBX.Api
             IDispositionTypeRepository dispositionTypeRepository,
             ICloudStorageService cloudStorageService,
             IWidgetRepository widgetRepository,
-            IOfficeClient officeClient)
+            IOfficeClient officeClient,
+            IHostingEnvironment hostingEnvironment
+        )
         {
             _zadarmaAccountRepository = zadarmaAccountRepository;
             _httpContextAccessor = httpContextAccessor;
@@ -58,6 +62,7 @@ namespace WebTelNET.PBX.Api
             _cloudStorageService = cloudStorageService;
             _widgetRepository = widgetRepository;
             _officeClient = officeClient;
+            _hostingEnvironment = hostingEnvironment;
 
             _currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -107,7 +112,7 @@ namespace WebTelNET.PBX.Api
             var model = new NotificationConfigInfo
             {
                 IsConfigured = zadarmaAccount.IsNotificationConfigured,
-                Link = String.Format("http://localhost:5001/api/notify/{0}", zadarmaAccount.Id.ToString())
+                Link = String.Format("http://{0}/api/notify/{1}", _hostingEnvironment.IsProduction() ? "pbx.leadder.ru" : "localhost:5001", zadarmaAccount.Id.ToString())
             };
 
             response.Data.Add(nameof(NotificationConfigInfo), model);
