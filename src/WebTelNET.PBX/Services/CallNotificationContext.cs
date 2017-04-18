@@ -200,9 +200,9 @@ namespace WebTelNET.PBX.Services
             _stategy = strategy;
         }
 
-        public Call ProcessNotification(JObject model, Guid zadarmaAccountId)
+        public Call ProcessNotification(CallRequestModelHeap model, Guid zadarmaAccountId)
         {
-            return _stategy.Process(model, zadarmaAccountId);
+            return _stategy.Process(JObject.FromObject(model), zadarmaAccountId);
         }
     }
 }

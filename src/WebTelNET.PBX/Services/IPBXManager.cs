@@ -9,6 +9,6 @@ namespace WebTelNET.PBX.Services
 {
     public interface IPBXManager
     {
-        Call ProcessCallNotification(JObject model, Guid zadarmaAccountId);
+        Call ProcessCallNotification(CallRequestModelHeap model, Guid zadarmaAccountId);
     }
 }

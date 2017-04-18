@@ -126,21 +126,51 @@ namespace WebTelNET.PBX.Services
 
     #region RequestModels
 
-    public class CallRequestModel
+    public interface ICallRequestModel {
+        string Event { get; set; }
+        DateTime call_start { get; set; }
+        string pbx_call_id { get; set; }
+    }
+
+    public class CallRequestModel : ICallRequestModel
     {
         public string Event { get; set; }
         public DateTime call_start { get; set; }
         public string pbx_call_id { get; set; }
     }
 
-    public class IncomingCallStartRequestModel : CallRequestModel
+    public interface IIncomingCallStartRequestModel : ICallRequestModel
     {
+        string caller_id { get; set; }
+        string called_did { get; set; }
+    }
+
+    public class IncomingCallStartRequestModel : IIncomingCallStartRequestModel
+    {
+        public string Event { get; set; }
+        public DateTime call_start { get; set; }
+        public string pbx_call_id { get; set; }
         public string caller_id { get; set; }
         public string called_did { get; set; }
     }
 
-    public class IncomingCallEndRequestModel : IncomingCallStartRequestModel
+    public interface IIncomingCallEndRequestModel : IIncomingCallStartRequestModel
     {
+        string Internal { get; set; }
+        int duration { get; set; }
+        string disposition { get; set; }
+        string status_code { get; set; }
+        int is_recorded { get; set; }
+        string call_id_with_rec { get; set; }
+    }
+
+    public class IncomingCallEndRequestModel : IIncomingCallEndRequestModel
+    {
+        public string Event { get; set; }
+        public DateTime call_start { get; set; }
+        public string pbx_call_id { get; set; }
+        public string caller_id { get; set; }
+        public string called_did { get; set; }
         public string Internal { get; set; }
         public int duration { get; set; }
         public string disposition { get; set; }
@@ -149,20 +179,60 @@ namespace WebTelNET.PBX.Services
         public string call_id_with_rec { get; set; }
     }
 
-    public class OutgoingCallStartRequestModel : CallRequestModel
+    public interface IOutgoingCallStartRequestModel : ICallRequestModel
     {
+        string Internal { get; set; }
+        string destination { get; set; }
+    }
+
+    public class OutgoingCallStartRequestModel : IOutgoingCallStartRequestModel
+    {
+        public string Event { get; set; }
+        public DateTime call_start { get; set; }
+        public string pbx_call_id { get; set; }
         public string Internal { get; set; }
         public string destination { get; set; }
     }
 
-    public class OutgoingCallEndRequestModel : OutgoingCallStartRequestModel
+    public interface IOutgoingCallEndRequestModel : IOutgoingCallStartRequestModel
     {
+        string caller_id { get; set; }
+        int duration { get; set; }
+        string disposition { get; set; }
+        string status_code { get; set; }
+        int is_recorded { get; set; }
+        string call_id_with_rec { get; set; }
+    }
+
+    public class OutgoingCallEndRequestModel : IOutgoingCallEndRequestModel
+    {
+        public string Event { get; set; }
+        public DateTime call_start { get; set; }
+        public string pbx_call_id { get; set; }
+        public string Internal { get; set; }
+        public string destination { get; set; }
         public string caller_id { get; set; }
         public int duration { get; set; }
         public string disposition { get; set; }
         public string status_code { get; set; }
         public int is_recorded { get; set; }
         public string call_id_with_rec { get; set; }
+    }
+
+    public class CallRequestModelHeap : ICallRequestModel, IIncomingCallStartRequestModel, IIncomingCallEndRequestModel, IOutgoingCallStartRequestModel, IOutgoingCallEndRequestModel
+    {
+        public string Event { get; set; }
+        public DateTime call_start { get; set; }
+        public string pbx_call_id { get; set; }
+        public string Internal { get; set; }
+        public string destination { get; set; }
+        public string caller_id { get; set; }
+        public string called_did { get; set; }
+        public int duration { get; set; }
+        public string disposition { get; set; }
+        public string status_code { get; set; }
+        public int is_recorded { get; set; }
+        public string call_id_with_rec { get; set; }        
     }
 
     #endregion
@@ -221,7 +291,7 @@ namespace WebTelNET.PBX.Services
     {
         public string From { get; set; }
         public string To { get; set; }
-        public DateTime Time { get; set; }
+        public int Time { get; set; }
     }
 
     /// <summary>
@@ -384,6 +454,7 @@ namespace WebTelNET.PBX.Services
         private async Task<ZadarmaResponseModel> ResolveRequestContentAsync<T>(HttpContent content)
             where T : ZadarmaResponseModel
         {
+            Console.WriteLine(await content.ReadAsStringAsync());
             var data = await content.ReadAsStringAsync();
             using (var sr = new StringReader(data))
             {
@@ -405,6 +476,7 @@ namespace WebTelNET.PBX.Services
         private async Task<ZadarmaResponseModel> ResolveRequestContentAsync<T>(HttpContent content,
             bool isSuccessStatusCode) where T : ZadarmaResponseModel
         {
+            Console.WriteLine("IsSuccessStatusCode: " + isSuccessStatusCode.ToString());
             if (isSuccessStatusCode)
             {
                 return await ResolveRequestContentAsync<T>(content);

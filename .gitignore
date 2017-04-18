@@ -237,6 +237,7 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 
+.vscode/
 
 src/**/wwwroot/apps/**/*.js
 src/**/wwwroot/apps/**/*.map

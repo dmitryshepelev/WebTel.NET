@@ -25,9 +25,9 @@ namespace WebTelNET.PBX.Services
             _callRepository = callRepository;
         }
 
-        public Call ProcessCallNotification(JObject model, Guid zadarmaAccountId)
+        public Call ProcessCallNotification(CallRequestModelHeap model, Guid zadarmaAccountId)
         {
-            var baseModel = model.ToObject<CallRequestModel>();
+            var baseModel = model as ICallRequestModel;
             var notificationType = ZadarmaService.ParseNotificationType(baseModel.Event);
 
             CallNotificationStrategy strategy;

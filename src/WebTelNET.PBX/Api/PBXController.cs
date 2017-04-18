@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -112,7 +113,7 @@ namespace WebTelNET.PBX.Api
             var model = new NotificationConfigInfo
             {
                 IsConfigured = zadarmaAccount.IsNotificationConfigured,
-                Link = String.Format("http://{0}/api/notify/{1}", _hostingEnvironment.IsProduction() ? "pbx.leadder.ru" : "localhost:5001", zadarmaAccount.Id.ToString())
+                Link = String.Format("http://{0}/api/pbx/notify/{1}", _hostingEnvironment.IsProduction() ? "pbx.leadder.ru" : "localhost:5001", zadarmaAccount.Id.ToString())
             };
 
             response.Data.Add(nameof(NotificationConfigInfo), model);
@@ -276,20 +277,23 @@ namespace WebTelNET.PBX.Api
         [Route("notify/{id?}")]
         [HttpPost]
         [Produces(typeof(string[]))]
-        public async Task<IActionResult> Notify(string id, [FromBody] JObject model)
+        public async Task<IActionResult> Notify(string id, CallRequestModelHeap model)
         {
             var response = new ApiResponseModel();
 
             if (string.IsNullOrEmpty(id))
             {
+                response.Message = "Invalid user id";
                 return BadRequest(response);
             }
             var zadarmaAccount = _zadarmaAccountRepository.GetSingle(x => x.Id.ToString().Equals(id));
             if (zadarmaAccount == null)
             {
+                response.Message = "There is no such account";
                 return BadRequest(response);
             }
 
+            
             var call = _pbxManager.ProcessCallNotification(model, zadarmaAccount.Id);
 
             if (call.IsRecorded == true)
@@ -308,8 +312,8 @@ namespace WebTelNET.PBX.Api
                 }
             }
 
-            response.Data.Add("model", call);
-            response.Data.Add("account_id", id);
+            response.Message = "Call has been added successfully";
+            response.Data.Add("call", call.Id);
             return Ok(response);
         }
 
