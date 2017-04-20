@@ -171,10 +171,11 @@ namespace WebTelNET.PBX.Services
             outgoingCall.IsRecorded = mapped.IsRecorded;
             outgoingCall.CallIdWithRecord = mapped.CallIdWithRecord;
 
+            var callerNumber = string.IsNullOrEmpty(requestModel.caller_id) ? requestModel.Internal : requestModel.caller_id;
             var callerPhoneNumber =
                 PhoneNumberRepository.GetOrCreate(new PhoneNumber
                 {
-                    Number = requestModel.caller_id,
+                    Number = callerNumber,
                     ZadarmaAccountId = zadarmaAccountId
                 });
 

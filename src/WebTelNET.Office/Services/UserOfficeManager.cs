@@ -107,28 +107,20 @@ namespace WebTelNET.Office.Services
         public ServiceActivationStatus ActivateUserService(UserOffice userOffice, string serviceTypeName, IDictionary<string, string> data = null)
         {
             var service = GetUserService(userOffice, serviceTypeName);
-            Console.WriteLine("HERE 1");
             if (service == null || service.ServiceStatusId != (int) ServiceStatuses.Available)
             {
-                Console.WriteLine("HERE 1.5");
                 return ServiceActivationStatus.UnableToActivate;
             }
-            Console.WriteLine("HERE 2");
             data = data ?? new Dictionary<string, string>();
 
             var unfilledData =
-                _userServiceDataRepository.GetAll(x => x.UserServiceId.Equals(service.Id) &&
-                                                       string.IsNullOrEmpty(x.Value)).ToList();
+                _userServiceDataRepository.GetAll(x => x.UserServiceId.Equals(service.Id) && string.IsNullOrEmpty(x.Value)).ToList();
             bool allDataUpdated = true;
-            Console.WriteLine("HERE 3");
-            Console.WriteLine(unfilledData.Count);
+
             foreach (var serviceData in unfilledData)
             {
                 string value;
                 var result = data.TryGetValue(serviceData.Key, out value);
-                Console.WriteLine(result);
-                Console.WriteLine(serviceData.Key);
-                Console.WriteLine(value);
                 if (result)
                 {
                     serviceData.Value = value;
@@ -136,13 +128,10 @@ namespace WebTelNET.Office.Services
                 }
                 else
                 {
-                    Console.WriteLine("Here 4");
                     allDataUpdated = false;
                     break;
                 }
             }
-            Console.WriteLine(allDataUpdated);
-            Console.WriteLine(service.ServiceStatusId);
             return allDataUpdated ? _userServiceRepository.Activate(service) : ServiceActivationStatus.RequireAdditionData;
         }
     }

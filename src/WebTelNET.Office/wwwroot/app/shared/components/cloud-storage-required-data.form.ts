@@ -1,7 +1,8 @@
 ﻿import { Component, Inject, Output, EventEmitter } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ResponseModel } from "@commonclient/services"
+import { ResponseModel } from "@commonclient/services";
 
+import { IRequiredDataForm } from "./required-data-form.interface";
 import { OfficeService, IOfficeService } from "../services/office.service";
 
 import { UserServiceInfo, UserServiceStatus } from "../models"
@@ -11,7 +12,7 @@ import { UserServiceInfo, UserServiceStatus } from "../models"
     selector: "cloud-storage-required-data-form",
     templateUrl: "cloud-storage-required-data-form.html"
 })
-export class CloudStorageRequiredDataForm {
+export class CloudStorageRequiredDataForm implements IRequiredDataForm {
     form: FormGroup;
     actionExecuting: boolean = false;
 

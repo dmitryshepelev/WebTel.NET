@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebTelNET.Office.Libs.Models;
 using WebTelNET.Office.Libs.Services;
+using WebTelNET.PBX.Models.Models;
 using WebTelNET.PBX.Models.Repository;
+using WebTelNET.PBX.Services;
 
 namespace WebTelNET.PBX.Controllers
 {
@@ -33,22 +35,43 @@ namespace WebTelNET.PBX.Controllers
 
         public async Task<IActionResult> Index()
         {
+            const string serviceTypeName = "PBX";
             try
             {
-                var model = await _officeClient.GetServiceInfoAsync(_currentUserId, "PBX");
+                var model = await _officeClient.GetServiceInfoAsync(_currentUserId, serviceTypeName);
 
                 switch (model.Status)
                 {
-                    case (int) ServiceStatuses.Available:
-                        return View("ServiceAvailable");
-                    case (int) ServiceStatuses.Unavailable:
-                        return View("ServiceUnavailable");
-                    default:
+                    case (int) ServiceStatuses.Activated:
                     {
                         var userAccount = _zadarmaAccountRepository.GetUserAccount(_currentUserId);
-                        return View(userAccount != null);
-                    }
 
+                        if (userAccount == null) 
+                        {
+                            // a new user account should be created
+                            var serviceData_UserKey = await _officeClient.GetServiceDataAsync(_currentUserId, serviceTypeName, "UserKey");
+                            var serviceData_SecretKey = await _officeClient.GetServiceDataAsync(_currentUserId, serviceTypeName, "SecretKey");
+
+                            IZadarmaService service = new ZadarmaService(serviceData_UserKey.Data, serviceData_SecretKey.Data);
+                            var result = await service.GetBalanceAsync();
+                            if (result.Status == ZadarmaResponseStatus.Success)
+                            {
+                                userAccount = _zadarmaAccountRepository.Create(new ZadarmaAccount
+                                {
+                                    UserKey = serviceData_UserKey.Data,
+                                    SecretKey = serviceData_SecretKey.Data,
+                                    UserId = _currentUserId
+                                });
+                                return View(true);
+                            }
+                            return ServiceUnavailable();
+                        }
+                        return View(true);
+                    }                        
+                    case (int) ServiceStatuses.Unavailable:
+                        return ServiceUnavailable();
+                    default:
+                        return View("ServiceAvailable");
                 }
 
             }
@@ -56,7 +79,12 @@ namespace WebTelNET.PBX.Controllers
             {
                 Console.WriteLine(e);
             }
-            return View();
+            return ServiceUnavailable();
+        }
+
+        private IActionResult ServiceUnavailable()
+        {
+            return View("ServiceUnavailable");
         }
     }
 }

@@ -293,7 +293,11 @@ namespace WebTelNET.PBX.Api
                 return BadRequest(response);
             }
 
-            
+            var plist = model.GetType().GetProperties();
+            foreach (var p in plist)
+            {
+                Console.WriteLine($"{p.Name}: {p.GetValue(model)}");
+            }
             var call = _pbxManager.ProcessCallNotification(model, zadarmaAccount.Id);
 
             if (call.IsRecorded == true)

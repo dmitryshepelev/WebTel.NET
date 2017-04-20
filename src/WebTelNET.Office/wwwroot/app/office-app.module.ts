@@ -15,6 +15,7 @@ import { routing, appRoutingProviders } from './office-app.routing';
 import { OfficeService } from "./shared/services/office.service";
 import { UserServiceControlComponent } from "./shared/components/user-service-control.component";
 import { CloudStorageRequiredDataForm } from "./shared/components/cloud-storage-required-data.form";
+import { PBXRequiredDataForm } from "./shared/components/pbx-required-data.form";
 import { ServicesPageComponent } from "./services/services-page.component";
 
 
@@ -43,6 +44,7 @@ import { ServicesPageComponent } from "./services/services-page.component";
         UserServiceControlComponent,
 
         CloudStorageRequiredDataForm,
+        PBXRequiredDataForm,
 
         ButtonSpinnerDirective
     ],

@@ -62,7 +62,7 @@ export class UserServiceControlComponent {
         }
     }
 
-    onCloudStorageActivated(value: any) {
+    onServiceActivated(value: any) {
         this.showDataForm = false;
         this._updateService();
     }

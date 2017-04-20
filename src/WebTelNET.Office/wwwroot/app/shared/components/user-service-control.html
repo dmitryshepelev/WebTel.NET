@@ -21,7 +21,8 @@
 
 <ng-sidebar-container class="sidepanel" class="on-top">
     <ng-sidebar [(opened)]="showDataForm" [animate]="false" [mode]="'over'" [position]="'top'" [showBackdrop]="true" [closeOnClickOutside]="false" [autoFocus]="false">
-        <cloud-storage-required-data-form (onCloudStorageActivated)="onCloudStorageActivated()" *ngIf="userService.serviceType == 'CloudStorage'"></cloud-storage-required-data-form>
+        <cloud-storage-required-data-form (onCloudStorageActivated)="onServiceActivated()" *ngIf="userService.serviceType == 'CloudStorage'"></cloud-storage-required-data-form>
+        <pbx-required-data-form (onPBXActivated)="onServiceActivated()" *ngIf="userService.serviceType == 'PBX'"></pbx-required-data-form>
     </ng-sidebar>
 
 
