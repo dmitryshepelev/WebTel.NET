@@ -82,7 +82,7 @@ namespace WebTelNET.Office.Services
                                 UserServiceId = service.Id
                             });
                         }
-                        else if (userServiceData.Value != pair.Value)
+                        else if (userServiceData.Value != pair.Value && string.IsNullOrEmpty(userServiceData.Value))
                         {
                             userServiceData.Value = pair.Value;
                             _userServiceDataRepository.Update(userServiceData);
