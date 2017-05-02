@@ -65,7 +65,6 @@ namespace WebTelNET.Office.Libs.Services
                 var responseModel = await ResolveResponseContentAsync<ApiResponseModel>(response.Content);
                 var model = new ServiceDataResponseModel();
                 model.Data = (string)responseModel.Data.FirstOrDefault().Value;
-                // var model = ((JObject)responseModel.Data.FirstOrDefault()).ToObject<ServiceDataResponseModel>();
                 return model;
             }
 

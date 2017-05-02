@@ -94,5 +94,34 @@ namespace WebTelNET.Office.Api
             response.Message = "The servcie cannot be activated";
             return BadRequest(response);
         }
+
+        [Route("getservicedata")]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public IActionResult GetServiceData([FromBody] UserServiceRequestModel model)
+        {
+            var response = new ApiResponseModel();
+
+            var userOffice = _userOfficeRepository.GetSingle(x => x.UserId.Equals(_currentUserId));
+            if (userOffice == null)
+            {
+                return NotFound(response);
+            }
+
+            var service = _userOfficeManager.GetUserService(userOffice, model.ServiceTypeName);
+            if (service.ServiceStatusId != (int)ServiceStatuses.Activated) 
+            {
+                response.Message = "Service doesn't have an activated status";
+                return BadRequest(response);
+            }
+
+            var data = _userServiceDataRepository.GetAll(x => x.UserServiceId.Equals(service.Id));
+
+            foreach(var d in data) 
+            {
+                response.Data.Add(d.Key, d.Value);
+            }
+            return Ok(response);
+        }
     }
 }

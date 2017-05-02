@@ -1,22 +1,21 @@
-import { Component, Inject, Output, EventEmitter } from "@angular/core";
+import { Component, Inject, Output, Input, EventEmitter } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ResponseModel } from "@commonclient/services";
 import { SubmitingComponent, ISubmitable } from "@commonclient/components";
 
 import { IRequiredDataForm } from "./required-data-form.interface";
 import { OfficeService, IOfficeService } from "../services/office.service";
-
-import { UserServiceInfo, UserServiceStatus } from "../models"
+import { UserServiceInfo, UserServiceStatus, DynamicComponentMode, IDynamicComponent, IDynamicComponentSettings } from "../models"
 
 @Component({
     moduleId: module.id,
     selector: 'pbx-required-data-form',
     templateUrl: 'pbx-required-data-form.html'
 })
-export class PBXRequiredDataForm extends SubmitingComponent implements IRequiredDataForm {
-    form: FormGroup;
+export class PBXRequiredDataForm extends SubmitingComponent implements IRequiredDataForm, IDynamicComponent {
+    private _serviceTypeName: string = "PBX";
 
-    @Output() onPBXActivated: EventEmitter<boolean> = new EventEmitter<boolean>();
+    form: FormGroup;
 
     constructor(
         @Inject(FormBuilder) private _builder: FormBuilder,
@@ -30,19 +29,29 @@ export class PBXRequiredDataForm extends SubmitingComponent implements IRequired
         });
     }
 
-    ngOnInit() { 
-        
-    }
+    ngOnInit() {}
 
     activate(): void {
         this.startSubmiting();
-        this._officeService.activateService("PBX", { UserKey: this.form.controls["UserKey"].value, SecretKey: this.form.controls["SecretKey"].value })
+        this._officeService.activateService(this._serviceTypeName, { UserKey: this.form.controls["UserKey"].value, SecretKey: this.form.controls["SecretKey"].value })
             .then((response: ResponseModel) => {
-                this.onPBXActivated.emit(true);
+                this._officeService.changeServiceStatus(this._serviceTypeName, UserServiceStatus.Activated);
             })
             .catch(error => {
                 console.log(error);
             })
             .then(() => { this.endSubmiting(); })
+    }
+
+    init(settings: IDynamicComponentSettings) {
+        if (settings.mode == DynamicComponentMode.EDIT) {
+            this._officeService.getServiceData(this._serviceTypeName)
+                .then((response: ResponseModel) => {
+                    this.form.setValue(response.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
     }
 }

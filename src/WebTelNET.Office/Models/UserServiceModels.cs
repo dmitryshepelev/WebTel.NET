@@ -3,9 +3,13 @@ using WebTelNET.Office.Libs.Models;
 
 namespace WebTelNET.Office.Models
 {
-    public class ActivationUserServiceRequestModel
+    public class UserServiceRequestModel 
     {
         public string ServiceTypeName { get; set; }
+    }
+
+    public class ActivationUserServiceRequestModel : UserServiceRequestModel
+    {
         public Dictionary<string, string> ActivationData { get; set; }
     }
 

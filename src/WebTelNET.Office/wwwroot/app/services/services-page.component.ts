@@ -1,8 +1,8 @@
-﻿import { Component, Inject, OnInit } from "@angular/core";
-
+﻿import { Component, Inject, OnInit, ElementRef, Compiler, ViewContainerRef, ViewChild } from "@angular/core";
 import { ResponseModel } from "@commonclient/services";
 
 import { OfficeService, IOfficeService } from "../shared/services/office.service";
+
 import { UserServiceInfo } from "../shared/models";
 
 @Component({

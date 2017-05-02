@@ -19,6 +19,6 @@ export class PBXAppComponent {
     }
 
     goToOffice() {
-        window.location.href = "http://localhost:5002/";
+        window.location.href = "http://office.leadder.ru/";
     }
 }

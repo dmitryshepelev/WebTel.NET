@@ -14,16 +14,20 @@
         <div *ngIf="userService.status == 1">
             <button type="button" class="btn btn-secondary btn-sm" [buttonSpinner]="cardActionExecuting" (click)="activate()">Подключить</button>
         </div>
-        <small class="text-muted" *ngIf="userService.status == 2">Подключена {{ userService.activationDateTime | date: "dd/MM/y" }}</small>
+        <div *ngIf="userService.status == 2">
+            <small class="text-muted">Подключена {{ userService.activationDateTime | date: "dd/MM/y" }}</small>
+            <button type="button" class="btn btn-secondary btn-sm pull-xs-right" (click)="openSettings()"><i class="fa fa-cog" aria-hidden="true"></i></button>
+        </div>
+        
     </div>
 </div>
 
 
-<ng-sidebar-container class="sidepanel" class="on-top">
-    <ng-sidebar [(opened)]="showDataForm" [animate]="false" [mode]="'over'" [position]="'top'" [showBackdrop]="true" [closeOnClickOutside]="false" [autoFocus]="false">
+<!--<ng-sidebar-container class="sidepanel" class="on-top">
+    <ng-sidebar #serivceDataSidebar [(opened)]="showDataForm" [animate]="false" [mode]="'over'" [position]="'top'" [showBackdrop]="true" [closeOnClickOutside]="true" [autoFocus]="false">
         <cloud-storage-required-data-form (onCloudStorageActivated)="onServiceActivated()" *ngIf="userService.serviceType == 'CloudStorage'"></cloud-storage-required-data-form>
-        <pbx-required-data-form (onPBXActivated)="onServiceActivated()" *ngIf="userService.serviceType == 'PBX'"></pbx-required-data-form>
+        <pbx-required-data-form (onPBXActivated)="onServiceActivated()" [settingsMode]="settignsMode" *ngIf="userService.serviceType == 'PBX'"></pbx-required-data-form>
     </ng-sidebar>
 
 
-</ng-sidebar-container>
+</ng-sidebar-container>-->

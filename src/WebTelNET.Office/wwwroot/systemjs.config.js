@@ -31,7 +31,8 @@
 
             'angular2-text-mask': 'npm:angular2-text-mask/dist/angular2TextMask.js',
             'text-mask-core': 'npm:text-mask-core',
-            'ng2-bootstrap/ng2-bootstrap': 'npm:ng2-bootstrap/bundles/ng2-bootstrap.umd.js',
+            'ng2-bootstrap/ng2-bootstrap': 'npm:ng2-bootstrap/bundles/ng2-bootstrap.umd.min.js',
+            'ngx-bootstrap': 'npm:ngx-bootstrap/index.js',
             'moment': 'npm:moment/moment.js',
             'moment_ru': 'npm:moment/locale/ru.js',
             'ng-sidebar': 'npm:ng-sidebar',

@@ -5,18 +5,18 @@ import { ResponseModel } from "@commonclient/services";
 import { IRequiredDataForm } from "./required-data-form.interface";
 import { OfficeService, IOfficeService } from "../services/office.service";
 
-import { UserServiceInfo, UserServiceStatus } from "../models"
+import { UserServiceInfo, UserServiceStatus, DynamicComponentMode, IDynamicComponent, IDynamicComponentSettings } from "../models";
 
 @Component({
     moduleId: module.id,
     selector: "cloud-storage-required-data-form",
     templateUrl: "cloud-storage-required-data-form.html"
 })
-export class CloudStorageRequiredDataForm implements IRequiredDataForm {
+export class CloudStorageRequiredDataForm implements IRequiredDataForm, IDynamicComponent {
+    private _serviceTypeName: string = "CloudStorage";
+
     form: FormGroup;
     actionExecuting: boolean = false;
-
-    @Output() onCloudStorageActivated: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     constructor(
         @Inject(FormBuilder) private _builder: FormBuilder,
@@ -35,9 +35,9 @@ export class CloudStorageRequiredDataForm implements IRequiredDataForm {
 
     activate() {
         this.actionExecuting = true;
-        this._officeService.activateService("CloudStorage", { Token: this.form.controls["Token"].value })
+        this._officeService.activateService(this._serviceTypeName, { Token: this.form.controls["Token"].value })
             .then((response: ResponseModel) => {
-                this.onCloudStorageActivated.emit(true);
+                this._officeService.changeServiceStatus(this._serviceTypeName, UserServiceStatus.Activated);
             })
             .catch(error => {
                 console.log(error);
@@ -45,5 +45,17 @@ export class CloudStorageRequiredDataForm implements IRequiredDataForm {
             .then(() => {
                 this.actionExecuting = false;
             });
+    }
+
+    init(settings: IDynamicComponentSettings) {
+        if (settings.mode == DynamicComponentMode.EDIT) {
+            this._officeService.getServiceData(this._serviceTypeName)
+                .then((response: ResponseModel) => {
+                    this.form.setValue(response.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
     }
 }
