@@ -16,6 +16,7 @@ export class PBXRequiredDataForm extends SubmitingComponent implements IRequired
     private _serviceTypeName: string = "PBX";
 
     form: FormGroup;
+    mode: DynamicComponentMode;
 
     constructor(
         @Inject(FormBuilder) private _builder: FormBuilder,
@@ -29,7 +30,15 @@ export class PBXRequiredDataForm extends SubmitingComponent implements IRequired
         });
     }
 
+    get EditMode(): boolean {
+        return this.mode == DynamicComponentMode.EDIT;
+    }
+
     ngOnInit() {}
+
+    submit(): void {
+        this.EditMode ? this.edit() : this.activate();
+    }
 
     activate(): void {
         this.startSubmiting();
@@ -43,7 +52,21 @@ export class PBXRequiredDataForm extends SubmitingComponent implements IRequired
             .then(() => { this.endSubmiting(); })
     }
 
+    edit(): void {
+        this.startSubmiting();
+        this._officeService.editServiceData(this._serviceTypeName, { UserKey: this.form.controls["UserKey"].value, SecretKey: this.form.controls["SecretKey"].value })
+            .then((response: ResponseModel) => {
+
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .then(() => { this.endSubmiting(); })
+    }
+
     init(settings: IDynamicComponentSettings) {
+        this.mode = settings.mode;
+
         if (settings.mode == DynamicComponentMode.EDIT) {
             this._officeService.getServiceData(this._serviceTypeName)
                 .then((response: ResponseModel) => {

@@ -1,6 +1,7 @@
 ﻿import { Component, Inject, Output, EventEmitter } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ResponseModel } from "@commonclient/services";
+import { SubmitingComponent, ISubmitable } from "@commonclient/components";
 
 import { IRequiredDataForm } from "./required-data-form.interface";
 import { OfficeService, IOfficeService } from "../services/office.service";
@@ -12,19 +13,25 @@ import { UserServiceInfo, UserServiceStatus, DynamicComponentMode, IDynamicCompo
     selector: "cloud-storage-required-data-form",
     templateUrl: "cloud-storage-required-data-form.html"
 })
-export class CloudStorageRequiredDataForm implements IRequiredDataForm, IDynamicComponent {
+export class CloudStorageRequiredDataForm extends SubmitingComponent implements IRequiredDataForm, IDynamicComponent {
     private _serviceTypeName: string = "CloudStorage";
 
     form: FormGroup;
-    actionExecuting: boolean = false;
+    mode: DynamicComponentMode;
 
     constructor(
         @Inject(FormBuilder) private _builder: FormBuilder,
         @Inject(OfficeService) private _officeService: IOfficeService
     ) {
+        super();
+
         this.form = _builder.group({
             Token: ["", Validators.required]
         });
+    }
+
+    get EditMode(): boolean {
+        return this.mode == DynamicComponentMode.EDIT;
     }
 
     getToken() {
@@ -33,8 +40,12 @@ export class CloudStorageRequiredDataForm implements IRequiredDataForm, IDynamic
         w.focus();
     }
 
+    submit(): void {
+        this.EditMode ? this.edit() : this.activate();
+    }
+
     activate() {
-        this.actionExecuting = true;
+        this.startSubmiting();
         this._officeService.activateService(this._serviceTypeName, { Token: this.form.controls["Token"].value })
             .then((response: ResponseModel) => {
                 this._officeService.changeServiceStatus(this._serviceTypeName, UserServiceStatus.Activated);
@@ -43,11 +54,27 @@ export class CloudStorageRequiredDataForm implements IRequiredDataForm, IDynamic
                 console.log(error);
             })
             .then(() => {
-                this.actionExecuting = false;
+                this.endSubmiting();
+            });
+    }
+
+    edit(): void {
+        this.startSubmiting();
+        this._officeService.editServiceData(this._serviceTypeName, { Token: this.form.controls["Token"].value })
+            .then((response: ResponseModel) => {
+
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .then(() => {
+                this.endSubmiting();
             });
     }
 
     init(settings: IDynamicComponentSettings) {
+        this.mode = settings.mode;
+
         if (settings.mode == DynamicComponentMode.EDIT) {
             this._officeService.getServiceData(this._serviceTypeName)
                 .then((response: ResponseModel) => {

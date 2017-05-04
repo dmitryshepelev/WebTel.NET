@@ -7,10 +7,12 @@
         Unavailable
     }
 
-    public enum ServiceActivationStatus
+    public enum ServiceOperationStatus
     {
         ActivationSucceed,
         UnableToActivate,
-        RequireAdditionData
+        RequireAdditionData,
+        EditionSucceed,
+        UnableToPerfomOperation
     }
 }

@@ -2,23 +2,23 @@ import { Injectable, ViewChild, ViewContainerRef, Output, EventEmitter } from '@
 import { Http, Response } from '@angular/http';
 import { ModalDirective } from "ng2-bootstrap/ng2-bootstrap";
 
-import { DynamicComponentMode, IDynamicComponent, IDynamicComponentSettings } from "../models";
+import { IModalSettings } from "../models";
 
 @Injectable()
 export class ModalService {
     
-    @Output() onShow = new EventEmitter<IDynamicComponentSettings>();
+    @Output() onShow = new EventEmitter<IModalSettings>();
     @Output() onHide = new EventEmitter<boolean>();
 
     constructor() {
         
     }
 
-    show(settings: IDynamicComponentSettings) {
+    show(settings: IModalSettings): void {
         this.onShow.emit(settings);
     }
 
-    hide() {
+    hide(): void {
         this.onHide.emit(true);
     }
 }

@@ -13,6 +13,11 @@ namespace WebTelNET.Office.Models
         public Dictionary<string, string> ActivationData { get; set; }
     }
 
+    public class EditUserServiceRequestModel: UserServiceRequestModel 
+    {
+        public Dictionary<string, string> Data { get;set; }
+    }
+
     public class UserServiceResponseModel : ServiceInfoResponseModel
     {
         public bool RequireActivationData { get; set; }

@@ -20,7 +20,9 @@ namespace WebTelNET.Office.Services
         IQueryable<UserService> GetUserServices(UserOffice userOffice,
             Expression<Func<UserService, bool>> expression = null);
 
-        ServiceActivationStatus ActivateUserService(UserOffice userOffice, string serviceTypeName, IDictionary<string, string> data = null);
+        ServiceOperationStatus ActivateUserService(UserOffice userOffice, string serviceTypeName, IDictionary<string, string> data = null);
+
+        bool EditUserServiceData(UserOffice userOffice, string serviceTypeName, IDictionary<string, string> data = null);
     }
 
     public class UserOfficeManager : IUserOfficeManager
@@ -104,12 +106,12 @@ namespace WebTelNET.Office.Services
             return expression == null ? services : services.Where(expression);
         }
 
-        public ServiceActivationStatus ActivateUserService(UserOffice userOffice, string serviceTypeName, IDictionary<string, string> data = null)
+        public ServiceOperationStatus ActivateUserService(UserOffice userOffice, string serviceTypeName, IDictionary<string, string> data = null)
         {
             var service = GetUserService(userOffice, serviceTypeName);
             if (service == null || service.ServiceStatusId != (int) ServiceStatuses.Available)
             {
-                return ServiceActivationStatus.UnableToActivate;
+                return ServiceOperationStatus.UnableToActivate;
             }
             data = data ?? new Dictionary<string, string>();
 
@@ -132,7 +134,32 @@ namespace WebTelNET.Office.Services
                     break;
                 }
             }
-            return allDataUpdated ? _userServiceRepository.Activate(service) : ServiceActivationStatus.RequireAdditionData;
+            return allDataUpdated ? _userServiceRepository.Activate(service) : ServiceOperationStatus.RequireAdditionData;
+        }
+
+        public bool EditUserServiceData(UserOffice userOffice, string serviceTypeName, IDictionary<string, string> data = null)
+        {
+            var service = GetUserService(userOffice, serviceTypeName);
+            if (service == null || service.ServiceStatusId != (int) ServiceStatuses.Activated)
+            {
+                return false;
+            }
+            data = data ?? new Dictionary<string, string>();
+
+            foreach(var d in data) 
+            {
+                if (!string.IsNullOrEmpty(d.Value))
+                {
+                    var serviceData = _userServiceDataRepository.GetSingle(x => x.UserServiceId.Equals(service.Id) && x.Key == d.Key);
+                    if (serviceData != null && serviceData.Value != d.Value) 
+                    {
+                        serviceData.Value = d.Value;
+                        _userServiceDataRepository.Update(serviceData);                    
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

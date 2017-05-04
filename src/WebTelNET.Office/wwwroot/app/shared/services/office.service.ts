@@ -11,6 +11,7 @@ export interface IOfficeService {
     getUserServices(): Promise<ResponseModel>;
     activateService(serviceType: string, data?: Object): Promise<ResponseModel>;
     getServiceData(serviceType: string): Promise<ResponseModel>;
+    editServiceData(serviceType: string, data: Object): Promise<ResponseModel>;
 
     changeServiceStatus(serviceType: string, status: UserServiceStatus ): void;
 }
@@ -32,6 +33,10 @@ export class OfficeService extends ServiceBase implements IOfficeService {
 
     activateService(serviceType: string, data?: Object): Promise<ResponseModel> {
         return this.post(this._baseUrl + "/activateservice/", { ServiceTypeName: serviceType, ActivationData: data || {} });
+    }
+
+    editServiceData(serviceType: string, data: Object): Promise<ResponseModel> {
+        return this.post(this._baseUrl + "/editservicedata/", { ServiceTypeName: serviceType, Data: data });
     }
 
     getServiceData(serviceType: string): Promise<ResponseModel> {

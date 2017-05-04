@@ -5,7 +5,6 @@ using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.X9;
 using WebTelNET.CommonNET.Libs.Filters;
 using WebTelNET.CommonNET.Models;
 using WebTelNET.Office.Libs.Models;
@@ -85,13 +84,36 @@ namespace WebTelNET.Office.Api
         {
             var response = new ApiResponseModel();
 
-            ServiceActivationStatus status = _userOfficeManager.ActivateUserService(UserOffice, model.ServiceTypeName, model.ActivationData);
-            if (status == ServiceActivationStatus.ActivationSucceed)
+            ServiceOperationStatus status = _userOfficeManager.ActivateUserService(UserOffice, model.ServiceTypeName, model.ActivationData);
+            if (status == ServiceOperationStatus.ActivationSucceed)
             {
                 response.Message = "The service has been activated successfully";
                 return Ok(response);
             }
             response.Message = "The servcie cannot be activated";
+            return BadRequest(response);
+        }
+
+        [Route("editservicedata")]
+        [HttpPost]
+        [Produces(typeof(string[]))]
+        public IActionResult EditServiceData([FromBody] EditUserServiceRequestModel model) 
+        {
+            var response = new ApiResponseModel();
+
+            UserService service = _userOfficeManager.GetUserService(UserOffice, model.ServiceTypeName);
+            if (service == null) 
+            {
+                return NotFound(response);
+            }
+            bool status = _userOfficeManager.EditUserServiceData(UserOffice, model.ServiceTypeName, model.Data);
+            if (status)
+            {
+                response.Message = "The service data has been edited";
+                return Ok(response);
+            }
+            response.Data.Add(nameof(status), status);
+            response.Message = "Unable to edit service data";
             return BadRequest(response);
         }
 
@@ -102,13 +124,7 @@ namespace WebTelNET.Office.Api
         {
             var response = new ApiResponseModel();
 
-            var userOffice = _userOfficeRepository.GetSingle(x => x.UserId.Equals(_currentUserId));
-            if (userOffice == null)
-            {
-                return NotFound(response);
-            }
-
-            var service = _userOfficeManager.GetUserService(userOffice, model.ServiceTypeName);
+            var service = _userOfficeManager.GetUserService(UserOffice, model.ServiceTypeName);
             if (service.ServiceStatusId != (int)ServiceStatuses.Activated) 
             {
                 response.Message = "Service doesn't have an activated status";

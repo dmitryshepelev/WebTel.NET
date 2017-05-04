@@ -1,7 +1,20 @@
 <div>
-    <input type="button" class="btn btn-warning" (click)="getToken()" value="Получить токен"  />
-    <form [formGroup]="form">
-        <input type="text" formControlName="Token" class="form-control" placeholder="Токен"/>
-        <button type="button" class="btn btn-primary" [buttonSpinner]="actionExecuting" (click)="activate()">Активировать</button>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-group row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-deafult" (click)="getToken()">Получить токен</button>
+            </div>
+        </div>        
+        <div class="form-group row">
+            <div class="col-md-12">
+                <label for="token" class="col-form-label">Токен</label>
+                <input type="text" id="token" formControlName="Token" class="form-control" placeholder="Токен"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary pull-xs-right" [buttonSpinner]="submiting" [disabled]="form.invalid || submiting">{{ EditMode ? "Обновить" : "Активировать" }}</button>
+            </div>
+        </div>        
     </form>
 </div>

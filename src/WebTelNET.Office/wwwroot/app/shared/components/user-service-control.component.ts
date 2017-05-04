@@ -89,7 +89,7 @@ export class UserServiceControlComponent implements OnDestroy {
     private _openModal(mode: DynamicComponentMode) {
         let arrNames = this.userService.serviceType.match(/[A-Z][a-z]+/g);
         let componentSelector = `${(arrNames == null ? this.userService.serviceType : arrNames.join("-")).toLowerCase()}-required-data-form`;
-        this._modalService.show({ component: componentSelector, mode: mode });
+        this._modalService.show({ component: componentSelector, mode: mode, title: "Настройки" });
     }
 
     private _activate() {

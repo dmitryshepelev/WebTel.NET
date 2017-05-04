@@ -1,4 +1,6 @@
-﻿export class ServiceProviderInfo {
+﻿import { ModalOptions } from "ng2-bootstrap/ng2-bootstrap"
+
+export class ServiceProviderInfo {
     name: string;
     description: string;
     webSite: string;
@@ -38,6 +40,14 @@ export class IDynamicComponentSettings {
 }
 
 export interface IDynamicComponent {
+    mode: DynamicComponentMode;
+
     init(settings: IDynamicComponentSettings): void;
     destroy?(): void;
+}
+
+export interface IModalSettings extends IDynamicComponentSettings {
+    title?: string;
+
+    config?: ModalOptions;
 }

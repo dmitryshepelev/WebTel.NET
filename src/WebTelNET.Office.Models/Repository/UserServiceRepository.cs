@@ -12,7 +12,7 @@ namespace WebTelNET.Office.Models.Repository
 {
     public interface IUserServcieRepository : IRepository<UserService>
     {
-        ServiceActivationStatus Activate(UserService userService);
+        ServiceOperationStatus Activate(UserService userService);
     }
     
     public class UserServiceRepository : RepositoryBase<UserService>, IUserServcieRepository
@@ -39,16 +39,16 @@ namespace WebTelNET.Office.Models.Repository
             return predicate != null ? query.Where(predicate) : query;
         }
 
-        public ServiceActivationStatus Activate(UserService userService)
+        public ServiceOperationStatus Activate(UserService userService)
         {
             if (userService.ServiceStatusId == (int) ServiceStatuses.Available)
             {
                 userService.ActivationDateTime = DateTime.Now;
                 userService.ServiceStatusId = (int) ServiceStatuses.Activated;
                 Update(userService);
-                return ServiceActivationStatus.ActivationSucceed;
+                return ServiceOperationStatus.ActivationSucceed;
             }
-            return ServiceActivationStatus.UnableToActivate;
+            return ServiceOperationStatus.UnableToActivate;
         }
     }
 }
